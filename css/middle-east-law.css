@@ -1,0 +1,534 @@
+@import url("./home.css");
+
+/* Middle East Law Expert page specific styles */
+.me-hero {
+    padding: 120px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.me-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(197, 149, 74, 0.12) 0%, transparent 55%),
+        radial-gradient(circle at 90% 80%, rgba(197, 149, 74, 0.08) 0%, transparent 55%);
+    pointer-events: none;
+}
+
+.me-hero-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.3fr);
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.me-hero-copy h1 {
+    font-size: 44px;
+    line-height: 1.2;
+    margin-bottom: 18px;
+    background: linear-gradient(135deg, #ffffff 0%, #c5954a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.me-hero-copy p {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.88);
+    line-height: 1.8;
+    margin-bottom: 26px;
+}
+
+.me-hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 26px;
+}
+
+.me-hero-badge {
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(197, 149, 74, 0.18);
+    border: 1px solid rgba(197, 149, 74, 0.35);
+    color: #c5954a;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.me-hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+}
+
+.me-hero-cta .primary {
+    border: none;
+    border-radius: 999px;
+    padding: 12px 26px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(197, 149, 74, 0.4);
+}
+
+.me-hero-cta .primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(197, 149, 74, 0.55);
+}
+
+.me-hero-cta .secondary {
+    border-radius: 999px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.me-hero-cta .secondary:hover {
+    border-color: rgba(197, 149, 74, 0.7);
+    color: #c5954a;
+    background: rgba(197, 149, 74, 0.06);
+}
+
+.me-hero-security {
+    margin-top: 12px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.me-hero-security span {
+    color: #c5954a;
+    font-weight: 600;
+}
+
+.me-hero-panel {
+    background: radial-gradient(circle at top, rgba(31, 44, 69, 0.9), rgba(13, 21, 36, 0.98));
+    border-radius: 22px;
+    width: 700px;
+    height: 270px;
+    padding: 26px 24px 22px;
+    border: 1px solid rgba(197, 149, 74, 0.25);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+}
+
+.me-hero-panel h3 {
+    font-size: 24px;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.me-hero-panel p {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 18px;
+}
+
+.me-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.me-hero-stat {
+    background: rgba(13, 21, 36, 0.92);
+    border-radius: 14px;
+    padding: 12px 10px;
+    text-align: center;
+    border: 1px solid rgba(197, 149, 74, 0.3);
+}
+
+.me-hero-stat strong {
+    display: block;
+    font-size: 22px;
+    color: #c5954a;
+    margin-bottom: 2px;
+}
+
+.me-hero-stat span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Smart Matching section */
+.me-matching {
+    padding: 40px 0 80px;
+
+}
+
+.me-matching-layout {
+    max-width: 1400px; 
+    margin: 0 auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr); /* put lawyers under the smart matching form */
+    gap: 32px;
+    align-items: flex-start;
+}
+
+.me-matching-form {
+    background: radial-gradient(circle at top, rgba(31, 44, 69, 0.85), rgba(13, 21, 36, 0.98));
+    border-radius: 18px;
+    padding: 26px 22px;
+    border: 1px solid rgba(197, 149, 74, 0.25);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+}
+
+.me-matching-form h3 {
+    font-size: 22px;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.me-matching-steps {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 18px;
+}
+
+.me-field-label {
+    display: block;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 6px;
+}
+
+.me-select,
+.me-textarea,
+.me-radio-group {
+    margin-bottom: 16px;
+}
+
+.me-select select,
+.me-textarea textarea {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(10, 16, 28, 0.92);
+    color: #ffffff;
+    padding: 10px 12px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.me-select select:focus,
+.me-textarea textarea:focus {
+    border-color: rgba(197, 149, 74, 0.7);
+    box-shadow: 0 0 0 1px rgba(197, 149, 74, 0.4);
+}
+
+.me-textarea textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.me-radio-group-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.me-radio-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(10, 16, 28, 0.96);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.me-radio-pill input {
+    accent-color: #c5954a;
+}
+
+.me-radio-pill:hover {
+    border-color: rgba(197, 149, 74, 0.7);
+    background: rgba(197, 149, 74, 0.07);
+}
+
+.me-matching-btn {
+    width: 100%;
+    border-radius: 12px;
+    border: none;
+    padding: 11px 18px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 10px 26px rgba(197, 149, 74, 0.5);
+}
+
+.me-matching-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(197, 149, 74, 0.7);
+}
+
+.me-lawyer-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.me-no-lawyers {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 2rem 1.5rem;
+    font-size: 15px;
+    line-height: 1.6;
+}
+.me-no-lawyers a {
+    color: #c5954a;
+    text-decoration: none;
+}
+.me-no-lawyers a:hover {
+    text-decoration: underline;
+}
+
+.me-lawyer-card {
+    background: rgba(13, 21, 36, 0.96);
+    border-radius: 16px;
+    padding: 18px 16px;
+    border: 1px solid rgba(197, 149, 74, 0.22);
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
+}
+
+.me-lawyer-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.me-lawyer-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: radial-gradient(circle at top, #c5954a, #8a642f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0d1524;
+    font-weight: 700;
+}
+
+.me-lawyer-name {
+    font-size: 17px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.me-lawyer-specialty {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.me-lawyer-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 8px 0 10px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.me-rating {
+    color: #f6c453;
+}
+
+.me-price {
+    font-size: 14px;
+    color: #c5954a;
+    font-weight: 600;
+}
+
+.me-availability {
+    font-size: 13px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(22, 163, 74, 0.18);
+    color: #4ade80;
+}
+
+.me-availability.soon {
+    background: rgba(234, 179, 8, 0.18);
+    color: #facc15;
+}
+
+.me-availability.offline {
+    background: rgba(148, 163, 184, 0.18);
+    color: #cbd5f5;
+}
+
+.me-lawyer-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.me-lawyer-actions button {
+    flex: 1;
+    border-radius: 999px;
+    border: none;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.me-lawyer-actions .chat {
+    background: rgba(197, 149, 74, 0.16);
+    color: #c5954a;
+    border: 1px solid rgba(197, 149, 74, 0.4);
+}
+
+.me-lawyer-actions .video {
+    background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+    color: #0d1524;
+}
+
+.me-lawyer-actions button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+/* How it works */
+.me-how {
+    padding: 80px 0;
+}
+
+.me-how-steps {
+    max-width: 1300px; /* make How It Works section wider */
+    margin: 0 auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+}
+
+.me-how-card {
+    background: rgba(13, 21, 36, 0.95);
+    border-radius: 20px;
+    padding: 26px 20px;
+    border: 1px solid rgba(197, 149, 74, 0.25);
+}
+
+.me-how-step {
+    font-size: 14px;
+    color: #c5954a;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.me-how-card h3 {
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.me-how-card p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+}
+
+/* Testimonials */
+.me-testimonials {
+    padding: 60px 0 40px;
+}
+
+.me-testimonial-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.me-testimonial-card {
+    background: rgba(13, 21, 36, 0.96);
+    border-radius: 16px;
+    padding: 18px 16px;
+    border: 1px solid rgba(197, 149, 74, 0.20);
+}
+
+.me-testimonial-text {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.86);
+    line-height: 1.7;
+    margin-bottom: 10px;
+}
+
+.me-testimonial-author {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* FAQ re-use existing .faq-section styles from home.css */
+
+@media (max-width: 900px) {
+    .me-hero-inner {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+    }
+
+    .me-matching-layout {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 0 25px;
+    }
+
+    .me-hero {
+        padding: 100px 0 60px;
+    }
+
+    .me-matching {
+        padding: 30px 0 60px;
+    }
+}
+
+@media (max-width: 600px) {
+    .me-hero-inner {
+        padding: 0 25px;
+    }
+
+    .me-hero-copy h1 {
+        font-size: 30px;
+    }
+
+    .me-hero-copy p {
+        font-size: 15px;
+    }
+
+    .me-matching-layout,
+    .me-testimonial-grid,
+    .me-how-steps {
+        padding: 0 25px;
+    }
+}
+
+

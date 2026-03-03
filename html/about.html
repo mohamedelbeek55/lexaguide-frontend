@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlLang">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../shared/home.css">
+    <link rel="stylesheet" href="../css/about.css">
+    <title>LexaGuide - About</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../index.html" class="navbar-logo" aria-label="LexaGuide home">
+                <div class="navbar-logo-img">
+                    <img src="../assets/logos/logo-removebg-preview.png" alt="LexaGuide logo">
+                    <div class="navbar-logo-text">
+                        <span class="navbar-brand">LexaGuide</span>
+                        <span class="navbar-tagline">AI-Powered Legal Guidance</span>
+                    </div>
+                </div>
+            </a>
+
+            <button class="navbar-toggle" id="navbarToggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="navbar-menu" id="navbarMenu">
+                <ul class="navbar-links">
+                    <li><a href="../index.html" data-i18n="home">Home</a></li>
+                    <li><a href="../index.html#services-section" data-i18n="services">Services</a>
+                    </li>
+                    <li><a href="./about.html" class="active" data-i18n="about">About</a></li>
+                    <li><a href="../index.html#faq-section" data-i18n="faq">FAQ</a></li>
+                </ul>
+
+                <div class="navbar-right">
+                    <div class="language-selector">
+                        <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+                            <svg class="lang-globe" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                                <path
+                                    d="M2 12H22M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z"
+                                    stroke="currentColor" stroke-width="2" />
+                            </svg>
+                            <span class="lang-text" id="langText">English</span>
+                            <svg class="lang-chevron" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" onclick="changeLanguage('en')">
+                                <span>English</span>
+                            </button>
+                            <button class="lang-option" onclick="changeLanguage('ar')">
+                                <span>العربية</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="navbar-cta">
+                        <a href="./login.html" class="btn-login" data-i18n="login">Login</a>
+                        <a href="./signup.html" class="btn-signup" data-i18n="signup">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Us Section -->
+    <section class="about-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="aboutTitle">About Us</h2>
+            <p class="about-intro" data-i18n="aboutIntro">
+                We combine decades of legal expertise with innovative AI-driven tools to deliver precise, reliable, and
+                accessible legal guidance across the Middle East.
+                Our team blends seasoned attorneys, technologists, and client success specialists who share a single
+                mission: empower individuals and organizations with
+                the knowledge and resources they need to make confident legal decisions.
+            </p>
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="about-icon">🎯</div>
+                    <h3 data-i18n="aboutMissionTitle">Our Mission</h3>
+                    <p data-i18n="aboutMissionDesc">To provide exceptional legal counsel and representation, ensuring
+                        justice and protecting the rights of our clients with integrity, professionalism, and
+                        dedication.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon">👁️</div>
+                    <h3 data-i18n="aboutVisionTitle">Our Vision</h3>
+                    <p data-i18n="aboutVisionDesc">To be the leading legal platform recognized for excellence,
+                        innovation, and unwavering commitment to achieving the best outcomes for our clients.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon">💎</div>
+                    <h3 data-i18n="aboutValuesTitle">Our Values</h3>
+                    <p data-i18n="aboutValuesDesc">Integrity, transparency, excellence, and client-centered service
+                        guide everything we do. We uphold the highest ethical standards in all our legal practices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="../assets/logos/logo-removebg-preview.png" alt="Counsel Logo" width="300px">
+                    </div>
+                    <p class="footer-description" data-i18n="footerDescription">Providing exceptional legal counsel and
+                        representation with integrity, professionalism, and dedication to achieving the best outcomes
+                        for our clients.</p>
+                    <div class="social-links">
+                        <a href="www.facebook.com" class="social-link" aria-label="Facebook">
+                            <img src="../assets/logos/icons8-facebook-64.png" alt="Facebook" class="social-icon" width="100px">
+                        </a>
+                        <a href="www.x.com" class="social-link" aria-label="Twitter">
+                            <img src="../assets/logos/icons8-x-logo-50.png" alt="Twitter" class="social-icon">
+                        </a>
+                        <a href="www.instagram.com" class="social-link" aria-label="Instagram">
+                            <img src="../assets/logos/icons8-instagram-logo-64.png" alt="Instagram" class="social-icon">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerQuickLinksTitle">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="../index.html" data-i18n="footerLinkHome">Home</a></li>
+                        <li><a href="./about.html" data-i18n="footerLinkAbout">About</a></li>
+                        <li><a href="../index.html#services-section" data-i18n="footerLinkServices">Services</a></li>
+                        <li><a href="../index.html#faq-section" data-i18n="footerLinkContact">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerServicesTitle">Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="./contract-analysis.html" data-i18n="footerService1">Contract
+                                Analysis</a></li>
+                        <li><a href="./legal-doc-generation.html" data-i18n="footerService2">Document Generation</a></li>
+                        <li><a href="./chatbot.html" data-i18n="footerService3">ChatBot</a></li>
+                        <li><a href="./middle-east-law.html" data-i18n="footerService4">Law
+                            Experts</a></li>
+                        <li><a href="./consultations-management.html" data-i18n="footerService5">Case Management</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerContactTitle">Contact Info</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="contact-icon">
+                                <img src="../assets/logos/icons8-phone-50.png" alt="Phone" class="contact-icon-img"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <!-- <span class="contact-icon-fallback" style="display:none;">📞</span> -->
+                            </span>
+                            <span data-i18n="footerPhone">+1 (555) 123-4567</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">
+                                <img src="../assets/logos/icons8-info-64.png" alt="Email" class="contact-icon-img"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <!-- <span class="contact-icon-fallback" style="display:none;">✉️</span> -->
+                            </span>
+                            <span data-i18n="footerEmail">info@counsel.com</span>
+                        </li>
+                    </ul>
+                    <div class="app-downloads">
+                        <h4 class="app-downloads-title" data-i18n="footerAppsTitle">Download Our App</h4>
+                        <div class="app-buttons">
+                            <a href="#" class="app-button app-store" aria-label="Download on App Store">
+                                <img src="../assets/logos/icons8-app-store-48.png" alt="App Store" class="app-icon-img">
+                                <div class="app-button-text">
+                                    <span class="app-button-label" data-i18n="footerAppStoreLabel">Download on
+                                        the</span>
+                                    <span class="app-button-name" data-i18n="footerAppStoreName">App Store</span>
+                                </div>
+                            </a>
+                            <a href="#" class="app-button google-play" aria-label="Get it on Google Play">
+                                <img src="../assets/logos/icons8-google-play-24.png" alt="Google Play" class="app-icon-img">
+                                <div class="app-button-text">
+                                    <span class="app-button-label" data-i18n="footerGooglePlayLabel">Get it on</span>
+                                    <span class="app-button-name" data-i18n="footerGooglePlayName">Google Play</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p data-i18n="footerCopyright">&copy; 2026 Counsel. All rights reserved.</p>
+                    <div class="footer-legal">
+                        <a href="#" data-i18n="footerPrivacy">Privacy Policy</a>
+                        <span>|</span>
+                        <a href="#" data-i18n="footerTerms">Terms of Service</a>
+                        <span>|</span>
+                        <a href="#" data-i18n="footerCookies">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../shared/api.js"></script>
+    <script src="../js/about.js"></script>
+</body>
+
+</html>

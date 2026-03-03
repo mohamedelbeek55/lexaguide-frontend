@@ -1,0 +1,88 @@
+.profile-main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.profile-section {
+  margin-bottom: 2rem;
+  padding: 1.75rem;
+  border-radius: 12px;
+  background: rgba(13, 21, 36, 0.6);
+  border: 1px solid rgba(197, 149, 74, 0.2);
+}
+
+.profile-section h1,
+.profile-section h2 {
+  margin-bottom: 1.25rem;
+  color: #c5954a;
+  font-size: 1.5rem;
+}
+
+.profile-avatar-lg {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+  color: #0d1524;
+  font-weight: 700;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.profile-detail-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.profile-detail-row .k {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 100px;
+}
+
+.profile-detail-row .v {
+  color: #fff;
+}
+
+.profile-loading {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.profile-settings-intro {
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.settings-row label {
+  min-width: 100px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.settings-row select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(197, 149, 74, 0.3);
+  background: rgba(13, 21, 36, 0.8);
+  color: #fff;
+  font-size: 14px;
+}

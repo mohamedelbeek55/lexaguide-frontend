@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlLang">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../shared/home.css">
+    <link rel="stylesheet" href="../css/legal-contracts.css">
+    <title>Legal Contracts & Document Procedures</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../index.html" class="navbar-logo" aria-label="LexaGuide home">
+                <div class="navbar-logo-img">
+                    <img src="../assets/logos/logo-removebg-preview.png" alt="LexaGuide logo">
+                    <div class="navbar-logo-text">
+                        <span class="navbar-brand">LexaGuide</span>
+                        <span class="navbar-tagline">AI-Powered Legal Guidance</span>
+                    </div>
+                </div>
+            </a>
+
+            <button class="navbar-toggle" id="navbarToggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="navbar-menu" id="navbarMenu">
+                <ul class="navbar-links">
+                    <li><a href="../index.html" data-i18n="home">Home</a></li>
+                    <li><a href="../index.html#services-section" data-i18n="services">Services</a></li>
+                    <li><a href="./about.html" data-i18n="about">About</a></li>
+                    <li><a href="../index.html#faq-section" data-i18n="faq">FAQ</a></li>
+                </ul>
+
+                <div class="navbar-right">
+                    <div class="language-selector">
+                        <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+                            <svg class="lang-globe" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                                <path
+                                    d="M2 12H22M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z"
+                                    stroke="currentColor" stroke-width="2" />
+                            </svg>
+                            <span class="lang-text" id="langText">English</span>
+                            <svg class="lang-chevron" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" onclick="changeLanguage('en')">
+                                <span>English</span>
+                            </button>
+                            <button class="lang-option" onclick="changeLanguage('ar')">
+                                <span>العربية</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="navbar-cta">
+                        <a href="./login.html" class="btn-login" data-i18n="login">Login</a>
+                        <a href="./signup.html" class="btn-signup" data-i18n="signup">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="lc-page">
+        <!-- Hero / Header -->
+        <header class="lc-hero">
+            <div class="lc-container">
+                <div class="lc-hero-top">
+
+
+                </div>
+
+                <div class="lc-hero-main">
+                    <div class="lc-hero-left">
+                        <div class="lc-badge">
+                            <span class="lc-badge-dot"></span>
+                            <span data-i18n="heroBadge">AI-Assisted Procedures • Human-Verified</span>
+                        </div>
+                        <h1 class="lc-hero-title" data-i18n="heroTitle">Legal Contracts &amp; Document Procedures</h1>
+                        <p class="lc-hero-text" data-i18n="heroText">
+                            Quickly find how to issue, authenticate, or renew your legal contracts with clear steps,
+                            required documents, official fees, and timelines.
+                        </p>
+
+                        <div class="lc-search-card">
+                            <label for="procedureSearch" class="lc-sr-only">Search for contracts or procedures</label>
+                            <div class="lc-search-row">
+                                <div class="lc-search-input-wrap">
+                                    <!-- <span class="lc-search-icon">🔍</span> -->
+                                    <input id="procedureSearch" type="text"
+                                        placeholder="Search by contract type or procedure (e.g., 'lease contract')"
+                                        class="lc-search-input">
+                                </div>
+                                <button id="procedureSearchBtn" class="lc-search-button" data-i18n="searchButton">
+                                    Find Procedure
+                                </button>
+                            </div>
+                            <p class="lc-search-hints">
+                                <span data-i18n="searchHintPrefix">Example queries:</span>
+                                <span data-i18n="searchHintExamples">“Real Estate Sale Contract”, “Work Visa
+                                    Sponsorship”, “Commercial Agency License”</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <aside class="lc-hero-aside">
+                        <h2 class="lc-aside-title" data-i18n="heroSnapshotTitle">Snapshot: Typical Contract Journey</h2>
+                        <ol class="lc-aside-steps">
+                            <li>
+                                <span class="lc-step-number">1</span>
+                                <div>
+                                    <p class="lc-step-title" data-i18n="heroStep1Title">Select contract category</p>
+                                    <p class="lc-step-text" data-i18n="heroStep1Text">Choose Real Estate, Labor,
+                                        Commercial, or other specialized contracts.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="lc-step-number">2</span>
+                                <div>
+                                    <p class="lc-step-title" data-i18n="heroStep2Title">Review requirements &amp; fees
+                                    </p>
+                                    <p class="lc-step-text" data-i18n="heroStep2Text">Confirm required documents, office
+                                        locations, and official governmental fees.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="lc-step-number">3</span>
+                                <div>
+                                    <p class="lc-step-title" data-i18n="heroStep3Title">Follow guided steps</p>
+                                    <p class="lc-step-text" data-i18n="heroStep3Text">Use digital or physical channels,
+                                        with clear processing timelines.</p>
+                                </div>
+                            </li>
+                        </ol>
+                        <div class="lc-aside-footer">
+                            <span data-i18n="heroNotice">Not legal advice • For informational use only</span>
+                            <span class="lc-aside-tag" data-i18n="heroNoticeTag">Middle East–optimized</span>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="lc-main">
+            <div class="lc-container lc-main-inner">
+                <!-- Contract Categories -->
+                <section id="categories" class="lc-section">
+                    <div class="lc-section-header">
+                        <div>
+                            <h2 class="lc-section-title" data-i18n="categoriesTitle">Contract Categories</h2>
+                            <p class="lc-section-subtitle" data-i18n="categoriesSubtitle">
+                                Browse key legal contract families. Select one to focus the guide on typical
+                                requirements and procedures.
+                            </p>
+                        </div>
+                        <div class="lc-chip-info">
+                            <span class="lc-chip-dot"></span>
+                            <span data-i18n="categoriesChip">Curated for individuals &amp; SMEs</span>
+                        </div>
+                    </div>
+
+                    <div class="lc-grid lc-grid-3">
+                        <article class="lc-card lc-category-card" data-category="real-estate">
+                            <div class="lc-card-header">
+                                <div class="lc-card-header-left">
+                                    <div class="lc-card-icon">🏢</div>
+                                    <h3 data-i18n="catRealEstate">Real Estate Contracts</h3>
+                                </div>
+                                <span class="lc-card-tag" data-i18n="tagProperty">Property</span>
+                            </div>
+                            <p class="lc-card-text" data-i18n="catRealEstateText">
+                                Sale, lease, mortgage, and property transfer agreements involving residential or
+                                commercial units.
+                            </p>
+                            <ul class="lc-card-list">
+                                <li>Title deed verification &amp; registration</li>
+                                <li>Land department or notary involvement</li>
+                                <li>Typical timeline: 1–5 working days</li>
+                            </ul>
+                        </article>
+
+                        <article class="lc-card lc-category-card" data-category="labor">
+                            <div class="lc-card-header">
+                                <div class="lc-card-header-left">
+                                    <div class="lc-card-icon">👔</div>
+                                    <h3 data-i18n="catLabor">Labor &amp; Employment</h3>
+                                </div>
+                                <span class="lc-card-tag" data-i18n="tagHR">HR</span>
+                            </div>
+                            <p class="lc-card-text" data-i18n="catLaborText">
+                                Employment contracts, offer letters, termination documents, and sponsorship-related
+                                procedures.
+                            </p>
+                            <ul class="lc-card-list">
+                                <li>Ministry of Labor portals &amp; approvals</li>
+                                <li>Digital signatures often accepted</li>
+                                <li>Typical timeline: 1–10 working days</li>
+                            </ul>
+                        </article>
+
+                        <article class="lc-card lc-category-card" data-category="commercial">
+                            <div class="lc-card-header">
+                                <div class="lc-card-header-left">
+                                    <div class="lc-card-icon">📑</div>
+                                    <h3 data-i18n="catCommercial">Commercial &amp; Corporate</h3>
+                                </div>
+                                <span class="lc-card-tag" data-i18n="tagBusiness">Business</span>
+                            </div>
+                            <p class="lc-card-text" data-i18n="catCommercialText">
+                                Partnership agreements, shareholder resolutions, agency contracts, and MoUs.
+                            </p>
+                            <ul class="lc-card-list">
+                                <li>Chamber of Commerce &amp; notary roles</li>
+                                <li>Often bilingual (Arabic / English)</li>
+                                <li>Typical timeline: 2–7 working days</li>
+                            </ul>
+                        </article>
+
+                        <article class="lc-card lc-category-card" data-category="personal">
+                            <div class="lc-card-header">
+                                <div class="lc-card-header-left">
+                                    <div class="lc-card-icon">👨‍👩‍👧</div>
+                                    <h3 data-i18n="catPersonal">Personal &amp; Family</h3>
+                                </div>
+                                <span class="lc-card-tag" data-i18n="tagCivil">Civil</span>
+                            </div>
+                            <p class="lc-card-text" data-i18n="catPersonalText">
+                                Marriage contracts, guardianship, inheritance documentation, and personal status
+                                procedures.
+                            </p>
+                            <ul class="lc-card-list">
+                                <li>Sharia and civil court procedures</li>
+                                <li>Requires official IDs &amp; civil records</li>
+                                <li>Timeline varies by jurisdiction</li>
+                            </ul>
+                        </article>
+
+                        <article class="lc-card lc-category-card" data-category="banking">
+                            <div class="lc-card-header">
+                                <div class="lc-card-header-left">
+                                    <div class="lc-card-icon">💳</div>
+                                    <h3 data-i18n="catBanking">Banking &amp; Finance</h3>
+                                </div>
+                                <span class="lc-card-tag" data-i18n="tagFinance">Finance</span>
+                            </div>
+                            <p class="lc-card-text" data-i18n="catBankingText">
+                                Loan agreements, guarantees, credit facilities, and security documentation.
+                            </p>
+                            <ul class="lc-card-list">
+                                <li>Bank compliance &amp; central bank rules</li>
+                                <li>Often requires collateral evidence</li>
+                                <li>Typical timeline: 3–14 working days</li>
+                            </ul>
+                        </article>
+
+                        <article class="lc-card lc-category-card lc-card-dashed" data-category="custom">
+                            <div class="lc-card-header">
+                                <div class="lc-card-header-left">
+                                    <div class="lc-card-icon lc-card-icon-muted">➕</div>
+                                    <h3 data-i18n="catCustom">Custom or Cross-Border Contracts</h3>
+                                </div>
+                                <span class="lc-card-tag" data-i18n="tagAdvanced">Advanced</span>
+                            </div>
+                            <p class="lc-card-text" data-i18n="catCustomText">
+                                Complex, multi-jurisdictional, or sector-specific agreements requiring tailored drafting
+                                and approvals.
+                            </p>
+                            <p class="lc-card-footnote" data-i18n="catCustomNote">
+                                Use this for highly specialized procedures. We’ll still outline a generic path you can
+                                refine with a lawyer.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- Issuance Guide -->
+                <section id="issuance-guide" class="lc-section">
+                    <div class="lc-section-header lc-section-header-row">
+                        <div>
+                            <h2 class="lc-section-title" data-i18n="guideTitle">Issuance Guide — Step-by-Step</h2>
+                            <p class="lc-section-subtitle" data-i18n="guideSubtitle">
+                                Follow a guided flow for issuing or authenticating a selected contract. Steps may vary
+                                by jurisdiction.
+                            </p>
+                        </div>
+                        <div class="lc-mode-chip">
+                            <span data-i18n="modeLabel">Mode:</span>
+                            <span id="guideModeLabel">Digital + Physical</span>
+                        </div>
+                    </div>
+
+                    <div class="lc-flex">
+                        <ol class="lc-stepper">
+                            <li class="lc-step guide-step" data-step="1">
+                                <div class="lc-step-line">
+                                    <div class="lc-step-circle lc-step-circle-active">1</div>
+                                    <div class="lc-step-connector"></div>
+                                </div>
+                                <div class="lc-step-card">
+                                    <div class="lc-step-card-head">
+                                        <p class="lc-step-card-title" data-i18n="step1Title">Identify Contract Type
+                                            &amp; Parties</p>
+                                        <span class="lc-step-pill" data-i18n="step1Badge">Digital / Physical</span>
+                                    </div>
+                                    <p class="lc-step-card-text" data-i18n="step1Text">
+                                        Confirm the exact contract category, number of parties, governing law, and
+                                        language (Arabic, English, or bilingual).
+                                    </p>
+                                    <ul class="lc-step-card-list">
+                                        <li>Verify commercial registration or ID numbers for all parties.</li>
+                                        <li>Check if a standard government template exists.</li>
+                                        <li>Decide if notarization or attestation is required.</li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="lc-step guide-step" data-step="2">
+                                <div class="lc-step-line">
+                                    <div class="lc-step-circle">2</div>
+                                    <div class="lc-step-connector"></div>
+                                </div>
+                                <div class="lc-step-card">
+                                    <div class="lc-step-card-head">
+                                        <p class="lc-step-card-title" data-i18n="step2Title">Prepare Draft &amp;
+                                            Validate Terms</p>
+                                        <span class="lc-step-pill lc-step-pill-green" data-i18n="step2Badge">Digital
+                                            Preferred</span>
+                                    </div>
+                                    <p class="lc-step-card-text" data-i18n="step2Text">
+                                        Draft or review the contract with clear obligations, duration, renewal terms,
+                                        and dispute-resolution clause.
+                                    </p>
+                                    <ul class="lc-step-card-list">
+                                        <li>Use official templates when provided by ministries or regulators.</li>
+                                        <li>Validate against local labor, commercial, or real estate laws.</li>
+                                        <li>Translate if one of the parties does not speak the primary language.</li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="lc-step guide-step" data-step="3">
+                                <div class="lc-step-line">
+                                    <div class="lc-step-circle">3</div>
+                                    <div class="lc-step-connector"></div>
+                                </div>
+                                <div class="lc-step-card">
+                                    <div class="lc-step-card-head">
+                                        <p class="lc-step-card-title" data-i18n="step3Title">Choose Digital or Physical
+                                            Channel</p>
+                                        <span class="lc-step-pill lc-step-pill-blue"
+                                            data-i18n="step3Badge">Omni-channel</span>
+                                    </div>
+                                    <p class="lc-step-card-text" data-i18n="step3Text">
+                                        Select whether to finalize via government e-portal, notary, or relevant
+                                        authority office.
+                                    </p>
+                                    <ul class="lc-step-card-list">
+                                        <li>For many labor &amp; commercial matters, online portals are available.</li>
+                                        <li>Real estate and personal status often require in-person attendance.</li>
+                                        <li>Confirm if video-attestation or e-signature is accepted.</li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="lc-step guide-step" data-step="4">
+                                <div class="lc-step-line">
+                                    <div class="lc-step-circle">4</div>
+                                    <div class="lc-step-connector"></div>
+                                </div>
+                                <div class="lc-step-card">
+                                    <div class="lc-step-card-head">
+                                        <p class="lc-step-card-title" data-i18n="step4Title">Pay Official Fees &amp;
+                                            Submit</p>
+                                        <span class="lc-step-pill lc-step-pill-gold" data-i18n="step4Badge">Fees +
+                                            Submission</span>
+                                    </div>
+                                    <p class="lc-step-card-text" data-i18n="step4Text">
+                                        Pay applicable governmental fees online or at the counter, then submit all
+                                        required documents for review.
+                                    </p>
+                                    <ul class="lc-step-card-list">
+                                        <li>Keep digital receipts and stamped payment confirmations.</li>
+                                        <li>Ensure names and ID numbers match exactly across documents.</li>
+                                        <li>Some procedures require biometric verification or OTP.</li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="lc-step guide-step" data-step="5">
+                                <div class="lc-step-line">
+                                    <div class="lc-step-circle">5</div>
+                                </div>
+                                <div class="lc-step-card">
+                                    <div class="lc-step-card-head">
+                                        <p class="lc-step-card-title" data-i18n="step5Title">Receive, Register &amp;
+                                            Store</p>
+                                        <span class="lc-step-pill lc-step-pill-green"
+                                            data-i18n="step5Badge">Completion</span>
+                                    </div>
+                                    <p class="lc-step-card-text" data-i18n="step5Text">
+                                        Once approved, download or collect the final document, then ensure it is safely
+                                        registered and stored.
+                                    </p>
+                                    <ul class="lc-step-card-list">
+                                        <li>Save certified copies and digital backups.</li>
+                                        <li>Record expiry, renewal, or notice periods.</li>
+                                        <li>Share only through secure, traceable channels.</li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ol>
+
+                        <aside class="lc-mode-card">
+                            <h3 data-i18n="modeCardTitle">Digital vs. Physical Issuance</h3>
+                            <p data-i18n="modeCardText">
+                                Many jurisdictions support fully digital procedures, but some contracts still require
+                                physical presence.
+                            </p>
+                            <div class="lc-mode-grid">
+                                <button id="modeDigitalBtn" class="lc-mode-toggle" data-mode="digital">
+                                    <span class="lc-mode-title lc-text-green" data-i18n="modeDigital">Digital</span>
+                                    <span class="lc-mode-text" data-i18n="modeDigitalText">Portals, e-signatures, online
+                                        payment</span>
+                                </button>
+                                <button id="modePhysicalBtn" class="lc-mode-toggle" data-mode="physical">
+                                    <span class="lc-mode-title lc-text-gold" data-i18n="modePhysical">Physical</span>
+                                    <span class="lc-mode-text" data-i18n="modePhysicalText">Notary visits, ministry
+                                        counters</span>
+                                </button>
+                            </div>
+                            <div class="lc-mode-footnote">
+                                <p data-i18n="modeTip1">Always verify the latest procedure on official government
+                                    websites before initiating.</p>
+                                <p data-i18n="modeTip2">For high-value contracts, involve a qualified lawyer to review
+                                    and negotiate terms.</p>
+                            </div>
+                        </aside>
+                    </div>
+                </section>
+
+                <!-- Required Documents & Locations -->
+                <section id="requirements" class="lc-section">
+                    <div class="lc-section-header">
+                        <div>
+                            <h2 class="lc-section-title" data-i18n="reqTitle">Required Documents &amp; Locations</h2>
+                            <p class="lc-section-subtitle" data-i18n="reqSubtitle">
+                                Key documents, typical government entities, and indicative working hours. Use
+                                placeholders to map to your jurisdiction.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="lc-grid lc-grid-2">
+                        <div class="lc-req-list">
+                            <article class="lc-req-card">
+                                <div class="lc-req-layout">
+                                    <div>
+                                        <p class="lc-req-category">Real Estate — Sale / Lease</p>
+                                        <p class="lc-req-title" data-i18n="reqRealEstateTitle">Title Transfer / Tenancy
+                                            Registration</p>
+                                        <ul class="lc-req-items">
+                                            <li data-i18n="reqRealEstateNeed1">Original title deed or ownership
+                                                certificate</li>
+                                            <li data-i18n="reqRealEstateNeed2">National IDs / Passports of all parties
+                                            </li>
+                                            <li data-i18n="reqRealEstateNeed3">Signed sale / lease contract</li>
+                                        </ul>
+                                    </div>
+                                    <div class="lc-req-authority">
+                                        <p class="lc-req-authority-title" data-i18n="reqRealEstateAuthorityTitle">
+                                            Typical Authority</p>
+                                        <p data-i18n="reqRealEstateAuthorityName">Land Department / Real Estate
+                                            Registration Office</p>
+                                        <p class="lc-req-hours">
+                                            <span>Working hours:</span> <span data-i18n="reqRealEstateHours">Sun–Thu,
+                                                8:00–14:00</span>
+                                        </p>
+                                    </div>
+                                    <div class="lc-req-map">
+                                        <p class="lc-req-map-title" data-i18n="reqRealEstateLocationTitle">Office / Map
+                                            Placeholder</p>
+                                        <div class="lc-req-map-box" data-i18n="reqRealEstateLocationBox">Embed map /
+                                            location link here</div>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="lc-req-card">
+                                <div class="lc-req-layout">
+                                    <div>
+                                        <p class="lc-req-category">Labor — Employment Contract</p>
+                                        <p class="lc-req-title" data-i18n="reqLaborTitle">New Work Permit / Employment
+                                            Visa</p>
+                                        <ul class="lc-req-items">
+                                            <li data-i18n="reqLaborNeed1">Passport copy, photos, and medical test (where
+                                                applicable)</li>
+                                            <li data-i18n="reqLaborNeed2">Company commercial registration / license</li>
+                                            <li data-i18n="reqLaborNeed3">Signed employment contract with salary details
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="lc-req-authority">
+                                        <p class="lc-req-authority-title" data-i18n="reqLaborAuthorityTitle">Typical
+                                            Authority</p>
+                                        <p data-i18n="reqLaborAuthorityName">Ministry of Labor / Immigration Authority
+                                        </p>
+                                        <p class="lc-req-hours">
+                                            <span>Working hours:</span> <span data-i18n="reqLaborHours">Sun–Thu,
+                                                8:00–15:00</span>
+                                        </p>
+                                    </div>
+                                    <div class="lc-req-map">
+                                        <p class="lc-req-map-title" data-i18n="reqLaborLocationTitle">Office / Map
+                                            Placeholder</p>
+                                        <div class="lc-req-map-box" data-i18n="reqLaborLocationBox">Embed MOL service
+                                            center map here</div>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="lc-req-card">
+                                <div class="lc-req-layout">
+                                    <div>
+                                        <p class="lc-req-category">Commercial — Company Setup</p>
+                                        <p class="lc-req-title" data-i18n="reqCommercialTitle">Trade License Issuance /
+                                            Renewal</p>
+                                        <ul class="lc-req-items">
+                                            <li data-i18n="reqCommercialNeed1">Memorandum of Association or Articles
+                                            </li>
+                                            <li data-i18n="reqCommercialNeed2">Partners’ IDs / Passports</li>
+                                            <li data-i18n="reqCommercialNeed3">Office lease contract and municipality
+                                                approval</li>
+                                        </ul>
+                                    </div>
+                                    <div class="lc-req-authority">
+                                        <p class="lc-req-authority-title" data-i18n="reqCommercialAuthorityTitle">
+                                            Typical Authority</p>
+                                        <p data-i18n="reqCommercialAuthorityName">Department of Economic Development /
+                                            Free Zone Authority</p>
+                                        <p class="lc-req-hours">
+                                            <span>Working hours:</span> <span data-i18n="reqCommercialHours">Sun–Thu,
+                                                8:00–17:00</span>
+                                        </p>
+                                    </div>
+                                    <div class="lc-req-map">
+                                        <p class="lc-req-map-title" data-i18n="reqCommercialLocationTitle">Office / Map
+                                            Placeholder</p>
+                                        <div class="lc-req-map-box" data-i18n="reqCommercialLocationBox">Link to
+                                            economic department service center map</div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+
+                        <aside class="lc-req-aside">
+                            <h3 class="lc-req-aside-title" data-i18n="reqChecklistTitle">Document Preparation Checklist
+                            </h3>
+                            <ul class="lc-req-aside-list">
+                                <li data-i18n="reqChecklist1">Ensure all IDs and registration documents are valid and
+                                    unexpired.</li>
+                                <li data-i18n="reqChecklist2">Prepare both physical and scanned copies (PDF) of key
+                                    documents.</li>
+                                <li data-i18n="reqChecklist3">Keep Arabic translations where required by local
+                                    regulations.</li>
+                                <li data-i18n="reqChecklist4">Carry original documents for verification, even if
+                                    applying online.</li>
+                            </ul>
+                            <div class="lc-req-aside-footnote">
+                                <p data-i18n="reqChecklistNote">
+                                    For each contract category you select, adapt this checklist to your local
+                                    authority’s latest published requirements.
+                                </p>
+                            </div>
+                        </aside>
+                    </div>
+                </section>
+
+                <!-- Fees & Timeline -->
+                <section id="fees" class="lc-section">
+                    <div class="lc-section-header">
+                        <div>
+                            <h2 class="lc-section-title" data-i18n="feesTitle">Fees &amp; Timeline Overview</h2>
+                            <p class="lc-section-subtitle" data-i18n="feesSubtitle">
+                                Replace these indicative ranges with your jurisdiction’s official fee schedules and
+                                processing times.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="lc-grid lc-grid-3 lc-fees-grid">
+                        <article class="lc-card lc-fee-card">
+                            <div class="lc-fee-head">
+                                <h3 data-i18n="feeRealEstate">Real Estate Contract</h3>
+                                <span class="lc-fee-pill lc-fee-pill-green">High Value</span>
+                            </div>
+                            <p class="lc-card-text" data-i18n="feeRealEstateText">
+                                Title transfer, new lease registration, or mortgage registration.
+                            </p>
+                            <dl class="lc-fee-dl">
+                                <div class="lc-fee-row">
+                                    <dt data-i18n="feeRowLabelFees">Official fees (indicative)</dt>
+                                    <dd class="lc-text-gold" data-i18n="feeRealEstateFees">1–4% of contract value +
+                                        admin fees</dd>
+                                </div>
+                                <div class="lc-fee-row">
+                                    <dt data-i18n="feeRowLabelTimeline">Estimated timeline</dt>
+                                    <dd data-i18n="feeRealEstateTimeline">1–5 working days</dd>
+                                </div>
+                                <div class="lc-fee-row">
+                                    <dt data-i18n="feeRowLabelUrgent">Urgent / VIP channels</dt>
+                                    <dd data-i18n="feeRealEstateUrgent">Available in some jurisdictions</dd>
+                                </div>
+                            </dl>
+                            <p class="lc-fee-note">
+                                Always check the latest fee tables published by the Land Department or equivalent
+                                authority.
+                            </p>
+                        </article>
+
+                        <article class="lc-card lc-fee-card">
+                            <div class="lc-fee-head">
+                                <h3 data-i18n="feeLabor">Labor &amp; Employment</h3>
+                                <span class="lc-fee-pill lc-fee-pill-blue">Worker Focus</span>
+                            </div>
+                            <p class="lc-card-text" data-i18n="feeLaborText">
+                                New work permit, visa stamping, or contract attestation.
+                            </p>
+                            <dl class="lc-fee-dl">
+                                <div class="lc-fee-row">
+                                    <dt data-i18n="feeRowLabelFees">Official fees (indicative)</dt>
+                                    <dd class="lc-text-gold" data-i18n="feeLaborFees">Fixed fee bands by category</dd>
+                                </div>
+                                <div class="lc-fee-row">
+                                    <dt data-i18n="feeRowLabelTimeline">Estimated timeline</dt>
+                                    <dd data-i18n="feeLaborTimeline">3–10 working days</dd>
+                                </div>
+                                <div class="lc-fee-row">
+                                    <dt data-i18n="feeRowLabelTracking">Online tracking</dt>
+                                    <dd data-i18n="feeLaborTracking">Typically via MOL / immigration portal</dd>
+                                </div>
+                            </dl>
+                            <p class="lc-fee-note">
+                                Processing time may depend on quota approvals, medical tests, and security checks.
+                            </p>
+                        </article>
+
+                        <article class="lc-card lc-fee-card">
+                            <div class="lc-fee-head">
+                                <h3 data-i18n="feeCommercial">Commercial &amp; Corporate</h3>
+                                <span class="lc-fee-pill lc-fee-pill-gold">Business</span>
+                            </div>
+                            <p class="lc-card-text" data-i18n="feeCommercialText">
+                                Company formation, license renewal, or shareholder changes.
+                            </p>
+                            <dl class="lc-fee-dl">
+                                <div class="lc-fee-row">
+                                    <dt data-i18n="feeRowLabelFees">Official fees (indicative)</dt>
+                                    <dd class="lc-text-gold" data-i18n="feeCommercialFees">Package-based or
+                                        activity-based</dd>
+                                </div>
+                                <div class="lc-fee-row">
+                                    <dt data-i18n="feeRowLabelTimeline">Estimated timeline</dt>
+                                    <dd data-i18n="feeCommercialTimeline">3–14 working days</dd>
+                                </div>
+                                <div class="lc-fee-row">
+                                    <dt data-i18n="feeRowLabelDeps">Dependencies</dt>
+                                    <dd data-i18n="feeCommercialDeps">Security approvals, name reservation</dd>
+                                </div>
+                            </dl>
+                            <p class="lc-fee-note">
+                                Free zones may offer faster digital journeys, while mainland procedures can vary.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- FAQ -->
+                <section id="faq" class="lc-section lc-section-last">
+                    <div class="lc-section-header">
+                        <div>
+                            <h2 class="lc-section-title" data-i18n="faqTitle">Frequently Asked Questions</h2>
+                            <p class="lc-section-subtitle" data-i18n="faqSubtitle">
+                                General guidance only. Always validate with an officially licensed professional or
+                                authority.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="lc-grid lc-grid-faq">
+                        <div class="lc-faq-list">
+                            <div class="lc-faq-item">
+                                <button class="lc-faq-toggle" data-faq="1">
+                                    <span data-i18n="faqQ1">Do I always need a lawyer to issue a contract?</span>
+                                    <span class="lc-faq-icon">+</span>
+                                </button>
+                                <div class="lc-faq-panel">
+                                    <p>
+                                        For simple, standardized contracts (like short-term leases or standard
+                                        employment contracts), you can often
+                                        use official templates without a lawyer. However, for high-value, long-term, or
+                                        complex agreements, involving a
+                                        qualified lawyer is strongly recommended to reduce risk.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="lc-faq-item">
+                                <button class="lc-faq-toggle" data-faq="2">
+                                    <span data-i18n="faqQ2">Are digital signatures legally valid?</span>
+                                    <span class="lc-faq-icon">+</span>
+                                </button>
+                                <div class="lc-faq-panel">
+                                    <p>
+                                        Many countries in the Middle East recognize certified digital signatures,
+                                        especially when issued through
+                                        approved identity providers or government portals. However, some procedures
+                                        (like property transfers or
+                                        personal status matters) may still require in-person signatures and witnessing.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="lc-faq-item">
+                                <button class="lc-faq-toggle" data-faq="3">
+                                    <span data-i18n="faqQ3">What if my documents are in a foreign language?</span>
+                                    <span class="lc-faq-icon">+</span>
+                                </button>
+                                <div class="lc-faq-panel">
+                                    <p>
+                                        Most authorities require Arabic versions of foreign documents, attested and
+                                        translated by certified translators.
+                                        Check whether you must legalize documents at your embassy and the Ministry of
+                                        Foreign Affairs before submission.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="lc-faq-item">
+                                <button class="lc-faq-toggle" data-faq="4">
+                                    <span data-i18n="faqQ4">How can I track the status of my application?</span>
+                                    <span class="lc-faq-icon">+</span>
+                                </button>
+                                <div class="lc-faq-panel">
+                                    <p>
+                                        Most modern systems provide a reference or application number that you can use
+                                        to track status online or via SMS.
+                                        Keep payment receipts and submission confirmations, as they are often needed to
+                                        raise support tickets or inquiries.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <aside class="lc-faq-aside">
+                            <h3 data-i18n="faqNoticeTitle">Important Notice</h3>
+                            <p data-i18n="faqNoticeText">
+                                This page is a structured guide intended to help you understand the typical flow of
+                                legal contract procedures.
+                                It is not a substitute for official regulations or personalized legal advice.
+                            </p>
+                            <ul>
+                                <li data-i18n="faqNotice1">Always verify the latest rules on official government
+                                    portals.</li>
+                                <li data-i18n="faqNotice2">Laws and fees can change frequently across Middle Eastern
+                                    jurisdictions.</li>
+                                <li data-i18n="faqNotice3">For critical decisions, consult a licensed lawyer in your
+                                    country.</li>
+                            </ul>
+                            <div class="lc-faq-aside-footnote">
+                                <p data-i18n="faqNoticeFootnote">Use this as a neutral starting point to brief your
+                                    legal advisor and prepare your documents efficiently.</p>
+                            </div>
+                        </aside>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer (same structure as home page) -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="../assets/logos/logo-removebg-preview.png" alt="Counsel Logo" width="300px">
+                    </div>
+                    <p class="footer-description" data-i18n="footerDescription">Providing exceptional legal counsel and
+                        representation with integrity, professionalism, and dedication to achieving the best outcomes
+                        for our clients.</p>
+                    <div class="social-links">
+                        <a href="www.facebook.com" class="social-link" aria-label="Facebook">
+                            <img src="../assets/logos/icons8-facebook-64.png" alt="Facebook" class="social-icon"
+                                width="100px">
+                        </a>
+                        <a href="www.x.com" class="social-link" aria-label="Twitter">
+                            <img src="../assets/logos/icons8-x-logo-50.png" alt="Twitter" class="social-icon">
+                        </a>
+                        <a href="www.instagram.com" class="social-link" aria-label="Instagram">
+                            <img src="../assets/logos/icons8-instagram-logo-64.png" alt="Instagram" class="social-icon">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerQuickLinksTitle">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="../index.html" data-i18n="footerLinkHome">Home</a></li>
+                        <li><a href="./about.html" data-i18n="footerLinkAbout">About</a></li>
+                        <li><a href="../index.html#services-section" data-i18n="footerLinkServices">Services</a>
+                        <li><a href="../index.html#faq-section" data-i18n="footerLinkContact">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerServicesTitle">Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="./contract-analysis.html" data-i18n="footerService1">Contract
+                                Analysis</a></li>
+                        <li><a href="./legal-doc-generation.html"
+                                data-i18n="footerService2">Document Generation</a></li>
+                        <li><a href="./chatbot.html" data-i18n="footerService3">ChatBot</a></li>
+                        <li><a href="./middle-east-law.html" data-i18n="footerService4">Law Experts</a>
+                        </li>
+                        <li><a href="./consultations-management.html" data-i18n="footerService5">Case
+                                Management</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerContactTitle">Contact Info</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="contact-icon">
+                                <img src="../assets/logos/icons8-phone-50.png" alt="Phone" class="contact-icon-img">
+                            </span>
+                            <span data-i18n="footerPhone">+1 (555) 123-4567</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">
+                                <img src="../assets/logos/icons8-info-64.png" alt="Email" class="contact-icon-img">
+                            </span>
+                            <span data-i18n="footerEmail">info@counsel.com</span>
+                        </li>
+                    </ul>
+                    <div class="app-downloads">
+                        <h4 class="app-downloads-title" data-i18n="footerAppsTitle">Download Our App</h4>
+                        <div class="app-buttons">
+                            <a href="#" class="app-button app-store" aria-label="Download on App Store">
+                                <img src="../assets/logos/icons8-app-store-48.png" alt="App Store" class="app-icon-img">
+                                <div class="app-button-text">
+                                    <span class="app-button-label" data-i18n="footerAppStoreLabel">Download on
+                                        the</span>
+                                    <span class="app-button-name" data-i18n="footerAppStoreName">App Store</span>
+                                </div>
+                            </a>
+                            <a href="#" class="app-button google-play" aria-label="Get it on Google Play">
+                                <img src="../assets/logos/icons8-google-play-24.png" alt="Google Play" class="app-icon-img">
+                                <div class="app-button-text">
+                                    <span class="app-button-label" data-i18n="footerGooglePlayLabel">Get it on</span>
+                                    <span class="app-button-name" data-i18n="footerGooglePlayName">Google Play</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p data-i18n="footerCopyright">&copy; 2026 Counsel. All rights reserved.</p>
+                    <div class="footer-legal">
+                        <a href="#" data-i18n="footerPrivacy">Privacy Policy</a>
+                        <span>|</span>
+                        <a href="#" data-i18n="footerTerms">Terms of Service</a>
+                        <span>|</span>
+                        <a href="#" data-i18n="footerCookies">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../shared/api.js"></script>
+    <script src="../js/legal-contracts.js"></script>
+</body>
+
+</html>

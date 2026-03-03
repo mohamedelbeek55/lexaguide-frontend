@@ -1,0 +1,222 @@
+:root {
+    --bg: #0d1117;
+    --card: #1a2236;
+    --gold: #c9922a;
+    --gold-20: rgba(201, 146, 42, .2);
+    --text: #ffffff;
+    --muted: #9fb0c3;
+    --shadow: 0 10px 30px rgba(0, 0, 0, .35)
+}
+
+* {
+    box-sizing: border-box
+}
+
+html,
+body {
+    height: 100%
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "DM Sans", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+    -webkit-font-smoothing: antialiased
+}
+
+.app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--gold-20);
+    backdrop-filter: saturate(120%) blur(8px);
+    position: sticky;
+    top: 0;
+    background: linear-gradient(180deg, rgba(13, 17, 23, .9), rgba(13, 17, 23, .6))
+}
+
+.brand {
+    display: flex;
+    gap: 12px;
+    align-items: center
+}
+
+.brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(145deg, rgba(201, 146, 42, .15), rgba(201, 146, 42, .05));
+    border: 1px solid var(--gold-20);
+    color: var(--gold);
+    box-shadow: inset 0 0 20px rgba(201, 146, 42, .08)
+}
+
+.topbar h1 {
+    margin: 0;
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    letter-spacing: .5px
+}
+
+.goto-customer {
+    padding: 10px 14px;
+    border: 1px solid var(--gold-20);
+    border-radius: 10px;
+    color: var(--gold);
+    text-decoration: none;
+    transition: .2s;
+    background: linear-gradient(145deg, rgba(201, 146, 42, .1), rgba(201, 146, 42, .02))
+}
+
+.goto-customer:hover {
+    box-shadow: 0 0 0 3px rgba(201, 146, 42, .18), 0 8px 28px rgba(201, 146, 42, .2)
+}
+
+.main {
+    max-width: 1100px;
+    margin: 22px auto;
+    padding: 0 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px
+}
+
+.tile {
+    background: rgba(26, 34, 54, .55);
+    border: 1px solid var(--gold-20);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 16px
+}
+
+.tile-label {
+    color: var(--muted);
+    font-size: 14px
+}
+
+.tile-value {
+    font-size: 28px;
+    font-weight: 800
+}
+
+.list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(26, 34, 54, .55);
+    border: 1px solid var(--gold-20);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 18px;
+    opacity: 0;
+    transform: translateY(12px)
+}
+
+.card.enter {
+    animation: in .4s ease forwards
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px
+}
+
+.title {
+    font-family: "Playfair Display", serif;
+    font-size: 18px;
+    margin: 0
+}
+
+.muted {
+    color: var(--muted)
+}
+
+.badge {
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--gold-20);
+    background: rgba(201, 146, 42, .08);
+    font-size: 12px
+}
+
+.badge.pending {
+    color: var(--gold)
+}
+
+.badge.accepted {
+    color: #0bd39a;
+    border-color: rgba(11, 211, 154, .35);
+    background: rgba(11, 211, 154, .15)
+}
+
+.badge.declined {
+    color: #ff7575;
+    border-color: rgba(255, 117, 117, .35);
+    background: rgba(255, 117, 117, .12)
+}
+
+.actions {
+    display: flex;
+    gap: 10px
+}
+
+.btn {
+    appearance: none;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 700
+}
+
+.btn.accept {
+    background: linear-gradient(180deg, #18c58f, #12a374);
+    color: #061015
+}
+
+.btn.decline {
+    background: linear-gradient(180deg, #e05b5b, #c34949);
+    color: #1b0c0c
+}
+
+@keyframes in {
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+@media (max-width:960px) {
+    .list {
+        grid-template-columns: 1fr
+    }
+
+    .stats {
+        grid-template-columns: repeat(3, 1fr)
+    }
+}

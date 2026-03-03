@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+    <html lang="en" id="htmlLang">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./shared/home.css">
+    <title>LexaGuide</title>
+    
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="navbar-container">
+            <a href="./index.html" class="navbar-logo" aria-label="LexaGuide home">
+                <div class="navbar-logo-img">
+                    <img src="./assets/logos/logo-removebg-preview.png" alt="LexaGuide logo">
+                    <div class="navbar-logo-text">
+                        <span class="navbar-brand">LexaGuide</span>
+                        <span class="navbar-tagline">AI-Powered Legal Guidance</span>
+                    </div>
+                </div>
+            </a>
+
+            <button class="navbar-toggle" id="navbarToggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="navbar-menu" id="navbarMenu">
+                <ul class="navbar-links">
+                    <li><a href="./index.html" data-i18n="home">Home</a></li>
+                    <li><a href="#services-section" data-i18n="services">Services</a></li>
+                    <li><a href="./html/about.html" data-i18n="about">About</a></li>
+                    <li><a href="#faq-section" data-i18n="faq">FAQ</a></li>
+                </ul>
+
+                <div class="navbar-right">
+                    <div class="language-selector">
+                        <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+                            <svg class="lang-globe" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                <path d="M2 12H22M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                            <!-- <span class="lang-flag" id="langFlag"></span> -->
+                            <span class="lang-text" id="langText">English</span>
+                            <svg class="lang-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" onclick="changeLanguage('en')">
+                                <!-- <span class="lang-flag"></span> -->
+                                <span>English</span>
+                            </button>
+                            <button class="lang-option" onclick="changeLanguage('ar')">
+                                <!-- <span class="lang-flag"></span> -->
+                                <span>العربية</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="navbar-cta">
+                        <a href="./html/login.html" class="btn-login" data-i18n="login">Login</a>
+                        <a href="./html/signup.html" class="btn-signup" data-i18n="signup">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero">
+        <div class="hero-inner">
+            <div class="hero-content">
+                <p class="hero-kicker" data-i18n="heroKicker">AI-Powered Legal Excellence</p>
+                <h1 class="hero-title" data-i18n="heroTitle">We blend tradition with intelligent legal technology</h1>
+                <p class="hero-tagline" data-i18n="heroTagline">
+                    LexaGuide delivers precise legal strategies, document automation, and expert guidance so you can move faster with total confidence.
+                </p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="stat-value">5+</span>
+                        <span class="stat-label" data-i18n="heroStatPracticeAreas">Services</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-value">24/7</span>
+                        <span class="stat-label" data-i18n="heroStatSupport">Guided Support</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-value">98%</span>
+                        <span class="stat-label" data-i18n="heroStatSatisfaction">Client Satisfaction</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <img src="./assets/logos/360_F_516209984_APT701DWSDCUPzErByEByUrqEjHwRYCX-removebg-preview.png"
+                     alt="Lady Justice"
+                     class="hero-visual-image"
+                     onerror="this.style.display='none';">
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Counsel Section -->
+    <section class="why-choose-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="whyChooseTitle">Why Choose LexaGuide?</h2>
+            <div class="why-choose-grid">
+                <div class="why-choose-item">
+                    <div class="why-icon-wrapper">
+                        <img src="./assets/logos/icons8-lawyer-50.png" alt="Expert Legal Team" class="why-icon-img" onerror="this.style.display='none';">
+                    </div>
+                    <h3 data-i18n="whyCard1Title">Expert Legal Team</h3>
+                    <p data-i18n="whyCard1Text">Our experienced attorneys bring years of expertise and a proven track record of success in various areas of law.</p>
+                </div>
+                <div class="why-choose-item">
+                    <div class="why-icon-wrapper">
+                        <img src="./assets/logos/icons8-service-30.png" alt="Personalized Service" class="why-icon-img" onerror="this.style.display='none';">
+                    </div>
+                    <h3 data-i18n="whyCard2Title">Personalized Service</h3>
+                    <p data-i18n="whyCard2Text">We understand that every case is unique. We provide tailored solutions that meet your specific needs and goals.</p>
+                </div>
+                <div class="why-choose-item">
+                    <div class="why-icon-wrapper">
+                        <img src="./assets/logos/icons8-improvement-50.png" alt="Proven Results" class="why-icon-img" onerror="this.style.display='none';">
+                    </div>
+                    <h3 data-i18n="whyCard3Title">Proven Results</h3>
+                    <p data-i18n="whyCard3Text">With a history of successful outcomes, we have built a reputation for achieving favorable results for our clients.</p>
+                </div>
+                <div class="why-choose-item">
+                    <div class="why-icon-wrapper">
+                        <img src="./assets/logos/icons8-chat-50.png" alt="Clear Communication" class="why-icon-img" onerror="this.style.display='none';">
+                    </div>
+                    <h3 data-i18n="whyCard4Title">Clear Communication</h3>
+                    <p data-i18n="whyCard4Text">We keep you informed every step of the way, ensuring you understand your options and the progress of your case.</p>
+                </div>
+               
+            </div>
+        </div>
+    </section>
+
+    <!-- How We Help Section -->
+    <section class="how-help-section" id="services-section">
+        <div class="container">
+            <div class="how-help-header">
+                <button class="ai-badge">
+                    <!-- <span class="brain-icon">🧠</span> -->
+                    <span data-i18n="aiBadge">AI-Powered Legal Assistance</span>
+                </button>
+                <h2 class="how-help-title">
+                    <span data-i18n="howHelpTitle1">How</span> <span class="brand-highlight">LexaGuide</span> <span data-i18n="howHelpTitle2">helps you</span>
+                </h2>
+                <p class="how-help-description" data-i18n="howHelpDescription">
+                    Experience legal expertise that outperforms 90% of lawyers across the Middle East. Our AI delivers exceptional legal guidance and document services with precision that surpasses most prestigious law firms in the region.
+                </p>
+            </div>
+            <div class="how-help-grid">
+                <a href="./html/legal-contracts.html" class="help-card" style="cursor: pointer; text-decoration: none; color: inherit;">
+                    <div class="help-icon-wrapper teal-icon">
+                        <img src="./assets/logos/icons8-scale-48.png" alt="Legal Contracts &amp; Procedures" class="help-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    </div>
+                    <h3 class="help-card-title">Legal Contracts &amp; Document Procedures</h3>
+                    <p class="help-card-description">Step-by-step guidance on issuing, authenticating, and managing legal contracts and required documents.</p>
+                </a>
+                <div class="help-card" onclick="window.location.href='./html/legal-doc-generation.html'" style="cursor: pointer;">
+                    <div class="help-icon-wrapper teal-icon">
+                        <img src="./assets/logos/icons8-document-50.png" alt="Document Generation" class="help-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        
+                    </div>
+                    <h3 class="help-card-title" data-i18n="helpCard2Title">Document Generation</h3>
+                    <p class="help-card-description" data-i18n="helpCard2Text">Create legal documents like contracts and agreements without the complicated language.</p>
+                </div>
+                <div class="help-card" onclick="window.location.href='./html/contract-analysis.html'" style="cursor: pointer;">
+                    <div class="help-icon-wrapper gold-icon">
+                        <img src="./assets/logos/icons8-shield-80.png" alt="Contract Checker" class="help-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <!-- <div class="help-icon-fallback" style="display:none;">🛡️</div> -->
+                    </div>
+                    <h3 class="help-card-title" data-i18n="helpCard3Title">Contract Analysis</h3>
+                    <p class="help-card-description" data-i18n="helpCard3Text">Have your contracts checked to make sure they're fair and protect your rights.</p>
+                </div>
+                <div class="help-card" onclick="window.location.href='./html/chatbot.html'" style="cursor: pointer;">
+                    <div class="help-icon-wrapper purple-icon">
+                        <img src="./assets/logos/icons8-chatbot-50.png" alt="Friendly Chat" class="help-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <!-- <div class="help-icon-fallback" style="display:none;">💬</div> -->
+                    </div>
+                    <h3 class="help-card-title" data-i18n="helpCard4Title">Chat Bot</h3>
+                    <p class="help-card-description" data-i18n="helpCard4Text">Ask any questions and get simple, helpful answers.</p>
+                </div>
+                <div class="help-card" onclick="window.location.href='./html/middle-east-law.html'" style="cursor: pointer;">
+                    <div class="help-icon-wrapper teal-icon">
+                        <img src="./assets/logos/icons8-lawyer-50.png" alt="Middle East Law" class="help-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <!-- <div class="help-icon-fallback" style="display:none;">🌍</div> -->
+                    </div>
+                    <h3 class="help-card-title" data-i18n="helpCard5Title">Middle East Law Expert</h3>
+                    <p class="help-card-description" data-i18n="helpCard5Text">Connecting users with lawyers (via chat or video) with a filtering/recommendation system to suggest the most suitable legal professionals.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq-section">
+        <div class="container">
+            <div class="faq-header">
+                <div class="faq-icon-wrapper">
+                    <svg class="faq-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9C15 10.6569 13.6569 12 12 12V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M12 18H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h2 class="faq-title"><span data-i18n="faqTitle1">Common</span> <span class="faq-title-accent" data-i18n="faqTitle2">Questions</span></h2>
+                <p class="faq-subtitle" data-i18n="faqSubtitle">Here are answers to questions people often ask about Untitled</p>
+            </div>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span data-i18n="faqQ1">What is Untitled?</span>
+                            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="faq-answer">
+                            <p data-i18n="faqA1">Untitled is an AI-powered legal assistance platform that provides expert legal guidance and document services. Our system delivers exceptional legal expertise that outperforms 90% of lawyers across the Middle East.</p>
+                        </div>
+                    </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span data-i18n="faqQ2">How does Untitled work?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faqA2">Untitled uses advanced AI technology to understand your legal questions and provide clear, simple answers. You can ask questions in everyday language, create legal documents, check contracts, and get advice specific to Middle East laws.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span data-i18n="faqQ3">Is Untitled's advice reliable?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faqA3">Yes, our AI system is trained on extensive legal data and delivers advice with precision that surpasses most prestigious law firms in the region. However, for complex legal matters, we recommend consulting with a qualified attorney.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span data-i18n="faqQ4">Can I cancel my subscription anytime?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faqA4">Absolutely! You can cancel your subscription at any time without any penalties. Your access will continue until the end of your current billing period.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span data-i18n="faqQ5">Is my information kept private?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faqA5">Yes, we take your privacy seriously. All your information is encrypted and kept confidential. We follow strict data protection protocols to ensure your legal information remains secure and private.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span data-i18n="faqQ6">Do I need to know legal terms to use Untitled?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faqA6">Not at all! Untitled is designed to be user-friendly. You can ask questions in everyday language, and we'll provide answers in clear, simple terms that anyone can understand. No legal knowledge required.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="faq-cta">
+                <p><span data-i18n="faqCta1">Have another question?</span> <a href="./html/contact.html" class="faq-cta-link" data-i18n="faqCta2">Contact our friendly team</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="./assets/logos/logo-removebg-preview.png" alt="Counsel Logo" width="300px">
+                    </div>
+                    <p class="footer-description" data-i18n="footerDescription">Providing exceptional legal counsel and representation with integrity, professionalism, and dedication to achieving the best outcomes for our clients.</p>
+                    <div class="social-links">
+                        <a href="www.facebook.com" class="social-link" aria-label="Facebook">
+                            <img src="./assets/logos/icons8-facebook-64.png" alt="Facebook" class="social-icon" width="100px">
+                        </a>
+                        <a href="www.x.com" class="social-link" aria-label="Twitter">
+                            <img src="./assets/logos/icons8-x-logo-50.png" alt="Twitter" class="social-icon">
+                        </a>
+                        <a href="www.instagram.com" class="social-link" aria-label="Instagram">
+                            <img src="./assets/logos/icons8-instagram-logo-64.png" alt="Instagram" class="social-icon">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerQuickLinksTitle">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="./index.html" data-i18n="footerLinkHome">Home</a></li>
+                        <li><a href="./html/about.html" data-i18n="footerLinkAbout">About</a></li>
+                        <li><a href="#" data-i18n="footerLinkServices">Services</a></li>
+                        <li><a href="#" data-i18n="footerLinkContact">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerServicesTitle">Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="./html/contract-analysis.html" data-i18n="footerService1">Contract Analysis</a></li>
+                        <li><a href="#" data-i18n="footerService2">Document Generation</a></li>
+                        <li><a href="./html/chatbot.html" data-i18n="footerService3">ChatBot</a></li>
+                        <li><a href="./html/middle-east-law.html" data-i18n="footerService4">Law Experts</a></li>
+                        <li><a href="#" data-i18n="footerService5">Case Management</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerContactTitle">Contact Info</h3>
+                    <ul class="footer-contact">
+                        
+                        <li>
+                            <span class="contact-icon">
+                                <img src="./assets/logos/icons8-phone-50.png" alt="Phone" class="contact-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <!-- <span class="contact-icon-fallback" style="display:none;">📞</span> -->
+                            </span>
+                            <span data-i18n="footerPhone">+1 (555) 123-4567</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">
+                                <img src="./assets/logos/icons8-info-64.png" alt="Email" class="contact-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <!-- <span class="contact-icon-fallback" style="display:none;">✉️</span> -->
+                            </span>
+                            <span data-i18n="footerEmail">info@counsel.com</span>
+                        </li>
+                        
+                    </ul>
+                    <div class="app-downloads">
+                        <h4 class="app-downloads-title" data-i18n="footerAppsTitle">Download Our App</h4>
+                        <div class="app-buttons">
+                            <a href="#" class="app-button app-store" aria-label="Download on App Store">
+                                <img src="./assets/logos/icons8-app-store-48.png" alt="App Store" class="app-icon-img">
+                                <div class="app-button-text">
+                                    <span class="app-button-label" data-i18n="footerAppStoreLabel">Download on the</span>
+                                    <span class="app-button-name" data-i18n="footerAppStoreName">App Store</span>
+                                </div>
+                            </a>
+                            <a href="#" class="app-button google-play" aria-label="Get it on Google Play">
+                                <img src="./assets/logos/icons8-google-play-24.png" alt="Google Play" class="app-icon-img">
+                                <div class="app-button-text">
+                                    <span class="app-button-label" data-i18n="footerGooglePlayLabel">Get it on</span>
+                                    <span class="app-button-name" data-i18n="footerGooglePlayName">Google Play</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p data-i18n="footerCopyright">&copy; 2026 LexaGuide. All rights reserved.</p>
+                    <div class="footer-legal">
+                        <a href="#" data-i18n="footerPrivacy">Privacy Policy</a>
+                        <span>|</span>
+                        <a href="#" data-i18n="footerTerms">Terms of Service</a>
+                        <span>|</span>
+                        <a href="#" data-i18n="footerCookies">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./shared/api.js"></script>
+    <script src="./js/home.js"></script>
+</body>
+</html>

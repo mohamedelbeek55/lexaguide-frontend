@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlLang">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../shared/home.css">
+    <link rel="stylesheet" href="../css/legal-doc-generation.css">
+    <title>LexaGuide – Legal Document Generation</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../index.html" class="navbar-logo" aria-label="LexaGuide home">
+                <div class="navbar-logo-img">
+                    <img src="../assets/logos/logo-removebg-preview.png" alt="LexaGuide logo">
+                    <div class="navbar-logo-text">
+                        <span class="navbar-brand">LexaGuide</span>
+                        <span class="navbar-tagline">AI-Powered Legal Guidance</span>
+                    </div>
+                </div>
+            </a>
+
+            <button class="navbar-toggle" id="navbarToggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="navbar-menu" id="navbarMenu">
+                <ul class="navbar-links">
+                    <li><a href="../index.html" data-i18n="home">Home</a></li>
+                    <li><a href="../index.html#services-section" data-i18n="services">Services</a></li>
+                    <li><a href="./about.html" data-i18n="about">About</a></li>
+                    <li><a href="../index.html#faq-section" data-i18n="faq">FAQ</a></li>
+                </ul>
+
+                <div class="navbar-right">
+                    <div class="language-selector">
+                        <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+                            <svg class="lang-globe" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                                <path
+                                    d="M2 12H22M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z"
+                                    stroke="currentColor" stroke-width="2" />
+                            </svg>
+                            <span class="lang-text" id="langText">English</span>
+                            <svg class="lang-chevron" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" onclick="changeLanguage('en')">
+                                <span>English</span>
+                            </button>
+                            <button class="lang-option" onclick="changeLanguage('ar')">
+                                <span>العربية</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="navbar-cta">
+                        <a href="./login.html" class="btn-login" data-i18n="login">Login</a>
+                        <a href="./signup.html" class="btn-signup" data-i18n="signup">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="ldg-section">
+        <div class="ldg-container">
+            <!-- Header -->
+            <div class="ldg-header">
+                <h1 class="ldg-title" data-i18n="ldgTitle">LegalDoc AI: Smart Contract & Complaint Generation</h1>
+                <p class="ldg-subtitle" data-i18n="ldgSubtitle">Turn your inputs into legally binding contracts or
+                    formal complaints instantly.</p>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="ldg-main">
+                <!-- User Input Form -->
+                <div class="ldg-form-container">
+                    <h2 class="ldg-form-title" data-i18n="ldgFormTitle">Document Information</h2>
+                    <form id="documentForm" class="ldg-form">
+                        <!-- Document Type Selection -->
+                        <div class="ldg-form-group">
+                            <label class="ldg-label" data-i18n="ldgDocType">Document Type</label>
+                            <div class="ldg-radio-group">
+                                <label class="ldg-radio-label">
+                                    <input type="radio" name="docType" value="contract-lease" checked
+                                        onchange="updateFormFields()">
+                                    <span data-i18n="ldgContractLease">Contract (Lease)</span>
+                                </label>
+                                <label class="ldg-radio-label">
+                                    <input type="radio" name="docType" value="contract-general"
+                                        onchange="updateFormFields()">
+                                    <span data-i18n="ldgContractGeneral">Contract (General)</span>
+                                </label>
+                                <label class="ldg-radio-label">
+                                    <input type="radio" name="docType" value="complaint" onchange="updateFormFields()">
+                                    <span data-i18n="ldgComplaint">Complaint (Service Dispute)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Form Fields Container -->
+                        <div id="dynamicFields"></div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="ldg-submit-btn" data-i18n="ldgGenerateBtn">Generate
+                            Document</button>
+                    </form>
+                </div>
+
+                <!-- Generated Output/Review Area -->
+                <div class="ldg-output-container" id="outputContainer" style="display: none;">
+                    <div class="ldg-output-header">
+                        <h2 class="ldg-output-title" data-i18n="ldgOutputTitle">Generated Document</h2>
+                        <button class="ldg-copy-btn" id="copyBtn" data-i18n="ldgCopyBtn">Copy Document</button>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="ldg-tabs">
+                        <button class="ldg-tab active" onclick="switchTab('legal')" data-i18n="ldgTabLegal">Final Legal
+                            Document</button>
+                        <button class="ldg-tab" onclick="switchTab('explanation')" data-i18n="ldgTabExplanation">Plain
+                            English Explanation</button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="ldg-tab-content">
+                        <div id="legalTab" class="ldg-tab-pane active">
+                            <div class="ldg-document-display" id="legalDocument">
+                                <!-- Generated legal document will appear here -->
+                            </div>
+                        </div>
+                        <div id="explanationTab" class="ldg-tab-pane">
+                            <div class="ldg-explanation-display" id="plainExplanation">
+                                <!-- Plain English explanation will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="../assets/logos/logo-removebg-preview.png" alt="Counsel Logo" width="300px">
+                    </div>
+                    <p class="footer-description" data-i18n="footerDescription">Providing exceptional legal counsel and
+                        representation with integrity, professionalism, and dedication to achieving the best outcomes
+                        for our clients.</p>
+                    <div class="social-links">
+                        <a href="www.facebook.com" class="social-link" aria-label="Facebook">
+                            <img src="../assets/logos/icons8-facebook-64.png" alt="Facebook" class="social-icon"
+                                width="100px">
+                        </a>
+                        <a href="www.x.com" class="social-link" aria-label="Twitter">
+                            <img src="../assets/logos/icons8-x-logo-50.png" alt="Twitter" class="social-icon">
+                        </a>
+                        <a href="www.instagram.com" class="social-link" aria-label="Instagram">
+                            <img src="../assets/logos/icons8-instagram-logo-64.png" alt="Instagram" class="social-icon">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerQuickLinksTitle">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="../index.html" data-i18n="footerLinkHome">Home</a></li>
+                        <li><a href="./about.html" data-i18n="footerLinkAbout">About</a></li>
+                        <li><a href="../index.html#services-section" data-i18n="footerLinkServices">Services</a></li>
+                        <li><a href="../index.html#faq-section" data-i18n="footerLinkContact">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerServicesTitle">Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="./contract-analysis.html" data-i18n="footerService1">Contract
+                                Analysis</a></li>
+                        <li><a href="./legal-doc-generation.html" data-i18n="footerService2">Document Generation</a></li>
+                        <li><a href="./chatbot.html" data-i18n="footerService3">ChatBot</a></li>
+                        <li><a href="./middle-east-law.html" data-i18n="footerService4">Law Experts</a>
+                        <li><a href="./consultations-management.html" data-i18n="footerService5">Case Management</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerContactTitle">Contact Info</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="contact-icon">
+                                <img src="../assets/logos/icons8-phone-50.png" alt="Phone" class="contact-icon-img"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <!-- <span class="contact-icon-fallback" style="display:none;">📞</span> -->
+                            </span>
+                            <span data-i18n="footerPhone">+1 (555) 123-4567</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">
+                                <img src="../assets/logos/icons8-info-64.png" alt="Email" class="contact-icon-img"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <!-- <span class="contact-icon-fallback" style="display:none;">✉️</span> -->
+                            </span>
+                            <span data-i18n="footerEmail">info@counsel.com</span>
+                        </li>
+                    </ul>
+                    <div class="app-downloads">
+                        <h4 class="app-downloads-title" data-i18n="footerAppsTitle">Download Our App</h4>
+                        <div class="app-buttons">
+                            <a href="#" class="app-button app-store" aria-label="Download on App Store">
+                                <img src="../assets/logos/icons8-app-store-48.png" alt="App Store" class="app-icon-img">
+                                <div class="app-button-text">
+                                    <span class="app-button-label" data-i18n="footerAppStoreLabel">Download on
+                                        the</span>
+                                    <span class="app-button-name" data-i18n="footerAppStoreName">App Store</span>
+                                </div>
+                            </a>
+                            <a href="#" class="app-button google-play" aria-label="Get it on Google Play">
+                                <img src="../assets/logos/icons8-google-play-24.png" alt="Google Play" class="app-icon-img">
+                                <div class="app-button-text">
+                                    <span class="app-button-label" data-i18n="footerGooglePlayLabel">Get it on</span>
+                                    <span class="app-button-name" data-i18n="footerGooglePlayName">Google Play</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p data-i18n="footerCopyright">&copy; 2026 Counsel. All rights reserved.</p>
+                    <div class="footer-legal">
+                        <a href="#" data-i18n="footerPrivacy">Privacy Policy</a>
+                        <span>|</span>
+                        <a href="#" data-i18n="footerTerms">Terms of Service</a>
+                        <span>|</span>
+                        <a href="#" data-i18n="footerCookies">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../shared/api.js"></script>
+    <script src="../js/legal-doc-generation.js"></script>
+</body>
+
+</html>

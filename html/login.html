@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlLang">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../shared/home.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <title>LexaGuide - Login</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../index.html" class="navbar-logo" aria-label="LexaGuide home">
+                <div class="navbar-logo-img">
+                    <img src="../assets/logos/logo-removebg-preview.png" alt="LexaGuide logo">
+                    <div class="navbar-logo-text">
+                        <span class="navbar-brand">LexaGuide</span>
+                        <span class="navbar-tagline">AI-Powered Legal Guidance</span>
+                    </div>
+                </div>
+            </a>
+
+            <button class="navbar-toggle" id="navbarToggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="navbar-menu" id="navbarMenu">
+                <ul class="navbar-links">
+                    <li><a href="../index.html" data-i18n="home">Home</a></li>
+                    <li><a href="../index.html#services-section" data-i18n="services">Services</a></li>
+                    <li><a href="./about.html" data-i18n="about">About</a></li>
+                    <li><a href="../index.html#faq-section" data-i18n="faq">FAQ</a></li>
+                </ul>
+
+                <div class="navbar-right">
+                    <div class="language-selector">
+                        <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+                            <svg class="lang-globe" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                                <path
+                                    d="M2 12H22M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z"
+                                    stroke="currentColor" stroke-width="2" />
+                            </svg>
+                            <span class="lang-text" id="langText">English</span>
+                            <svg class="lang-chevron" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" onclick="changeLanguage('en')">
+                                <span>English</span>
+                            </button>
+                            <button class="lang-option" onclick="changeLanguage('ar')">
+                                <span>العربية</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="navbar-cta">
+                        <a href="./login.html" class="btn-login active" data-i18n="login">Login</a>
+                        <a href="./signup.html" class="btn-signup" data-i18n="signup">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="auth-section">
+        <div class="auth-container">
+            <div class="auth-form-wrapper">
+                <div class="form-container">
+                    <div class="form-header">
+                        <h2 data-i18n="loginTitle">Welcome Back</h2>
+                        <p data-i18n="loginSubtitle">Sign in to your account to continue</p>
+                    </div>
+
+                    <form id="loginForm">
+                        <div class="input-group">
+                            <label for="email" data-i18n="emailLabel">E-mail Address</label>
+                            <input type="email" id="email" name="email" placeholder="yourmail@gmail.com" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="password" data-i18n="passwordLabel">Password</label>
+                            <input type="password" id="password" name="password" placeholder="••••••••••" required>
+                        </div>
+
+                        <div class="forgot-password">
+                            <a href="#" data-i18n="forgotPassword">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="submit-btn" data-i18n="loginButton">LOGIN</button>
+                    </form>
+
+                    <div class="signup-link">
+                        <p data-i18n="noAccount">Don't have an account? <a href="./signup.html"
+                                data-i18n="createAccount">Create account</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="../shared/api.js"></script>
+    <script src="../js/login.js"></script>
+</body>
+
+</html>

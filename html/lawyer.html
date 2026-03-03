@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lawyer Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/lawyer.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">⚖</div>
+      <h1>Lawyer Dashboard</h1>
+    </div>
+    <a class="goto-customer" href="./customer.html">Customer Booking</a>
+  </header>
+
+  <main class="main">
+    <div class="stats">
+      <div class="tile">
+        <div class="tile-label">Pending</div>
+        <div class="tile-value" id="pendingCount">0</div>
+      </div>
+      <div class="tile">
+        <div class="tile-label">Accepted</div>
+        <div class="tile-value" id="acceptedCount">0</div>
+      </div>
+      <div class="tile">
+        <div class="tile-label">Declined</div>
+        <div class="tile-value" id="declinedCount">0</div>
+      </div>
+    </div>
+
+    <section class="list" id="bookingList"></section>
+  </main>
+</div>
+<script src="../js/lawyer.js"></script>
+</body>
+</html>
