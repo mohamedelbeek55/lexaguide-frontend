@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Book Consultation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/customer.css">
+</head>
+
+<body>
+    <div class="app">
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-mark">⚖</div>
+                <h1>Middle East Law</h1>
+            </div>
+            <div>
+                <a class="goto-dashboard" href="../index.html">Home</a>
+                <a class="goto-dashboard" href="./lawyer.html" style="margin-left:8px">Lawyer Dashboard</a>
+            </div>
+        </header>
+
+        <main class="grid">
+            <section class="panel profile">
+                <div class="profile-card">
+                    <div class="avatar">L</div>
+                    <div class="meta">
+                        <h2 class="name"></h2>
+                        <div class="sub">
+                            <span class="specialty"></span>
+                            <span class="dot">•</span>
+                            <span class="location"></span>
+                        </div>
+                        <div class="ratings">
+                            <div class="stars"></div>
+                            <span class="count"></span>
+                        </div>
+                        <div class="price-row">
+                            <span class="label">Price/60m</span>
+                            <span class="price"></span>
+                        </div>
+                        <div class="status">
+                            <span class="badge"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel form">
+                <h2 class="section-title">Book a Consultation</h2>
+                <form id="booking-form" class="booking-form">
+                    <div class="field">
+                        <label for="clientName">Your Name</label>
+                        <input id="clientName" type="text" required placeholder="e.g., Sara Al-Masri">
+                    </div>
+                    <div class="field-group">
+                        <div class="field">
+                            <label for="date">Date</label>
+                            <input id="date" type="date" required>
+                        </div>
+                        <div class="field">
+                            <label for="time">Start Time</label>
+                            <input id="time" type="time" required>
+                        </div>
+                        <div class="field">
+                            <label for="duration">Duration</label>
+                            <select id="duration">
+                                <option value="30">30 mins</option>
+                                <option value="60" selected>60 mins</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="issue">Issue Description</label>
+                        <textarea id="issue" rows="5" required placeholder="Summarize your legal issue"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label>Preferred Communication</label>
+                        <div class="toggle" id="commToggle">
+                            <button type="button" data-mode="chat" class="toggle-btn active">Written Chat</button>
+                            <button type="button" data-mode="video" class="toggle-btn">Video Call</button>
+                        </div>
+                        <input type="hidden" id="communication" value="chat">
+                    </div>
+
+                    <button type="submit" class="cta">Book Consultation</button>
+                </form>
+
+                <div id="confirmation" class="confirmation hidden">
+                    <div class="conf-card">
+                        <div class="conf-icon">✔</div>
+                        <h3>Booking Confirmed</h3>
+                        <p>Booking ID</p>
+                        <div class="booking-id" id="bookingId"></div>
+                        <div class="conf-actions">
+                            <a class="cta ghost" href="./lawyer.html">Open Lawyer Dashboard</a>
+                            <button id="newBooking" class="cta">New Booking</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="../js/customer.js"></script>
+</body>
+
+</html>

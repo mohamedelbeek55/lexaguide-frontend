@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlLang">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../shared/home.css">
+    <link rel="stylesheet" href="../css/chatbot.css">
+    <title>LexaGuide – Chat Bot</title>
+</head>
+
+<body>
+    <!-- Navbar (same as home/contract) -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../index.html" class="navbar-logo" aria-label="LexaGuide home">
+                <div class="navbar-logo-img">
+                    <img src="../assets/logos/logo-removebg-preview.png" alt="LexaGuide logo">
+                    <div class="navbar-logo-text">
+                        <span class="navbar-brand">LexaGuide</span>
+                        <span class="navbar-tagline">AI-Powered Legal Guidance</span>
+                    </div>
+                </div>
+            </a>
+
+            <button class="navbar-toggle" id="navbarToggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="navbar-menu" id="navbarMenu">
+                <ul class="navbar-links">
+                    <li><a href="../index.html" data-i18n="home">Home</a></li>
+                    <li><a href="../index.html#services-section" data-i18n="services">Services</a></li>
+                    <li><a href="./about.html" data-i18n="about">About</a></li>
+                    <li><a href="../index.html#faq-section" data-i18n="faq">FAQ</a></li>
+                </ul>
+
+                <div class="navbar-right">
+                    <div class="language-selector">
+                        <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+                            <svg class="lang-globe" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                                <path
+                                    d="M2 12H22M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z"
+                                    stroke="currentColor" stroke-width="2" />
+                            </svg>
+                            <span class="lang-text" id="langText">English</span>
+                            <svg class="lang-chevron" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" onclick="changeLanguage('en')">
+                                <span>English</span>
+                            </button>
+                            <button class="lang-option" onclick="changeLanguage('ar')">
+                                <span>العربية</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="navbar-cta">
+                        <a href="./login.html" class="btn-login" data-i18n="login">Login</a>
+                        <a href="./signup.html" class="btn-signup" data-i18n="signup">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Chatbot Landing Page -->
+    <section class="chatbot-section">
+        <div class="chatbot-container">
+            <!-- Hero / Core value -->
+            <section class="cb-hero">
+                <div class="cb-hero-copy">
+                    <h1 class="cb-hero-title" data-i18n="cbHeroTitle">
+                        Your 24/7 Smart Legal Advisor: Instant Answers, Lower Cost.
+                    </h1>
+                    <p class="cb-hero-subtitle" data-i18n="cbHeroSubtitle">
+                        Ask your legal questions, upload documents for analysis, and receive preliminary legal advice in
+                        seconds.
+                        No appointments, no waiting.
+                    </p>
+                    <div class="cb-hero-cta">
+                        <button class="cb-hero-btn"
+                            onclick="document.getElementById('cb-chat').scrollIntoView({behavior:'smooth'})"
+                            data-i18n="cbHeroBtn1">
+                            Start Chatting Now
+                        </button>
+                        <button class="cb-hero-btn-secondary" data-i18n="cbHeroBtn2">
+                            Try the Chatbot for Free
+                        </button>
+                    </div>
+                </div>
+                <div class="cb-hero-visual">
+                    <div class="cb-hero-screen">
+                        <div class="cb-hero-bubble user" data-i18n="cbHeroBubble1">"Can you quickly check this
+                            contract?"</div>
+                        <div class="cb-hero-bubble bot" data-i18n="cbHeroBubble2">"Sure. Upload it and I'll highlight
+                            key clauses and risks."</div>
+                        <div class="cb-hero-note" data-i18n="cbHeroNote">A quick preview of how your AI legal chatbot
+                            responds.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Embedded chatbot interface -->
+            <section id="cb-chat">
+                <div class="chatbot-card">
+                    <div class="chatbot-header">
+                        <div>
+                            <div class="chatbot-title" data-i18n="cbChatTitle">AI Legal Chatbot</div>
+                            <div class="chatbot-subtitle" data-i18n="cbChatSubtitle">
+                                Get instant, low-cost preliminary legal answers and quick document checks.
+                            </div>
+                        </div>
+                        <span class="chatbot-badge" data-i18n="cbChatBadge">Always On · 24/7</span>
+                    </div>
+
+                    <div class="chat-window" id="chatWindow">
+                        <div class="chat-message bot" data-i18n="cbChatWelcome">
+                            Hello! I can help with quick legal questions and basic document analysis.
+                            Ask something like: "What should I check before signing an employment contract?"
+                        </div>
+                    </div>
+
+                    <div class="chat-input-row">
+                        <input id="chatInput" type="text" class="chat-input" data-i18n-placeholder="cbChatPlaceholder"
+                            placeholder="Type your question here..." />
+                        <button class="chat-send-btn" id="chatSendBtn" data-i18n="cbChatSend">Send</button>
+                    </div>
+                    <div class="chat-helper-text" data-i18n="cbChatHelper">
+                        This is a front-end demo only. In production, this chat would call your real AI/backend API.
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- How it works -->
+            <section class="cb-how">
+                <h2 data-i18n="cbHowTitle">How It Works</h2>
+                <div class="cb-how-grid">
+                    <div class="cb-how-step">
+                        <div class="cb-how-label" data-i18n="cbHow1Label">Step 1 · Ask Your Question</div>
+                        <p data-i18n="cbHow1Desc">Type your legal question in the chat box or upload a document for a
+                            quick review.</p>
+                    </div>
+                    <div class="cb-how-step">
+                        <div class="cb-how-label" data-i18n="cbHow2Label">Step 2 · Analysis & Response</div>
+                        <p data-i18n="cbHow2Desc">The chatbot processes your input and provides a preliminary answer in
+                            seconds.</p>
+                    </div>
+                    <div class="cb-how-step">
+                        <div class="cb-how-label" data-i18n="cbHow3Label">Step 3 · Next Steps</div>
+                        <p data-i18n="cbHow3Desc">Use the answer as a starting point, or upgrade to speak with a human
+                            lawyer if your case is complex.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Disclaimer -->
+            <section class="cb-disclaimer">
+                <h2 data-i18n="cbDisclaimerTitle">Important Disclaimer</h2>
+                <p data-i18n="cbDisclaimerText">
+                    The Chatbot provides preliminary and general information and advice, and it does not replace a human
+                    lawyer.
+                    We recommend using it for initial analysis and simple queries. For complex cases, please contact a
+                    licensed attorney.
+                </p>
+            </section>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="../assets/logos/logo-removebg-preview.png" alt="Counsel Logo" width="300px">
+                    </div>
+                    <p class="footer-description" data-i18n="footerDescription">Providing exceptional legal counsel and
+                        representation with integrity, professionalism, and dedication to achieving the best outcomes
+                        for our clients.</p>
+                    <div class="social-links">
+                        <a href="www.facebook.com" class="social-link" aria-label="Facebook">
+                            <img src="../assets/logos/icons8-facebook-64.png" alt="Facebook" class="social-icon"
+                                width="100px">
+                        </a>
+                        <a href="www.x.com" class="social-link" aria-label="Twitter">
+                            <img src="../assets/logos/icons8-x-logo-50.png" alt="Twitter" class="social-icon">
+                        </a>
+                        <a href="www.instagram.com" class="social-link" aria-label="Instagram">
+                            <img src="../assets/logos/icons8-instagram-logo-64.png" alt="Instagram" class="social-icon">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerQuickLinksTitle">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="../index.html" data-i18n="footerLinkHome">Home</a></li>
+                        <li><a href="./about.html" data-i18n="footerLinkAbout">About</a></li>
+                        <li><a href="../index.html#services-section" data-i18n="footerLinkServices">Services</a></li>
+                        <li><a href="../index.html#faq-section" data-i18n="footerLinkContact">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerServicesTitle">Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="./contract-analysis.html" data-i18n="footerService1">Contract
+                                Analysis</a></li>
+                        <li><a href="./legal-doc-generation.html" data-i18n="footerService2">Document Generation</a></li>
+                        <li><a href="./chatbot.html" data-i18n="footerService3">ChatBot</a></li>
+                        <li><a href="./middle-east-law.html" data-i18n="footerService4">Law Experts</a>
+                        <li><a href="./consultations-management.html" data-i18n="footerService5">Case Management</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title" data-i18n="footerContactTitle">Contact Info</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="contact-icon">
+                                <img src="../assets/logos/icons8-phone-50.png" alt="Phone" class="contact-icon-img"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <!-- <span class="contact-icon-fallback" style="display:none;">📞</span> -->
+                            </span>
+                            <span data-i18n="footerPhone">+1 (555) 123-4567</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">
+                                <img src="../assets/logos/icons8-info-64.png" alt="Email" class="contact-icon-img"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <!-- <span class="contact-icon-fallback" style="display:none;">✉️</span> -->
+                            </span>
+                            <span data-i18n="footerEmail">info@counsel.com</span>
+                        </li>
+                    </ul>
+                    <div class="app-downloads">
+                        <h4 class="app-downloads-title" data-i18n="footerAppsTitle">Download Our App</h4>
+                        <div class="app-buttons">
+                            <a href="#" class="app-button app-store" aria-label="Download on App Store">
+                                <img src="../assets/logos/icons8-app-store-48.png" alt="App Store" class="app-icon-img">
+                                <div class="app-button-text">
+                                    <span class="app-button-label" data-i18n="footerAppStoreLabel">Download on
+                                        the</span>
+                                    <span class="app-button-name" data-i18n="footerAppStoreName">App Store</span>
+                                </div>
+                            </a>
+                            <a href="#" class="app-button google-play" aria-label="Get it on Google Play">
+                                <img src="../assets/logos/icons8-google-play-24.png" alt="Google Play" class="app-icon-img">
+                                <div class="app-button-text">
+                                    <span class="app-button-label" data-i18n="footerGooglePlayLabel">Get it on</span>
+                                    <span class="app-button-name" data-i18n="footerGooglePlayName">Google Play</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p data-i18n="footerCopyright">&copy; 2026 Counsel. All rights reserved.</p>
+                    <div class="footer-legal">
+                        <a href="#" data-i18n="footerPrivacy">Privacy Policy</a>
+                        <span>|</span>
+                        <a href="#" data-i18n="footerTerms">Terms of Service</a>
+                        <span>|</span>
+                        <a href="#" data-i18n="footerCookies">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../shared/api.js"></script>
+    <script src="../js/chatbot.js"></script>
+</body>
+
+</html>

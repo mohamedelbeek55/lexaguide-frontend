@@ -1,0 +1,616 @@
+@import url("./home.css");
+
+/* Contract Analysis Page - matching Middle East Law style */
+.ca-hero {
+    padding: 120px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.ca-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(197, 149, 74, 0.12) 0%, transparent 55%),
+        radial-gradient(circle at 90% 80%, rgba(197, 149, 74, 0.08) 0%, transparent 55%);
+    pointer-events: none;
+}
+
+.ca-hero-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.3fr);
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.ca-hero-title {
+    font-size: 44px;
+    line-height: 1.2;
+    margin-bottom: 18px;
+    background: linear-gradient(135deg, #ffffff 0%, #c5954a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ca-hero-subtitle {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.88);
+    line-height: 1.8;
+    margin-bottom: 26px;
+}
+
+.ca-hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+}
+
+.ca-hero-btn {
+    border-radius: 999px;
+    padding: 12px 26px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.ca-hero-btn.primary {
+    border: none;
+    color: #ffffff;
+    background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+    box-shadow: 0 6px 20px rgba(197, 149, 74, 0.4);
+}
+
+.ca-hero-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(197, 149, 74, 0.55);
+}
+
+.ca-hero-btn.secondary {
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.ca-hero-btn.secondary:hover {
+    border-color: rgba(197, 149, 74, 0.7);
+    color: #c5954a;
+    background: rgba(197, 149, 74, 0.06);
+}
+
+.ca-hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.ca-hero-image {
+    width: 100%;
+    max-width: 550px;
+    height: 350px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 30px rgba(197, 149, 74, 0.2));
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.ca-hero-panel {
+    width: 100%;
+    max-width: 400px;
+    background: radial-gradient(circle at top, rgba(31, 44, 69, 0.9), rgba(13, 21, 36, 0.98));
+    border-radius: 22px;
+    padding: 24px 22px;
+    border: 1px solid rgba(197, 149, 74, 0.25);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+}
+
+.ca-hero-mockup {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ca-mockup-header {
+    font-size: 18px;
+    color: #c5954a;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.ca-mockup-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ca-mockup-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background: rgba(13, 21, 36, 0.95);
+    border-radius: 10px;
+    border: 1px solid rgba(197, 149, 74, 0.22);
+}
+
+.ca-mockup-label {
+    font-size: 12px;
+    color: #c5954a;
+    font-weight: 600;
+}
+
+.ca-mockup-text {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* Workflow Section */
+.ca-workflow {
+    padding: 60px 0;
+}
+
+.ca-workflow-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.ca-section-title {
+    font-size: 36px;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 40px;
+    background: linear-gradient(135deg, #ffffff 0%, #c5954a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ca-workflow-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.ca-workflow-step {
+    background: rgba(13, 21, 36, 0.95);
+    border-radius: 20px;
+    padding: 32px 24px;
+    border: 1px solid rgba(197, 149, 74, 0.25);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.ca-workflow-step:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(197, 149, 74, 0.3);
+}
+
+.ca-step-icon {
+    margin-bottom: 16px;
+}
+
+.ca-step-icon-img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    display: inline-block;
+}
+
+.ca-workflow-step h3 {
+    font-size: 22px;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.ca-step-subtitle {
+    font-size: 14px;
+    color: #c5954a;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.ca-step-description {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+}
+
+/* Upload Section */
+.ca-upload-section {
+    padding: 60px 0;
+    background: rgba(13, 21, 36, 0.3);
+}
+
+.ca-upload-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.ca-upload-intro {
+    text-align: center;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 30px;
+}
+
+.ca-upload-area {
+    background: radial-gradient(circle at top, rgba(31, 44, 69, 0.85), rgba(13, 21, 36, 0.98));
+    border-radius: 20px;
+    border: 2px dashed rgba(197, 149, 74, 0.6);
+    padding: 50px 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 24px;
+}
+
+.ca-upload-area:hover {
+    border-color: rgba(197, 149, 74, 0.9);
+    box-shadow: 0 12px 36px rgba(197, 149, 74, 0.35);
+    transform: translateY(-2px);
+}
+
+.ca-upload-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.ca-upload-text {
+    font-size: 20px;
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.ca-upload-hint {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.ca-upload-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+.ca-btn-primary,
+.ca-btn-secondary {
+    border-radius: 999px;
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: none;
+}
+
+.ca-btn-primary {
+    color: #ffffff;
+    background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+    box-shadow: 0 6px 20px rgba(197, 149, 74, 0.4);
+}
+
+.ca-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(197, 149, 74, 0.55);
+}
+
+.ca-btn-secondary {
+    color: rgba(255, 255, 255, 0.85);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.ca-btn-secondary:hover {
+    border-color: rgba(197, 149, 74, 0.7);
+    color: #c5954a;
+    background: rgba(197, 149, 74, 0.06);
+}
+
+/* Outputs Section */
+.ca-outputs {
+    padding: 60px 0;
+}
+
+.ca-outputs-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.ca-outputs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.ca-output-item {
+    background: rgba(13, 21, 36, 0.95);
+    border-radius: 20px;
+    padding: 32px 24px;
+    border: 1px solid rgba(197, 149, 74, 0.25);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.ca-output-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(197, 149, 74, 0.3);
+}
+
+.ca-output-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.ca-output-item h3 {
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.ca-output-item p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+}
+
+/* Security Section */
+.ca-security {
+    padding: 60px 0;
+    background: rgba(13, 21, 36, 0.3);
+}
+
+.ca-security-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.ca-security-card {
+    background: rgba(13, 21, 36, 0.95);
+    border-radius: 20px;
+    padding: 40px 32px;
+    border: 1px solid rgba(197, 149, 74, 0.25);
+    text-align: center;
+}
+
+.ca-security-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.ca-security-card h3 {
+    font-size: 26px;
+    color: #ffffff;
+    margin-bottom: 16px;
+}
+
+.ca-security-card p {
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.8;
+}
+
+/* Pricing Section */
+.ca-pricing {
+    padding: 60px 0;
+}
+
+.ca-pricing-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.ca-pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.ca-pricing-card {
+    background: rgba(13, 21, 36, 0.95);
+    border-radius: 20px;
+    padding: 32px 24px;
+    border: 1px solid rgba(197, 149, 74, 0.25);
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.ca-pricing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(197, 149, 74, 0.3);
+}
+
+.ca-pricing-card.featured {
+    border-color: rgba(197, 149, 74, 0.6);
+    box-shadow: 0 8px 24px rgba(197, 149, 74, 0.4);
+}
+
+.ca-pricing-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+    color: #0d1524;
+    padding: 4px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.ca-pricing-card h3 {
+    font-size: 22px;
+    color: #ffffff;
+    margin-bottom: 16px;
+}
+
+.ca-price {
+    font-size: 42px;
+    color: #c5954a;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.ca-price-unit {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 400;
+}
+
+.ca-price-desc {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 24px;
+}
+
+.ca-price-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px 0;
+    text-align: left;
+}
+
+.ca-price-features li {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ca-pricing-btn {
+    width: 100%;
+    border-radius: 999px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(197, 149, 74, 0.4);
+}
+
+.ca-pricing-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(197, 149, 74, 0.55);
+}
+
+/* FAQ Section */
+.ca-faq {
+    padding: 60px 0;
+    background: rgba(13, 21, 36, 0.3);
+}
+
+.ca-faq-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.ca-faq-list {
+    display: grid;
+    gap: 20px;
+}
+
+.ca-faq-item {
+    background: rgba(13, 21, 36, 0.95);
+    border-radius: 16px;
+    padding: 24px 22px;
+    border: 1px solid rgba(197, 149, 74, 0.25);
+}
+
+.ca-faq-item h3 {
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.ca-faq-item p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .ca-hero-inner {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+    }
+    
+    .ca-hero-visual {
+        order: -1;
+    }
+    
+    .ca-hero-image {
+        max-width: 100%;
+    }
+
+    .ca-hero {
+        padding: 100px 0 60px;
+    }
+
+    .ca-workflow-steps,
+    .ca-outputs-grid,
+    .ca-pricing-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .ca-hero-inner,
+    .ca-workflow-inner,
+    .ca-upload-inner,
+    .ca-outputs-inner,
+    .ca-security-inner,
+    .ca-pricing-inner,
+    .ca-faq-inner {
+        padding: 0 25px;
+    }
+
+    .ca-hero-title {
+        font-size: 30px;
+    }
+
+    .ca-hero-subtitle {
+        font-size: 15px;
+    }
+
+    .ca-section-title {
+        font-size: 28px;
+    }
+
+    .ca-upload-actions {
+        flex-direction: column;
+    }
+
+    .ca-btn-primary,
+    .ca-btn-secondary {
+        width: 100%;
+    }
+}

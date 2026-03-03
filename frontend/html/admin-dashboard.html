@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Law Firm</title>
+  <link rel="stylesheet" href="../shared/home.css">
+  <style>
+    :root {
+      --bg: #0d1524;
+      --bg-card: #1f2c45;
+      --surface: rgba(31, 44, 69, 0.95);
+      --gold: #c5954a;
+      --gold-light: #d4a55a;
+      --gold-border: rgba(197, 149, 74, 0.25);
+      --gold-hover: rgba(197, 149, 74, 0.12);
+      --text: rgba(255, 255, 255, 0.92);
+      --text-muted: rgba(255, 255, 255, 0.65);
+      --sidebar-w: 260px;
+      --navbar-h: 64px;
+      --radius: 12px;
+      --green: #52b788;
+      --red: #e63946;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Top Navbar */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: var(--sidebar-w);
+      right: 0;
+      height: var(--navbar-h);
+      background: linear-gradient(135deg, var(--surface), rgba(13, 21, 36, 0.98));
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 90;
+      transition: left 0.3s ease;
+    }
+
+    .sidebar.collapsed~.main-wrap .topbar {
+      left: 0;
+    }
+
+    .topbar-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .notif-wrap {
+      position: relative;
+      padding: 8px;
+      cursor: pointer;
+      border-radius: var(--radius);
+      transition: background 0.2s;
+    }
+
+    .notif-wrap:hover {
+      background: var(--gold-hover);
+    }
+
+    .notif-icon {
+      width: 22px;
+      height: 22px;
+      stroke: var(--text-muted);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .notif-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      min-width: 18px;
+      height: 18px;
+      background: var(--red);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    .profile-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topbar-user-menu {
+      position: relative;
+    }
+
+    .topbar-user-trigger {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 10px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .topbar-user-trigger:hover {
+      background: var(--gold-hover);
+      border-color: var(--gold-border);
+    }
+
+    .profile-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--bg);
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .topbar-user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      min-width: 180px;
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      z-index: 200;
+      display: none;
+      padding: 6px 0;
+    }
+
+    .topbar-user-menu.open .topbar-user-dropdown {
+      display: block;
+    }
+
+    .topbar-user-dropdown a,
+    .topbar-user-dropdown button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      background: none;
+      color: var(--text);
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .topbar-user-dropdown a:hover,
+    .topbar-user-dropdown button:hover {
+      background: var(--gold-hover);
+      color: var(--gold);
+    }
+
+    .topbar-user-dropdown button.logout {
+      color: var(--red);
+    }
+
+    .topbar-user-dropdown button.logout:hover {
+      background: rgba(230, 57, 70, 0.12);
+      color: var(--red);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: linear-gradient(180deg, var(--surface), rgba(13, 21, 36, 0.98));
+      border-right: 1px solid var(--gold-border);
+      z-index: 100;
+      transition: transform 0.3s ease, width 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar .logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .sidebar-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .sidebar-nav {
+      padding: 16px 0;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+    }
+
+    .nav-link:hover {
+      color: var(--gold);
+      background: var(--gold-hover);
+    }
+
+    .nav-link.active {
+      color: var(--gold);
+      background: var(--gold-hover);
+      border-left-color: var(--gold);
+    }
+
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    /* Main */
+    .main-wrap {
+      flex: 1;
+      margin-left: var(--sidebar-w);
+      min-height: 100vh;
+      transition: margin-left 0.3s ease;
+    }
+
+    .sidebar.collapsed~.main-wrap {
+      margin-left: 0;
+    }
+
+    .main-content {
+      padding: calc(var(--navbar-h) + 24px) 24px 24px;
+    }
+
+    /* Stats cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(197, 149, 74, 0.1);
+    }
+
+    .stat-card .icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(197, 149, 74, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .stat-card .icon-wrap svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .stat-change {
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .stat-change.positive {
+      color: var(--green);
+    }
+
+    .stat-change.negative {
+      color: var(--red);
+    }
+
+    /* Layout: content + activity */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+    }
+
+    @media (max-width: 1200px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Table */
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 13px;
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+
+    tr:hover {
+      background: var(--gold-hover);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-pending {
+      background: rgba(210, 180, 60, 0.25);
+      color: #d4a55a;
+    }
+
+    .badge-active {
+      background: rgba(45, 106, 79, 0.3);
+      color: var(--green);
+    }
+
+    .badge-closed {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+    }
+
+    /* Charts */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .charts-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-container {
+      position: relative;
+      height: 260px;
+    }
+
+    .chart-container canvas {
+      max-width: 100%;
+    }
+
+    /* Activity feed */
+    .activity-feed {
+      padding: 0;
+    }
+
+    .activity-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 13px;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .activity-text {
+      color: var(--text);
+    }
+
+    .activity-time {
+      color: var(--text-muted);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    /* Mobile sidebar */
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar~.main-wrap .topbar {
+        left: 0;
+      }
+
+      .main-wrap {
+        margin-left: 0;
+      }
+
+      .sidebar-toggle {
+        display: block;
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s;
+      }
+
+      .overlay.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="logo">Law Firm</span>
+        <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="admin-dashboard.html" class="nav-link active">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+          Dashboard
+        </a>
+        <a href="../lawyers-management.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Lawyers
+        </a>
+        <a href="../users-management.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          Users
+        </a>
+        <a href="../consultations-management.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+          Consultations
+        </a>
+        <a href="../admin-dashboard.html#settings" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+          Settings
+        </a>
+      </nav>
+    </aside>
+    <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+    <div class="main-wrap">
+      <header class="topbar">
+        <span class="topbar-logo">Admin Dashboard</span>
+        <div class="topbar-right">
+          <div class="notif-wrap" title="Notifications">
+            <svg class="notif-icon" viewBox="0 0 24 24">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+            <span class="notif-badge" id="notifBadge">5</span>
+          </div>
+          <div class="topbar-user-menu" id="topbarUserMenu">
+            <button type="button" class="topbar-user-trigger" id="topbarUserTrigger" aria-haspopup="true" aria-expanded="false" aria-label="Account menu">
+              <div class="profile-wrap">
+                <div class="profile-avatar" id="profileAvatar">AD</div>
+                <span class="profile-name" id="profileName">Admin User</span>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="topbar-user-dropdown" role="menu" id="topbarUserDropdown">
+              <a href="../profile.html" role="menuitem">Profile</a>
+              <a href="index.html#settings" role="menuitem">Settings</a>
+              <button type="button" class="logout" role="menuitem" id="topbarLogout">Log out</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <div class="dashboard-grid">
+          <div class="dashboard-main">
+            <div class="card">
+              <h2 class="card-title">Recent Consultations</h2>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Client Name</th>
+                      <th>Lawyer Name</th>
+                      <th>Legal Area</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="consultationsBody"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="charts-row">
+              <div class="card">
+                <h2 class="card-title">Consultations per Month</h2>
+                <div class="chart-container">
+                  <canvas id="barChart"></canvas>
+                </div>
+              </div>
+              <div class="card">
+                <h2 class="card-title">Legal Areas Distribution</h2>
+                <div class="chart-container">
+                  <canvas id="donutChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card activity-feed">
+            <h2 class="card-title">Recent Activity</h2>
+            <div id="activityFeed"></div>
+          </div>
+        </div>
+        <div class="card" id="settings" style="margin-top:1.5rem;">
+          <h2 class="card-title">Settings</h2>
+          <p style="color:var(--text-muted);font-size:14px;">Dashboard and account preferences. Use the sidebar to navigate.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var stats = [
+        { label: 'Total Lawyers', value: 24, change: 12, positive: true, icon: 'users' },
+        { label: 'Total Users', value: 156, change: 8, positive: true, icon: 'users' },
+        { label: 'Total Consultations', value: 89, change: 15, positive: true, icon: 'chat' },
+        { label: 'Pending Consultations', value: 12, change: -5, positive: false, icon: 'clock' },
+        { label: 'Total Documents', value: 342, change: 22, positive: true, icon: 'file' },
+        { label: 'Active Legal Areas', value: 8, change: 0, positive: true, icon: 'globe' }
+      ];
+
+      var consultations = [
+        { client: 'John Smith', lawyer: 'Sarah Mitchell', area: 'Corporate Law', date: '2025-02-24', status: 'Pending' },
+        { client: 'Emma Wilson', lawyer: 'James Chen', area: 'Criminal Law', date: '2025-02-23', status: 'Active' },
+        { client: 'Oliver Brown', lawyer: 'Emily Rodriguez', area: 'Family Law', date: '2025-02-22', status: 'Closed' },
+        { client: 'Sophie Davis', lawyer: 'David Thompson', area: 'Immigration', date: '2025-02-21', status: 'Active' },
+        { client: 'Liam Johnson', lawyer: 'Rachel Kim', area: 'IP', date: '2025-02-20', status: 'Closed' }
+      ];
+
+      var barData = [28, 35, 42, 38, 45, 52];
+      var donutData = [
+        { label: 'Corporate', value: 28, color: '#c5954a' },
+        { label: 'Family', value: 22, color: '#52b788' },
+        { label: 'Criminal', value: 18, color: '#778da9' },
+        { label: 'Immigration', value: 15, color: '#e6c654' },
+        { label: 'Real Estate', value: 12, color: '#415a77' },
+        { label: 'Other', value: 5, color: '#6c757d' }
+      ];
+
+      var activity = [
+        { text: 'New lawyer registered: Alex Morgan', time: '10 min ago' },
+        { text: 'Consultation closed: Smith vs. Corp', time: '25 min ago' },
+        { text: 'Document uploaded: Contract_2025.pdf', time: '1 hour ago' },
+        { text: 'New consultation started: Family Law', time: '2 hours ago' },
+        { text: 'User signup: john@email.com', time: '3 hours ago' },
+        { text: 'Legal area updated: Immigration', time: '5 hours ago' }
+      ];
+
+      var notifBadge = document.getElementById('notifBadge');
+      var notifWrap = document.querySelector('.notif-wrap');
+
+      function updateNotifBadge() {
+        if (!notifBadge) return;
+        var count = 0;
+        try {
+          var raw = localStorage.getItem('lexaNotifications');
+          if (raw) {
+            var list = JSON.parse(raw);
+            if (Array.isArray(list)) count = list.length;
+          }
+        } catch (e) { }
+
+        if (!count) {
+          notifBadge.style.display = 'none';
+        } else {
+          notifBadge.style.display = 'flex';
+          notifBadge.textContent = count > 99 ? '99+' : String(count);
+        }
+      }
+
+      if (notifWrap) {
+        notifWrap.addEventListener('click', function () {
+          var feed = document.getElementById('activityFeed');
+          if (feed && typeof feed.scrollIntoView === 'function') {
+            feed.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          try {
+            localStorage.removeItem('lexaNotifications');
+          } catch (e) { }
+          updateNotifBadge();
+        });
+      }
+
+      updateNotifBadge();
+
+      var sidebar = document.getElementById('sidebar');
+      var overlay = document.getElementById('overlay');
+      var sidebarToggle = document.getElementById('sidebarToggle');
+
+      function toggleSidebar() {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('visible');
+        overlay.setAttribute('aria-hidden', !overlay.classList.contains('visible'));
+      }
+      sidebarToggle.addEventListener('click', toggleSidebar);
+      overlay.addEventListener('click', toggleSidebar);
+
+      function animateValue(el, start, end, duration) {
+        var startTime = null;
+        function step(timestamp) {
+          if (!startTime) startTime = timestamp;
+          var progress = Math.min((timestamp - startTime) / duration, 1);
+          var ease = 1 - Math.pow(1 - progress, 2);
+          el.textContent = Math.floor(start + (end - start) * ease);
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
+      function renderStats() {
+        var grid = document.getElementById('statsGrid');
+        var icons = {
+          users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+          chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+          clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+          file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
+          globe: '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'
+        };
+        grid.innerHTML = stats.map(function (s, i) {
+          var changeClass = s.positive ? 'positive' : 'negative';
+          var changeStr = (s.change >= 0 ? '+' : '') + s.change + '% this month';
+          return '<div class="stat-card"><div class="icon-wrap"><svg viewBox="0 0 24 24">' + (icons[s.icon] || icons.users) + '</svg></div><div class="stat-value" data-value="' + s.value + '">0</div><div class="stat-label">' + s.label + '</div><div class="stat-change ' + changeClass + '">' + changeStr + '</div></div>';
+        }).join('');
+        grid.querySelectorAll('.stat-value').forEach(function (el, i) {
+          var end = stats[i].value;
+          animateValue(el, 0, end, 1200);
+        });
+      }
+
+      function renderConsultations() {
+        var tbody = document.getElementById('consultationsBody');
+        var statusClass = { Pending: 'badge-pending', Active: 'badge-active', Closed: 'badge-closed' };
+        tbody.innerHTML = consultations.map(function (c) {
+          return '<tr><td>' + c.client + '</td><td>' + c.lawyer + '</td><td>' + c.area + '</td><td>' + c.date + '</td><td><span class="badge ' + (statusClass[c.status] || '') + '">' + c.status + '</span></td></tr>';
+        }).join('');
+      }
+
+      function drawBarChart() {
+        var canvas = document.getElementById('barChart');
+        if (!canvas) return;
+        var container = canvas.parentElement;
+        var w = (container && container.clientWidth) ? container.clientWidth : 400;
+        var h = 240;
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        var padding = { top: 20, right: 20, bottom: 40, left: 40 };
+        var maxVal = Math.max.apply(null, barData);
+        var chartW = w - padding.left - padding.right;
+        var chartH = h - padding.top - padding.bottom;
+        var barW = chartW / barData.length * 0.6;
+        var gap = chartW / barData.length * 0.2;
+        var months = ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'];
+
+        ctx.clearRect(0, 0, w, h);
+        barData.forEach(function (val, i) {
+          var x = padding.left + gap + i * (chartW / barData.length);
+          var barH = (val / maxVal) * chartH;
+          var y = padding.top + chartH - barH;
+          ctx.fillStyle = 'rgba(197, 149, 74, 0.6)';
+          ctx.fillRect(x, y, barW, barH);
+          ctx.fillStyle = '#c5954a';
+          ctx.font = '12px Segoe UI';
+          ctx.textAlign = 'center';
+          ctx.fillText(months[i], x + barW / 2, h - 12);
+          ctx.fillStyle = 'rgba(255,255,255,0.9)';
+          ctx.fillText(val, x + barW / 2, y - 6);
+        });
+      }
+
+      function drawDonutChart() {
+        var canvas = document.getElementById('donutChart');
+        if (!canvas) return;
+        var container = canvas.parentElement;
+        var w = (container && container.clientWidth) ? container.clientWidth : 400;
+        var h = 240;
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        var cx = w / 2;
+        var cy = h / 2 - 10;
+        var total = donutData.reduce(function (s, d) { return s + d.value; }, 0);
+        var radius = Math.min(w, h) / 2 - 30;
+        var innerRadius = radius * 0.55;
+        var start = -Math.PI / 2;
+
+        donutData.forEach(function (d) {
+          var slice = (d.value / total) * Math.PI * 2;
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius, start, start + slice);
+          ctx.arc(cx, cy, innerRadius, start + slice, start, true);
+          ctx.closePath();
+          ctx.fillStyle = d.color;
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(13, 21, 36, 0.8)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          start += slice;
+        });
+
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.font = 'bold 14px Segoe UI';
+        ctx.textAlign = 'center';
+        ctx.fillText('Total: ' + total, cx, cy - 6);
+        ctx.font = '11px Segoe UI';
+        ctx.fillStyle = 'rgba(255,255,255,0.6)';
+        ctx.fillText('consultations', cx, cy + 10);
+
+        var legY = h - 8;
+        donutData.forEach(function (d, i) {
+          var x = 20 + (i % 3) * (w / 3);
+          var y = legY - Math.floor(i / 3) * 18;
+          ctx.fillStyle = d.color;
+          ctx.fillRect(x, y - 6, 10, 10);
+          ctx.fillStyle = 'rgba(255,255,255,0.85)';
+          ctx.font = '10px Segoe UI';
+          ctx.textAlign = 'left';
+          ctx.fillText(d.label, x + 14, y);
+        });
+      }
+
+      function renderActivity() {
+        var feed = document.getElementById('activityFeed');
+        feed.innerHTML = activity.map(function (a) {
+          return '<div class="activity-item"><span class="activity-dot"></span><div><div class="activity-text">' + a.text + '</div><div class="activity-time">' + a.time + '</div></div></div>';
+        }).join('');
+      }
+
+      renderStats();
+      renderConsultations();
+      renderActivity();
+      setTimeout(function () {
+        drawBarChart();
+        drawDonutChart();
+      }, 100);
+
+      window.addEventListener('resize', function () {
+        var bar = document.getElementById('barChart');
+        var donut = document.getElementById('donutChart');
+        if (bar) { bar.width = bar.offsetWidth; bar.height = 240; drawBarChart(); }
+        if (donut) { donut.width = donut.offsetWidth; donut.height = 240; drawDonutChart(); }
+      });
+    })();
+  </script>
+
+  <!-- Load centralized API service -->
+  <script src="../shared/api.js"></script>
+
+  <!-- Live data overlay: hydrate stats and consultations table from real API -->
+  <script>
+    (function () {
+      'use strict';
+
+      // Require admin login for dashboard access
+      if (API.requireAdmin) {
+        API.requireAdmin();
+      } else {
+        API.requireAuth();
+      }
+
+      // ── Show logged-in user in topbar ──────────────────────────────────────
+      var user = API.getUser();
+      if (user) {
+        var nameEl = document.getElementById('profileName');
+        var avatarEl = document.getElementById('profileAvatar');
+        var name = user.full_name || user.name || user.email || 'Admin';
+        if (nameEl) nameEl.textContent = name;
+        if (avatarEl) {
+          var parts = name.trim().split(/\s+/);
+          avatarEl.textContent = parts.length >= 2
+            ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+            : name.slice(0, 2).toUpperCase();
+        }
+      }
+
+      // ── Topbar user dropdown (Profile, Settings, Log out) ────────────────────
+      var topbarMenu = document.getElementById('topbarUserMenu');
+      var topbarTrigger = document.getElementById('topbarUserTrigger');
+      var topbarDropdown = document.getElementById('topbarUserDropdown');
+      var topbarLogout = document.getElementById('topbarLogout');
+      if (topbarTrigger && topbarMenu) {
+        topbarTrigger.addEventListener('click', function (e) {
+          e.stopPropagation();
+          topbarMenu.classList.toggle('open');
+          topbarTrigger.setAttribute('aria-expanded', topbarMenu.classList.contains('open'));
+        });
+        document.addEventListener('click', function () {
+          topbarMenu.classList.remove('open');
+          if (topbarTrigger) topbarTrigger.setAttribute('aria-expanded', 'false');
+        });
+      }
+      if (topbarLogout) topbarLogout.addEventListener('click', function () { API.Auth.logout(); });
+
+      // ── Helper: animate a stat card value ───────────────────────────────────
+      function animateStat(el, end) {
+        var start = 0;
+        var startTime = null;
+        function step(ts) {
+          if (!startTime) startTime = ts;
+          var p = Math.min((ts - startTime) / 900, 1);
+          el.textContent = Math.floor(start + (end - start) * (1 - Math.pow(1 - p, 2)));
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
+      // ── Update stat cards with real counts ───────────────────────────────────
+      function setStatCardByLabel(label, value) {
+        var cards = document.querySelectorAll('.stat-card');
+        cards.forEach(function (card) {
+          var lbl = card.querySelector('.stat-label');
+          if (lbl && lbl.textContent.trim().toLowerCase() === label.toLowerCase()) {
+            var valEl = card.querySelector('.stat-value');
+            if (valEl) animateStat(valEl, value);
+          }
+        });
+      }
+
+      // ── Update recent consultations table with real data ─────────────────────
+      function renderRealConsultations(list) {
+        var tbody = document.getElementById('consultationsBody');
+        if (!tbody) return;
+        if (!list || list.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="color:#888;text-align:center;padding:16px;">No consultations yet.</td></tr>';
+          return;
+        }
+        var statusClass = { pending: 'badge-pending', active: 'badge-active', completed: 'badge-closed', cancelled: '' };
+        tbody.innerHTML = list.slice(0, 10).map(function (c) {
+          var client = c.client_name || c.user_name || '—';
+          var lawyer = c.lawyer_name || '—';
+          var area = c.legal_area_name || c.legal_area || '—';
+          var date = c.scheduled_at ? new Date(c.scheduled_at).toISOString().slice(0, 10) : (c.created_at ? new Date(c.created_at).toISOString().slice(0, 10) : '—');
+          var status = c.status || 'pending';
+          return '<tr>' +
+            '<td>' + client + '</td>' +
+            '<td>' + lawyer + '</td>' +
+            '<td>' + area + '</td>' +
+            '<td>' + date + '</td>' +
+            '<td><span class="badge ' + (statusClass[status] || '') + '">' + status + '</span></td>' +
+            '</tr>';
+        }).join('');
+      }
+
+      // ── Fetch and apply real data (admin: all consultations; else my consultations) ──
+      async function hydrateFromAPI() {
+        try {
+          var lawyersResp = await API.Lawyer.getAll();
+          var lawyers = (lawyersResp && lawyersResp.data) ? lawyersResp.data : [];
+          setStatCardByLabel('Total Lawyers', lawyers.length);
+        } catch (e) { /* keep mock value */ }
+
+        try {
+          var consults = [];
+          if (API.Admin && API.Admin.getConsultations) {
+            var adminResp = await API.Admin.getConsultations();
+            consults = (adminResp && adminResp.data) ? adminResp.data : [];
+          }
+          if (consults.length === 0 && API.Consult && API.Consult.getMine) {
+            var mineResp = await API.Consult.getMine();
+            consults = (mineResp && mineResp.data) ? mineResp.data : [];
+          }
+          setStatCardByLabel('Total Consultations', consults.length);
+          var pending = consults.filter(function (c) { return (c.status || '').toLowerCase() === 'pending'; }).length;
+          setStatCardByLabel('Pending Consultations', pending);
+          renderRealConsultations(consults);
+        } catch (e) { /* keep mock value */ }
+
+        try {
+          var areasResp = await API.LegalArea.getAll();
+          var areas = (areasResp && areasResp.data) ? areasResp.data : [];
+          setStatCardByLabel('Active Legal Areas', areas.length);
+        } catch (e) { /* keep mock value */ }
+      }
+
+      hydrateFromAPI();
+    })();
+  </script>
+</body>
+
+</html>

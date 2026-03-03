@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlLang">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../shared/home.css">
+  <link rel="stylesheet" href="../css/profile.css">
+  <title>Profile | LexaGuide</title>
+</head>
+
+<body>
+  <!-- Navbar (same as public pages; user menu appears when logged in via api.js) -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="../index.html" class="navbar-logo" aria-label="LexaGuide home">
+        <div class="navbar-logo-img">
+          <img src="../assets/logos/logo-removebg-preview.png" alt="LexaGuide logo">
+          <div class="navbar-logo-text">
+            <span class="navbar-brand">LexaGuide</span>
+            <span class="navbar-tagline">AI-Powered Legal Guidance</span>
+          </div>
+        </div>
+      </a>
+      <button class="navbar-toggle" id="navbarToggle" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="navbar-menu" id="navbarMenu">
+        <ul class="navbar-links">
+          <li><a href="../index.html" data-i18n="home">Home</a></li>
+          <li><a href="../index.html#services-section" data-i18n="services">Services</a></li>
+          <li><a href="./about.html" data-i18n="about">About</a></li>
+          <li><a href="../index.html#faq-section" data-i18n="faq">FAQ</a></li>
+        </ul>
+        <div class="navbar-right">
+          <div class="language-selector">
+            <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+              <svg class="lang-globe" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M2 12H22M12 2C14.5 4.74 15.92 8.29 16 12C15.92 15.71 14.5 19.26 12 22C9.5 19.26 8.08 15.71 8 12C8.08 8.29 9.5 4.74 12 2Z" stroke="currentColor" stroke-width="2"/></svg>
+              <span class="lang-text" id="langText">English</span>
+              <svg class="lang-chevron" viewBox="0 0 24 24"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2"/></svg>
+            </button>
+            <div class="lang-dropdown" id="langDropdown">
+              <button class="lang-option" onclick="changeLanguage('en')"><span>English</span></button>
+              <button class="lang-option" onclick="changeLanguage('ar')"><span>العربية</span></button>
+            </div>
+          </div>
+          <div class="navbar-cta">
+            <a href="./login.html" class="btn-login" data-i18n="login">Login</a>
+            <a href="./signup.html" class="btn-signup" data-i18n="signup">Sign Up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="profile-main">
+    <section class="profile-section card">
+      <h1>Profile</h1>
+      <div class="profile-avatar-lg" id="profileAvatarLg">—</div>
+      <div class="profile-details" id="profileDetails">
+        <p class="profile-loading">Loading…</p>
+      </div>
+    </section>
+
+    <section class="profile-section card" id="settings">
+      <h2>Settings</h2>
+      <p class="profile-settings-intro">Preferences and account options.</p>
+      <div class="settings-row">
+        <label>Language</label>
+        <select id="settingsLang">
+          <option value="en">English</option>
+          <option value="ar">العربية</option>
+        </select>
+      </div>
+    </section>
+  </main>
+
+  <script src="../shared/api.js"></script>
+  <script src="../js/profile.js"></script>
+</body>
+
+</html>

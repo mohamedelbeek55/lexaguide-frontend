@@ -1,0 +1,409 @@
+@import url("./home.css");
+
+/* Legal Document Generation Page Styles - same look as home */
+.ldg-section {
+    min-height: 100vh;
+    padding: 120px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.ldg-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(197, 149, 74, 0.12) 0%, transparent 55%),
+        radial-gradient(circle at 90% 80%, rgba(197, 149, 74, 0.08) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.ldg-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Header */
+.ldg-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.ldg-title {
+    font-size: 42px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    line-height: 1.3;
+}
+
+.ldg-subtitle {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Main Content Layout */
+.ldg-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* Form Container */
+.ldg-form-container {
+    background: radial-gradient(circle at top, rgba(31, 44, 69, 0.85), rgba(13, 21, 36, 0.98));
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid rgba(197, 149, 74, 0.25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.ldg-form-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.ldg-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.ldg-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ldg-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 4px;
+}
+
+.ldg-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.ldg-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(13, 21, 36, 0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(197, 149, 74, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.ldg-radio-label:hover {
+    background: rgba(13, 21, 36, 0.8);
+    border-color: rgba(197, 149, 74, 0.4);
+}
+
+.ldg-radio-label input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #c5954a;
+}
+
+.ldg-radio-label input[type="radio"]:checked + span {
+    color: #c5954a;
+    font-weight: 600;
+}
+
+.ldg-input,
+.ldg-textarea {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(13, 21, 36, 0.9);
+    border: 1px solid rgba(197, 149, 74, 0.25);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 15px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.ldg-input:focus,
+.ldg-textarea:focus {
+    outline: none;
+    border-color: rgba(197, 149, 74, 0.5);
+    background: rgba(13, 21, 36, 1);
+    box-shadow: 0 0 0 3px rgba(197, 149, 74, 0.1);
+}
+
+.ldg-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.ldg-submit-btn {
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+    color: #0d1524;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    font-family: inherit;
+}
+
+.ldg-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(197, 149, 74, 0.4);
+}
+
+.ldg-submit-btn:active {
+    transform: translateY(0);
+}
+
+.ldg-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Output Container */
+.ldg-output-container {
+    background: radial-gradient(circle at top, rgba(31, 44, 69, 0.85), rgba(13, 21, 36, 0.95));
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid rgba(197, 149, 74, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.ldg-output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.ldg-output-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.ldg-copy-btn {
+    padding: 12px 24px;
+    background: rgba(197, 149, 74, 0.2);
+    color: #c5954a;
+    border: 1px solid rgba(197, 149, 74, 0.4);
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.ldg-copy-btn:hover {
+    background: rgba(197, 149, 74, 0.3);
+    border-color: rgba(197, 149, 74, 0.6);
+}
+
+/* Tabs */
+.ldg-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid rgba(197, 149, 74, 0.2);
+}
+
+.ldg-tab {
+    padding: 14px 24px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    position: relative;
+    bottom: -2px;
+}
+
+.ldg-tab:hover {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.ldg-tab.active {
+    color: #c5954a;
+    border-bottom-color: #c5954a;
+}
+
+/* Tab Content */
+.ldg-tab-content {
+    min-height: 400px;
+}
+
+.ldg-tab-pane {
+    display: none;
+}
+
+.ldg-tab-pane.active {
+    display: block;
+}
+
+.ldg-document-display {
+    background: rgba(13, 21, 36, 0.9);
+    border: 1px solid rgba(197, 149, 74, 0.2);
+    border-radius: 12px;
+    padding: 32px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 15px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    max-height: 600px;
+    overflow-y: auto;
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.ldg-explanation-display {
+    background: rgba(13, 21, 36, 0.9);
+    border: 1px solid rgba(197, 149, 74, 0.2);
+    border-radius: 12px;
+    padding: 32px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    line-height: 1.8;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.ldg-explanation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ldg-explanation-list li {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(197, 149, 74, 0.15);
+}
+
+.ldg-explanation-list li:last-child {
+    border-bottom: none;
+}
+
+.ldg-explanation-list li strong {
+    color: #c5954a;
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .ldg-main {
+        grid-template-columns: 1fr;
+    }
+    
+    .ldg-output-container {
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .ldg-section {
+        padding: 100px 0 60px;
+    }
+    
+    .ldg-container {
+        padding: 0 20px;
+    }
+    
+    .ldg-title {
+        font-size: 32px;
+    }
+    
+    .ldg-subtitle {
+        font-size: 18px;
+    }
+    
+    .ldg-form-container,
+    .ldg-output-container {
+        padding: 28px;
+    }
+    
+    .ldg-form-title,
+    .ldg-output-title {
+        font-size: 24px;
+    }
+    
+    .ldg-output-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .ldg-copy-btn {
+        width: 100%;
+    }
+    
+    .ldg-tabs {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .ldg-tab {
+        width: 100%;
+        text-align: left;
+        border-bottom: 1px solid rgba(197, 149, 74, 0.2);
+        border-left: 3px solid transparent;
+    }
+    
+    .ldg-tab.active {
+        border-left-color: #c5954a;
+        border-bottom-color: rgba(197, 149, 74, 0.2);
+    }
+    
+    .ldg-document-display,
+    .ldg-explanation-display {
+        padding: 24px;
+        font-size: 14px;
+    }
+}
+
+/* RTL Support */
+[dir="rtl"] .ldg-radio-label {
+    text-align: right;
+}
+
+[dir="rtl"] .ldg-tab {
+    text-align: right;
+}
+
+[dir="rtl"] .ldg-output-header {
+    flex-direction: row-reverse;
+}
+
