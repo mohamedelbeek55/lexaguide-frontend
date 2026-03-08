@@ -1,6 +1,4 @@
-// frontend/shared/api.js
-
-export const API_BASE = "https://lexaguide-backend.vercel.app/api"; // غيرها لو local
+const API_BASE = "https://graduation-backend2.vercel.app/api";
 
 function getAccessToken() {
   return localStorage.getItem("accessToken") || "";
@@ -11,7 +9,7 @@ function setTokens({ accessToken, refreshToken }) {
   if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
 }
 
-export function logoutLocal() {
+function logoutLocal() {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
   localStorage.removeItem("user");
@@ -20,126 +18,443 @@ export function logoutLocal() {
 async function request(path, { method = "GET", body, auth = false, isForm = false } = {}) {
   const headers = {};
   if (!isForm) headers["Content-Type"] = "application/json";
-
   if (auth) {
     const token = getAccessToken();
     if (token) headers["Authorization"] = `Bearer ${token}`;
   }
-
   const res = await fetch(`${API_BASE}${path}`, {
     method,
     headers,
     credentials: "include",
     body: body ? (isForm ? body : JSON.stringify(body)) : undefined
   });
-
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.message || "Request failed");
   return data;
 }
 
-/* =========================
-   AUTH
-========================= */
-export async function register(fullName, email, password) {
-  const data = await request("/auth/register", {
-    method: "POST",
-    body: { fullName, email, password }
-  });
-  setTokens(data);
-  localStorage.setItem("user", JSON.stringify(data.user));
-  return data;
-}
+const API = {
+  Auth: {
+    async register({ fullName, email, password }) {
+      const data = await request("/auth/register", {
+        method: "POST",
+        body: { fullName, email, password }
+      });
+      setTokens(data);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      return data;
+    },
+    async login(email, password) {
+      const data = await request("/auth/login", {
+        method: "POST",
+        body: { email, password }
+      });
+      setTokens(data);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      return data;
+    },
+    async me() {
+      return request("/auth/me", { auth: true });
+    }
+  },
+  Admin: {
+    stats() {
+      return request("/admin/stats", { auth: true });
+    },
+    users({ page = 1, limit = 20, q = "" } = {}) {
+      const qs = new URLSearchParams({ page: String(page), limit: String(limit), q });
+      return request(`/admin/users?${qs.toString()}`, { auth: true });
+    },
+    toggleUser(id) {
+      return request(`/admin/users/${id}/toggle-active`, { method: "PATCH", auth: true });
+    },
+    consultations({ page = 1, limit = 20 } = {}) {
+      const qs = new URLSearchParams({ page: String(page), limit: String(limit) });
+      return request(`/admin/consultations?${qs.toString()}`, { auth: true });
+    },
+    async getUsers() {
+      const resp = await this.users({ page: 1, limit: 100 });
+      return { data: resp.items || [] };
+    },
+    async getAllUsers() {
+      let page = 1;
+      const limit = 100;
+      const all = [];
+      while (true) {
+        const resp = await this.users({ page, limit });
+        const items = resp.items || [];
+        all.push(...items);
+        if (items.length < limit) break;
+        page++;
+      }
+      return { data: all };
+    },
+    async getConsultations() {
+      const resp = await this.consultations({ page: 1, limit: 100 });
+      const items = (resp.items || []).map((x) => ({
+        id: x._id,
+        client_name: (x.userId && x.userId.fullName) || "",
+        lawyer_name: (x.lawyerId && x.lawyerId.fullName) || "",
+        legal_area: "",
+        communication_method: x.type,
+        status: x.status,
+        description: x.notes || "",
+        created_at: x.createdAt
+      }));
+      return { data: items };
+    }
+  },
+  Match: {
+    async match({ legal_area_id, communication_method, description } = {}) {
+      const specialty = typeof legal_area_id === "string" ? legal_area_id : "";
+      const qs = new URLSearchParams();
+      if (specialty) qs.set("specialty", specialty);
+      const resp = await request(`/lawyers?${qs.toString()}`, { method: "GET" });
+      const items = (resp.lawyers || []).map((l, idx) => ({
+        id: l._id || idx + 1,
+        full_name: l.fullName,
+        specialty: (l.specialties && l.specialties[0]) || "",
+        country: l.governorate || "",
+        availability_status: l.ratingAvg ? "online_now" : "unavailable",
+        price_per_session: l.pricePerSession,
+        session_duration_mins: 30,
+        communication_methods: "chat",
+        bio: l.bio || "",
+        rating: l.ratingAvg || 0,
+        total_consultations: l.ratingCount || 0
+      }));
+      return { data: items };
+    }
+  },
+  Consult: {
+    async getMine() {
+      const resp = await request("/consultations/my", { auth: true });
+      const items = (resp.consultations || []).map((x) => ({
+        id: x._id,
+        client_name: "",
+        lawyer_name: (x.lawyerId && x.lawyerId.fullName) || "",
+        legal_area: (x.lawyerId && x.lawyerId.specialties && x.lawyerId.specialties[0]) || "",
+        communication_method: x.type,
+        status: x.status,
+        description: x.notes || "",
+        created_at: x.createdAt
+      }));
+      return { data: items };
+    },
+    async updateStatus(id, status) {
+      return request(`/consultations/${id}/status`, {
+        method: "PATCH",
+        auth: true,
+        body: { status }
+      });
+    },
+    async book({ lawyer_id, legal_area_id, communication_method, description } = {}) {
+      const lawyerId = lawyer_id || "";
+      const notes = description || "";
+      return request("/consultations", {
+        method: "POST",
+        auth: true,
+        body: { lawyerId, notes }
+      });
+    }
+  },
+  Lawyer: {
+    async getAll() {
+      const resp = await request("/lawyers", { method: "GET" });
+      const items = (resp.lawyers || []).map((l, idx) => ({
+        id: l._id || idx + 1,
+        full_name: l.fullName,
+        specialty: (l.specialties && l.specialties[0]) || "",
+        country: l.governorate || "",
+        availability_status: l.availability_status || (l.ratingAvg ? "online_now" : "unavailable"),
+        price_per_session: l.pricePerSession,
+        session_duration_mins: 30,
+        communication_methods: "chat",
+        bio: l.bio || "",
+        isVerified: true
+      }));
+      return { data: items };
+    },
+    async getPending() {
+      const resp = await request("/lawyers/pending", { auth: true });
+      const items = (resp.lawyers || []).map((l, idx) => ({
+        id: l._id || idx + 1,
+        full_name: l.fullName,
+        specialty: (l.specialties && l.specialties[0]) || "",
+        country: l.governorate || "",
+        availability_status: "unavailable",
+        price_per_session: l.pricePerSession,
+        session_duration_mins: 30,
+        communication_methods: "chat",
+        bio: l.bio || "",
+        isVerified: false
+      }));
+      return { data: items };
+    },
+    async verify(id) {
+      return request(`/lawyers/${id}/verify`, { method: "PATCH", auth: true });
+    },
+    async setActive(id, isActive) {
+      return request(`/lawyers/${id}/active`, {
+        method: "PATCH",
+        auth: true,
+        body: { isActive: !!isActive }
+      });
+    },
+    async update(id, payload) {
+      const body = {
+        fullName: payload.full_name,
+        bio: payload.bio,
+        governorate: payload.country,
+        specialties: payload.specialty ? [payload.specialty] : undefined,
+        pricePerSession: payload.price_per_session,
+        isVerified: payload.isVerified,
+        isActive: payload.availability_status ? payload.availability_status !== "unavailable" : undefined
+      };
+      return request(`/lawyers/${id}`, { method: "PATCH", auth: true, body });
+    },
+    async create(payload) {
+      const body = {
+        fullName: payload.full_name,
+        email: payload.email || (`lawyer.${Date.now()}@example.com`),
+        phone: payload.phone,
+        bio: payload.bio,
+        governorate: payload.country,
+        specialties: payload.specialty ? [payload.specialty] : [],
+        pricePerSession: payload.price_per_session,
+        isVerified: true,
+        isActive: payload.availability_status ? payload.availability_status !== "unavailable" : true
+      };
+      return request(`/lawyers`, { method: "POST", auth: true, body });
+    },
+    async delete(id) {
+      return request(`/lawyers/${id}`, { method: "DELETE", auth: true });
+    }
+  },
+  Templates: {
+    complaints({ page = 1, limit = 20, q = "" } = {}) {
+      const qs = new URLSearchParams({ page: String(page), limit: String(limit), q });
+      return request(`/templates/complaints?${qs.toString()}`);
+    },
+    complaint(id) {
+      return request(`/templates/complaints/${id}`);
+    },
+    contracts({ page = 1, limit = 20, q = "" } = {}) {
+      const qs = new URLSearchParams({ page: String(page), limit: String(limit), q });
+      return request(`/templates/contracts?${qs.toString()}`);
+    },
+    contract(id) {
+      return request(`/templates/contracts/${id}`);
+    }
+  },
+  Generated: {
+    create({ templateKind = "complaint", templateId, userInputs = {} }) {
+      return request("/generated", {
+        method: "POST",
+        auth: true,
+        body: { templateKind, templateId, userInputs }
+      });
+    },
+    mine({ page = 1, limit = 20 } = {}) {
+      const qs = new URLSearchParams({ page: String(page), limit: String(limit) });
+      return request(`/generated/my?${qs.toString()}`, { auth: true });
+    },
+    finalize(id) {
+      return request(`/generated/${id}/finalize`, { method: "PATCH", auth: true });
+    }
+  },
+  Profile: {
+    get() {
+      return request("/profile", { auth: true });
+    },
+    update(payload) {
+      return request("/profile", { method: "PATCH", auth: true, body: payload });
+    },
+    uploadAvatar(file) {
+      const form = new FormData();
+      form.append("avatar", file);
+      return request("/profile/avatar", { method: "POST", auth: true, body: form, isForm: true });
+    }
+  },
+  getToken: getAccessToken,
+  getUser: () => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "{}");
+    } catch {
+      return null;
+    }
+  },
+  isLoggedIn: () => !!getAccessToken(),
+  isAdmin: () => {
+    const u = API.getUser();
+    return u && (u.role === "admin");
+  },
+  logout: logoutLocal,
+  requireAuth() {
+    if (!API.isLoggedIn()) {
+      window.location.href = "/html/login.html";
+      throw new Error("Unauthorized");
+    }
+  },
+  requireAdmin() {
+    if (!API.isLoggedIn() || !API.isAdmin()) {
+      window.location.href = "/html/login.html";
+      throw new Error("Admin required");
+    }
+  },
+  UI: {
+    setLoading(btn, text = "Loading…") {
+      if (!btn) return () => { };
+      const prev = { text: btn.textContent, disabled: btn.disabled };
+      btn.textContent = text;
+      btn.disabled = true;
+      return function restore() {
+        btn.textContent = prev.text;
+        btn.disabled = prev.disabled;
+      };
+    },
+    toast(message, type = "info") {
+      try {
+        const el = document.createElement("div");
+        el.style.position = "fixed";
+        el.style.bottom = "16px";
+        el.style.right = "16px";
+        el.style.zIndex = "9999";
+        el.style.padding = "10px 12px";
+        el.style.borderRadius = "6px";
+        el.style.color = "#fff";
+        el.style.background = type === "success" ? "#27ae60" : type === "error" ? "#c0392b" : "#2c3e50";
+        el.textContent = message;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
+      } catch {
+        alert(message);
+      }
+    },
+    applyNavbar() {
+      const logged = API.isLoggedIn();
+      const navRight = document.querySelector(".navbar-right");
+      const navMenu = document.querySelector(".navbar-menu");
+      const navContainer = document.querySelector(".navbar-container");
+      let container = navRight || navMenu || navContainer || document.querySelector(".navbar");
+      if (!container) return;
 
-export async function login(email, password) {
-  const data = await request("/auth/login", {
-    method: "POST",
-    body: { email, password }
-  });
-  setTokens(data);
-  localStorage.setItem("user", JSON.stringify(data.user));
-  return data;
-}
+      const cta = (navRight && navRight.querySelector(".navbar-cta")) || document.querySelector(".navbar-cta");
+      const btnLogin = document.querySelector(".btn-login");
+      const btnSignup = document.querySelector(".btn-signup");
+      const existing = container.querySelector(".nav-user");
 
-export async function me() {
-  return request("/auth/me", { auth: true });
-}
+      if (logged) {
+        if (cta) cta.style.display = "none";
+        if (btnLogin) btnLogin.style.display = "none";
+        if (btnSignup) btnSignup.style.display = "none";
+        if (!existing) {
+          const user = API.getUser() || {};
+          const name = user.full_name || user.name || user.email || "User";
+          const initials = (() => {
+            const parts = (name || "").trim().split(/\s+/);
+            return parts.length >= 2
+              ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+              : (name || "U").slice(0, 2).toUpperCase();
+          })();
+          const wrap = document.createElement("div");
+          wrap.className = "nav-user";
+          wrap.style.display = "flex";
+          wrap.style.alignItems = "center";
+          wrap.style.gap = "10px";
+          wrap.style.cursor = "pointer";
+          wrap.style.position = "relative";
+          const avatar = document.createElement("div");
+          avatar.textContent = initials;
+          avatar.style.width = "32px";
+          avatar.style.height = "32px";
+          avatar.style.borderRadius = "50%";
+          avatar.style.display = "flex";
+          avatar.style.alignItems = "center";
+          avatar.style.justifyContent = "center";
+          avatar.style.background = "linear-gradient(135deg,#c5954a,#d4a55a)";
+          avatar.style.color = "#0d1524";
+          avatar.style.fontWeight = "700";
+          const label = document.createElement("span");
+          label.textContent = name;
+          label.style.color = "rgba(255,255,255,0.9)";
+          label.style.fontSize = "14px";
+          const dropdown = document.createElement("div");
+          dropdown.className = "nav-user-dd";
+          dropdown.style.position = "absolute";
+          dropdown.style.top = "100%";
+          dropdown.style.right = "0";
+          dropdown.style.marginTop = "8px";
+          dropdown.style.minWidth = "180px";
+          dropdown.style.background = "rgba(13,21,36,0.98)";
+          dropdown.style.border = "1px solid rgba(197,149,74,0.25)";
+          dropdown.style.borderRadius = "10px";
+          dropdown.style.boxShadow = "0 12px 40px rgba(0,0,0,0.4)";
+          dropdown.style.display = "none";
+          const linkProf = document.createElement("a");
+          linkProf.href = "/html/profile.html";
+          linkProf.textContent = "Profile";
+          linkProf.style.display = "block";
+          linkProf.style.padding = "10px 14px";
+          linkProf.style.color = "rgba(255,255,255,0.9)";
+          linkProf.style.textDecoration = "none";
+          const linkLogout = document.createElement("button");
+          linkLogout.textContent = "Logout";
+          linkLogout.style.display = "block";
+          linkLogout.style.width = "100%";
+          linkLogout.style.padding = "10px 14px";
+          linkLogout.style.background = "transparent";
+          linkLogout.style.color = "rgba(255,255,255,0.9)";
+          linkLogout.style.border = "none";
+          linkLogout.style.textAlign = "left";
+          linkLogout.addEventListener("click", () => {
+            API.logout();
+            window.location.href = "/";
+          });
+          dropdown.appendChild(linkProf);
+          dropdown.appendChild(linkLogout);
+          wrap.appendChild(avatar);
+          wrap.appendChild(label);
+          wrap.appendChild(dropdown);
+          wrap.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.style.display =
+              dropdown.style.display === "none" ? "block" : "none";
+          });
+          document.addEventListener("click", () => {
+            dropdown.style.display = "none";
+          });
+          // If menu is hidden (mobile), attach to navbar-container instead
+          try {
+            const isMenuHidden = navMenu && getComputedStyle(navMenu).display === "none";
+            (isMenuHidden && navContainer ? navContainer : container).appendChild(wrap);
+          } catch {
+            container.appendChild(wrap);
+          }
+        }
+      } else {
+        if (cta) cta.style.display = "";
+        if (btnLogin) btnLogin.style.display = "";
+        if (btnSignup) btnSignup.style.display = "";
+        if (existing) existing.remove();
+      }
+    }
+  }
+};
 
-/* =========================
-   ADMIN
-========================= */
-export async function adminStats() {
-  return request("/admin/stats", { auth: true });
-}
-
-export async function adminUsers({ page = 1, limit = 20, q = "" } = {}) {
-  const qs = new URLSearchParams({ page: String(page), limit: String(limit), q });
-  return request(`/admin/users?${qs.toString()}`, { auth: true });
-}
-
-export async function adminToggleUser(id) {
-  return request(`/admin/users/${id}/toggle-active`, { method: "PATCH", auth: true });
-}
-
-export async function adminConsultations({ page = 1, limit = 20 } = {}) {
-  const qs = new URLSearchParams({ page: String(page), limit: String(limit) });
-  return request(`/admin/consultations?${qs.toString()}`, { auth: true });
-}
-
-/* =========================
-   TEMPLATES
-========================= */
-export async function listComplaintTemplates({ page = 1, limit = 20, q = "" } = {}) {
-  const qs = new URLSearchParams({ page: String(page), limit: String(limit), q });
-  return request(`/templates/complaints?${qs.toString()}`);
-}
-
-export async function getComplaintTemplate(id) {
-  return request(`/templates/complaints/${id}`);
-}
-
-export async function listContractTemplates({ page = 1, limit = 20, q = "" } = {}) {
-  const qs = new URLSearchParams({ page: String(page), limit: String(limit), q });
-  return request(`/templates/contracts?${qs.toString()}`);
-}
-
-export async function getContractTemplate(id) {
-  return request(`/templates/contracts/${id}`);
-}
-
-/* =========================
-   GENERATED
-========================= */
-export async function createGenerated({ templateKind = "complaint", templateId, userInputs = {} }) {
-  return request("/generated", {
-    method: "POST",
-    auth: true,
-    body: { templateKind, templateId, userInputs }
-  });
-}
-
-export async function myGenerated({ page = 1, limit = 20 } = {}) {
-  const qs = new URLSearchParams({ page: String(page), limit: String(limit) });
-  return request(`/generated/my?${qs.toString()}`, { auth: true });
-}
-
-export async function finalizeGenerated(id) {
-  return request(`/generated/${id}/finalize`, { method: "PATCH", auth: true });
-}
-
-/* =========================
-   PROFILE
-========================= */
-export async function getProfile() {
-  return request("/profile", { auth: true });
-}
-
-export async function updateProfile(payload) {
-  return request("/profile", { method: "PATCH", auth: true, body: payload });
-}
-
-export async function uploadAvatar(file) {
-  const form = new FormData();
-  form.append("avatar", file);
-  return request("/profile/avatar", { method: "POST", auth: true, body: form, isForm: true });
-}
+window.API = API;
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    API.UI.applyNavbar();
+  } catch { }
+});
+window.addEventListener("load", () => {
+  try {
+    API.UI.applyNavbar();
+  } catch { }
+});
+window.addEventListener("resize", () => {
+  try {
+    API.UI.applyNavbar();
+  } catch { }
+});

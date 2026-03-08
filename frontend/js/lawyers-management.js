@@ -109,6 +109,8 @@
         '<td><span class="badge ' + statusClass + '">' + escapeHtml(status) + '</span></td>' +
         '<td class="actions-cell">' +
         '<button type="button" class="btn btn-edit" data-action="edit" data-id="' + id + '">Edit</button> ' +
+        '<button type="button" class="btn btn-secondary" data-action="verify" data-id="' + id + '">Verify</button> ' +
+        '<button type="button" class="btn btn-success" data-action="enable" data-id="' + id + '">Enable</button> ' +
         '<button type="button" class="btn btn-danger" data-action="delete" data-id="' + id + '">Delete</button>' +
         '</td>';
       tbody.appendChild(tr);
@@ -116,6 +118,12 @@
 
     tbody.querySelectorAll('[data-action="edit"]').forEach(function (btn) {
       btn.addEventListener('click', function () { openModalEdit(parseInt(btn.getAttribute('data-id'), 10)); });
+    });
+    tbody.querySelectorAll('[data-action="verify"]').forEach(function (btn) {
+      btn.addEventListener('click', function () { verifyLawyer(parseInt(btn.getAttribute('data-id'), 10)); });
+    });
+    tbody.querySelectorAll('[data-action="enable"]').forEach(function (btn) {
+      btn.addEventListener('click', function () { enableLawyer(parseInt(btn.getAttribute('data-id'), 10)); });
     });
     tbody.querySelectorAll('[data-action="delete"]').forEach(function (btn) {
       btn.addEventListener('click', function () { deleteLawyer(parseInt(btn.getAttribute('data-id'), 10)); });
@@ -165,6 +173,24 @@
   function clearErrors() {
     form.querySelectorAll('.invalid').forEach(function (el) { el.classList.remove('invalid'); });
     form.querySelectorAll('.error-msg').forEach(function (el) { el.textContent = ''; });
+  }
+
+  async function verifyLawyer(id) {
+    try {
+      await API.Lawyer.verify(id);
+      API.UI.toast('Lawyer verified.', 'success');
+    } catch (err) {
+      API.UI.toast(err.message || 'Failed to verify lawyer.', 'error');
+    }
+  }
+
+  async function enableLawyer(id) {
+    try {
+      await API.Lawyer.setActive(id, true);
+      API.UI.toast('Lawyer enabled.', 'success');
+    } catch (err) {
+      API.UI.toast(err.message || 'Failed to enable lawyer.', 'error');
+    }
   }
 
   async function deleteLawyer(id) {
@@ -251,7 +277,9 @@
   async function loadLawyers() {
     tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#888;">Loading lawyers…</td></tr>';
     try {
-      var response = await API.Lawyer.getAll();
+      var allResp = await API.Lawyer.getAll();
+      var pendResp = await API.Lawyer.getPending().catch(function () { return { data: [] }; });
+      var response = { data: [].concat((allResp && allResp.data) || [], (pendResp && pendResp.data) || []) };
       lawyers = (response && response.data) ? response.data : (Array.isArray(response) ? response : []);
       render();
     } catch (err) {

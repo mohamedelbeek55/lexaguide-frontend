@@ -36,10 +36,20 @@ window.addEventListener('resize', function () {
     }
 });
 
-// ─── If already logged in, redirect away ─────────────────────────────────────
-if (API.isLoggedIn()) {
-    window.location.href = 'middle-east-law.html';
-}
+// ─── If already logged in, redirect away (unless force) or logout via query ─
+(function () {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const shouldLogout = params.get('logout') === '1';
+        const force = params.get('force') === '1';
+        if (shouldLogout && API.logout) {
+            API.logout();
+        }
+        if (API.isLoggedIn() && !force) {
+            window.location.href = 'middle-east-law.html';
+        }
+    } catch { }
+})();
 
 // ─── Helper: show / clear error banner ───────────────────────────────────────
 function showError(message) {
@@ -89,7 +99,7 @@ document.getElementById('signupForm').addEventListener('submit', async function 
     const restore = API.UI.setLoading(submitBtn, 'Creating account…');
 
     try {
-        const payload = { full_name, email, password };
+        const payload = { fullName: full_name, email, password };
         if (phone) payload.phone = phone;
         if (national_id) payload.national_id = national_id;
 
@@ -191,3 +201,25 @@ document.addEventListener('click', function (event) {
         document.getElementById('langDropdown').classList.remove('active');
     }
 });
+
+// Prefill from query string and auto submit if all required present
+(function () {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const fullnameQS = params.get('fullname') || '';
+        const emailQS = params.get('email') || '';
+        const passwordQS = params.get('password') || '';
+        const confirmQS = params.get('confirm-password') || '';
+        const phoneQS = params.get('phone') || '';
+        const nationalQS = params.get('nationalId') || '';
+        if (fullnameQS) document.getElementById('fullname').value = fullnameQS;
+        if (emailQS) document.getElementById('email').value = emailQS;
+        if (passwordQS) document.getElementById('password').value = passwordQS;
+        if (confirmQS) document.getElementById('confirm-password').value = confirmQS;
+        if (phoneQS) document.getElementById('phone').value = phoneQS;
+        if (nationalQS) document.getElementById('nationalId').value = nationalQS;
+        if (fullnameQS && emailQS && passwordQS && confirmQS && passwordQS === confirmQS) {
+            document.getElementById('signupForm').dispatchEvent(new Event('submit'));
+        }
+    } catch {}
+})();

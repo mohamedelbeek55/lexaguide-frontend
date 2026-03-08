@@ -113,12 +113,23 @@
   async function loadUsers() {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#888;">Loading users…</td></tr>';
     try {
-      if (!API.Admin || typeof API.Admin.getUsers !== 'function') {
+      if (!API.Admin || (typeof API.Admin.users !== 'function' && typeof API.Admin.getAllUsers !== 'function')) {
         throw new Error('Admin API not available.');
       }
-      var response = await API.Admin.getUsers();
-      var raw = (response && response.data) !== undefined ? response.data : response;
-      users = Array.isArray(raw) ? raw : (raw && Array.isArray(raw.users) ? raw.users : []);
+      var response = (typeof API.Admin.getAllUsers === 'function')
+        ? await API.Admin.getAllUsers()
+        : await API.Admin.users({ page: 1, limit: 100 });
+      var raw = (response && (response.data || response.items)) ? (response.data || response.items) : [];
+      users = raw.map(function (u) {
+        return {
+          id: u._id || u.id,
+          full_name: u.fullName || u.full_name || '',
+          email: u.email || '',
+          phone: u.phone || '',
+          country: u.country || '',
+          created_at: u.createdAt || u.created_at || ''
+        };
+      });
       render();
     } catch (err) {
       var msg = err.message || 'Unknown error';
