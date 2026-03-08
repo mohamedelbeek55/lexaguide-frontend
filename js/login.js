@@ -108,6 +108,19 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     }
 });
 
+// Prefill from query string and auto submit if both present
+(function () {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const emailQS = params.get('email') || '';
+        const passwordQS = params.get('password') || '';
+        if (emailQS) (document.getElementById('email') || document.querySelector('[type=\"email\"]')).value = emailQS;
+        if (passwordQS) (document.getElementById('password') || document.querySelector('[type=\"password\"]')).value = passwordQS;
+        if (emailQS && passwordQS) {
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+        }
+    } catch {}
+})();
 // ─── Language Selector ────────────────────────────────────────────────────────
 let currentLang = localStorage.getItem('language') || 'en';
 const translations = {

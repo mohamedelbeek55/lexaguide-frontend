@@ -359,7 +359,7 @@ function renderMatchedLawyers(lawyers) {
 async function bookLawyer(lawyerId, communicationMethod) {
     var commMethod = communicationMethod === 'video_call' ? 'video_call' : 'chat';
     if (commMethod === 'chat') {
-        window.location.href = 'customer.html';
+        window.location.href = 'customer.html?lawyer=' + encodeURIComponent(String(lawyerId || ''));
         return;
     }
     if (!API.isLoggedIn()) {
