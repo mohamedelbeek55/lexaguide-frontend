@@ -52,6 +52,8 @@
     modalTitle.textContent = 'Add Lawyer';
     editId.value = '';
     document.getElementById('fullName').value = '';
+    var emailEl = document.getElementById('email');
+    if (emailEl) emailEl.value = '';
     var specEl = document.getElementById('specialty');
     if (specEl && specEl.options.length) specEl.selectedIndex = 0;
     document.getElementById('country').value = '';
@@ -143,6 +145,8 @@
     editId.value = l.id;
     modalTitle.textContent = 'Edit Lawyer — ' + (l.full_name || l.fullName || '');
     document.getElementById('fullName').value = l.full_name || l.fullName || '';
+    var emailEl = document.getElementById('email');
+    if (emailEl) emailEl.value = l.email || '';
     var specEl = document.getElementById('specialty');
     if (specEl) {
       var specVal = l.specialty || l.specialization || '';
@@ -212,6 +216,7 @@
     var restore = API.UI.setLoading(saveBtn, 'Saving…');
 
     var fullName = (document.getElementById('fullName').value || '').trim();
+    var email = (document.getElementById('email') && document.getElementById('email').value || '').trim();
     var specEl = document.getElementById('specialty');
     var specialty = specEl ? (specEl.value || '').trim() : '';
     var country = (document.getElementById('country').value || '').trim();
@@ -223,13 +228,14 @@
 
     try {
       if (mode === 'add') {
-        if (!fullName || !specialty) {
+        if (!fullName || !email || !specialty) {
           restore();
-          API.UI.toast('Full name and specialty (legal area) are required.', 'error');
+          API.UI.toast('Full name, email and specialty (legal area) are required.', 'error');
           return;
         }
         await API.Lawyer.create({
           full_name: fullName,
+          email: email,
           specialty: specialty,
           country: country || undefined,
           availability_status: availabilityStatus,
@@ -246,6 +252,7 @@
         if (!id) { restore(); return; }
         await API.Lawyer.update(id, {
           full_name: fullName,
+          email: email || undefined,
           specialty: specialty,
           country: country || undefined,
           availability_status: availabilityStatus,
@@ -288,16 +295,27 @@
   }
 
   async function loadLegalAreas() {
+    var defaults = [
+      'Family Law',
+      'Real Estate',
+      'Commercial Disputes',
+      'Labor Law',
+      'Intellectual Property',
+      'Corporate Law',
+      'Criminal Law',
+      'Civil Law',
+      'Immigration',
+      'Tax',
+      'Banking & Finance'
+    ];
     try {
-      var resp = await API.LegalArea.getAll();
-      legalAreas = (resp && resp.data) ? resp.data : (Array.isArray(resp) ? resp : []);
+      var list = defaults;
       var specEl = document.getElementById('specialty');
       if (!specEl) return;
       var firstOpt = specEl.options[0];
       specEl.innerHTML = '';
       if (firstOpt) specEl.appendChild(firstOpt);
-      legalAreas.forEach(function (a) {
-        var name = a.name || a.area_name || a.legal_area || '';
+      list.forEach(function (name) {
         if (!name) return;
         var opt = document.createElement('option');
         opt.value = name;

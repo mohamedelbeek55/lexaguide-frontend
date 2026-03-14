@@ -1,4 +1,23 @@
-const API_BASE = "https://graduation-backend2.vercel.app/api";
+// Dynamic API base: prod by default, switches to local on localhost or via ?api=local or localStorage override
+(function initApiBase() {
+  try {
+    var url = new URL(window.location.href);
+    var q = url.searchParams.get("api");
+    if (q === "local") localStorage.setItem("API_BASE_OVERRIDE", "http://127.0.0.1:3000/api");
+    if (q === "prod") localStorage.setItem("API_BASE_OVERRIDE", "https://graduation-backend2.vercel.app/api");
+  } catch (e) { /* ignore */ }
+})();
+const API_BASE = (() => {
+  try {
+    const override = localStorage.getItem("API_BASE_OVERRIDE");
+    if (override) return override;
+    const host = (typeof window !== "undefined" && window.location && window.location.hostname) || "";
+    if (host === "localhost" || host === "127.0.0.1") {
+      return "http://127.0.0.1:3000/api";
+    }
+  } catch (e) { /* ignore */ }
+  return "https://graduation-backend2.vercel.app/api";
+})();
 
 function getAccessToken() {
   return localStorage.getItem("accessToken") || "";
