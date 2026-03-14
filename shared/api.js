@@ -128,10 +128,41 @@ const API = {
     }
   },
   Match: {
-    async match({ legal_area_id, communication_method, description } = {}) {
-      const specialty = typeof legal_area_id === "string" ? legal_area_id : "";
+    async match({ legal_area_id, communication_method, description, city, budget } = {}) {
+      const case_type = typeof legal_area_id === "string" ? legal_area_id : "";
+
+      // Use the new AI recommendation endpoint if advanced fields are provided
+      if (city || budget) {
+        const resp = await request("/lawyers/recommend", {
+          method: "POST",
+          body: {
+            case_type,
+            city: city || "",
+            budget: Number(budget) || 1000,
+            consultation_type: communication_method === "video" ? "video_call" : "chat"
+          }
+        });
+
+        const items = (resp.lawyers || []).map(l => ({
+          id: l.id,
+          full_name: l.full_name,
+          specialty: l.specialization,
+          country: l.city,
+          availability_status: "online_now",
+          price_per_session: l.price,
+          session_duration_mins: 30,
+          communication_methods: "chat",
+          bio: "AI Recommended Match Score: " + (l.score * 100).toFixed(1) + "%",
+          rating: l.avg_rating,
+          total_consultations: l.reviews_count,
+          success_rate: l.success_rate
+        }));
+        return { data: items };
+      }
+
+      // Basic fallback matching
       const qs = new URLSearchParams();
-      if (specialty) qs.set("specialty", specialty);
+      if (case_type) qs.set("specialty", case_type);
       const resp = await request(`/lawyers?${qs.toString()}`, { method: "GET" });
       const items = (resp.lawyers || []).map((l, idx) => ({
         id: l._id || idx + 1,

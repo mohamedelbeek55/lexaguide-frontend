@@ -257,6 +257,8 @@ async function loadLegalAreas() {
 // ─── Show matched lawyers from real API ───────────────────────────────────
 async function simulateMatch() {
     var areaEl = document.getElementById('me-legal-area');
+    var cityEl = document.getElementById('me-city');
+    var budgetEl = document.getElementById('me-budget');
     var needEl = document.getElementById('me-need');
     var commEl = document.querySelector('[name="me-comm"]:checked') ||
         document.querySelector('.me-radio-input:checked');
@@ -264,6 +266,8 @@ async function simulateMatch() {
         document.querySelector('[data-action="match"]');
 
     var legalAreaId = areaEl ? areaEl.value : '';
+    var city = cityEl ? cityEl.value : '';
+    var budget = budgetEl ? budgetEl.value : '';
     var description = needEl ? needEl.value : '';
     var commMethod = commEl ? commEl.value : 'chat';
 
@@ -276,7 +280,9 @@ async function simulateMatch() {
 
     try {
         var response = await API.Match.match({
-            legal_area_id: parseInt(legalAreaId, 10) || legalAreaId,
+            legal_area_id: legalAreaId,
+            city: city,
+            budget: budget,
             communication_method: commMethod === 'video' ? 'video_call' : 'chat',
             description: description || undefined
         });
