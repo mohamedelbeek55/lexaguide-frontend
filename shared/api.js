@@ -310,18 +310,28 @@ const API = {
   isLoggedIn: () => !!getAccessToken(),
   isAdmin: () => {
     const u = API.getUser();
-    return u && (u.role === "admin");
+    return u && (u.role && u.role.toLowerCase() === "admin");
   },
-  logout: logoutLocal,
   requireAuth() {
     if (!API.isLoggedIn()) {
-      window.location.href = "/html/login.html";
+      console.warn("requireAuth: Not logged in, redirecting to login.html");
+      const isHtmlFolder = window.location.pathname.includes("/html/");
+      window.location.href = isHtmlFolder ? "login.html" : "html/login.html";
       throw new Error("Unauthorized");
     }
   },
   requireAdmin() {
-    if (!API.isLoggedIn() || !API.isAdmin()) {
-      window.location.href = "/html/login.html";
+    if (!API.isLoggedIn()) {
+      console.warn("requireAdmin: Not logged in, redirecting to login.html");
+      const isHtmlFolder = window.location.pathname.includes("/html/");
+      window.location.href = isHtmlFolder ? "login.html" : "html/login.html";
+      throw new Error("Admin required");
+    }
+    if (!API.isAdmin()) {
+      const user = API.getUser();
+      console.warn("requireAdmin: User is not admin (role:", user ? user.role : "none", "), redirecting to middle-east-law.html");
+      const isHtmlFolder = window.location.pathname.includes("/html/");
+      window.location.href = isHtmlFolder ? "middle-east-law.html" : "html/middle-east-law.html";
       throw new Error("Admin required");
     }
   },
