@@ -1,4 +1,4 @@
-﻿// Navbar menu reuse
+// Navbar menu reuse
 function toggleMenu() {
     const menu = document.getElementById('navbarMenu');
     const toggle = document.getElementById('navbarToggle');
@@ -129,6 +129,21 @@ function appendMessage(text, type) {
 }
 
 // ─── Real AI Chatbot Integration ─────────────────────────────────────────
+let currentSessionId = null;
+
+async function getOrCreateSession() {
+    if (currentSessionId) return currentSessionId;
+
+    try {
+        const resp = await API.Chatbot.createSession("Chat Session");
+        currentSessionId = resp.session._id;
+        return currentSessionId;
+    } catch (err) {
+        console.error("Failed to create session:", err);
+        return null;
+    }
+}
+
 async function realBotReply(userText) {
     // Add a "Thinking…" bubble
     const thinkingMsg = document.createElement('div');
@@ -146,16 +161,14 @@ async function realBotReply(userText) {
             return;
         }
 
-        const aiResponse = await API.AI.analyze({ question: userText });
+        const sessionId = await getOrCreateSession();
+        if (!sessionId) throw new Error("Could not start a chat session.");
 
-        // Extract the answer — handle different response shapes from the AI service
-        const answer = (aiResponse && aiResponse.data && (
-            aiResponse.data.answer ||
-            aiResponse.data.result ||
-            aiResponse.data.response ||
-            aiResponse.data.text ||
-            JSON.stringify(aiResponse.data)
-        )) || (aiResponse && aiResponse.answer) || 'I received a response but could not extract the text.';
+        const resp = await API.Chatbot.sendMessage(sessionId, userText);
+
+        // Extract the answer from the backend response
+        const answer = (resp && resp.assistantMessage && resp.assistantMessage.content) || 
+                       'I received a response but could not extract the text.';
 
         // Replace the thinking bubble with the real answer
         thinkingMsg.classList.remove('thinking-bubble');
@@ -163,7 +176,7 @@ async function realBotReply(userText) {
     } catch (err) {
         thinkingMsg.classList.remove('thinking-bubble');
         var errMsg = err && err.message ? err.message : String(err);
-        if (errMsg.indexOf('offline') !== -1 || errMsg.indexOf('Cannot connect') !== -1 || errMsg.indexOf('503') !== -1) {
+        if (errMsg.indexOf('offline') !== -1 || errMsg.indexOf('fetch') !== -1 || errMsg.indexOf('503') !== -1) {
             thinkingMsg.textContent = '⚠️ The AI service is currently offline. Please start the backend server and try again.';
         } else {
             thinkingMsg.textContent = '⚠️ Sorry, an error occurred: ' + errMsg;

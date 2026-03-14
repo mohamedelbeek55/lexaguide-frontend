@@ -282,8 +282,31 @@ const API = {
       const qs = new URLSearchParams({ page: String(page), limit: String(limit) });
       return request(`/generated/my?${qs.toString()}`, { auth: true });
     },
-    finalize(id) {
+    async finalize(id) {
       return request(`/generated/${id}/finalize`, { method: "PATCH", auth: true });
+    }
+  },
+  Chatbot: {
+    async createSession(title) {
+      return request("/chatbot/sessions", {
+        method: "POST",
+        auth: true,
+        body: { title }
+      });
+    },
+    async getSessions({ page = 1, limit = 20 } = {}) {
+      const qs = new URLSearchParams({ page: String(page), limit: String(limit) });
+      return request(`/chatbot/sessions?${qs.toString()}`, { auth: true });
+    },
+    async getSession(id) {
+      return request(`/chatbot/sessions/${id}`, { auth: true });
+    },
+    async sendMessage(sessionId, content) {
+      return request(`/chatbot/sessions/${sessionId}/messages`, {
+        method: "POST",
+        auth: true,
+        body: { content }
+      });
     }
   },
   Profile: {
