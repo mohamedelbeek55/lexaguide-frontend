@@ -20,18 +20,18 @@ const API_BASE = (() => {
 })();
 
 function getAccessToken() {
-  return localStorage.getItem("accessToken") || "";
+  return sessionStorage.getItem("accessToken") || "";
 }
 
 function setTokens({ accessToken, refreshToken }) {
-  if (accessToken) localStorage.setItem("accessToken", accessToken);
-  if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+  if (accessToken) sessionStorage.setItem("accessToken", accessToken);
+  if (refreshToken) sessionStorage.setItem("refreshToken", refreshToken);
 }
 
 function logoutLocal() {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
-  localStorage.removeItem("user");
+  sessionStorage.removeItem("accessToken");
+  sessionStorage.removeItem("refreshToken");
+  sessionStorage.removeItem("user");
 }
 
 async function request(path, { method = "GET", body, auth = false, isForm = false } = {}) {
@@ -64,7 +64,7 @@ const API = {
         body: { fullName, email, password }
       });
       setTokens(data);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      sessionStorage.setItem("user", JSON.stringify(data.user));
       return data;
     },
     async login(email, password) {
@@ -73,7 +73,7 @@ const API = {
         body: { email, password }
       });
       setTokens(data);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      sessionStorage.setItem("user", JSON.stringify(data.user));
       return data;
     },
     async me() {
@@ -302,7 +302,7 @@ const API = {
   getToken: getAccessToken,
   getUser: () => {
     try {
-      return JSON.parse(localStorage.getItem("user") || "{}");
+      return JSON.parse(sessionStorage.getItem("user") || "{}");
     } catch {
       return null;
     }

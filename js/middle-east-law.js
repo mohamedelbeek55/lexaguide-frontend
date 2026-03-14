@@ -218,25 +218,39 @@ function toggleFaq(element) {
     }
 }
 
-// ─── Load legal areas from API to populate the dropdown ───────────────────
+// ─── Load legal areas to populate the dropdown ───────────────────
 async function loadLegalAreas() {
     var areaSelect = document.getElementById('me-legal-area');
     if (!areaSelect) return;
+
+    var defaults = [
+        'Family Law',
+        'Real Estate',
+        'Commercial Disputes',
+        'Labor Law',
+        'Intellectual Property',
+        'Corporate Law',
+        'Criminal Law',
+        'Civil Law',
+        'Immigration',
+        'Tax',
+        'Banking & Finance'
+    ];
+
     try {
-        var response = await API.LegalArea.getAll();
-        var areas = (response && response.data) ? response.data : [];
-        // Keep placeholder option, then add options from database
+        // Keep placeholder option
         var firstOpt = areaSelect.options[0];
         areaSelect.innerHTML = '';
         if (firstOpt && firstOpt.value === '') areaSelect.appendChild(firstOpt);
-        areas.forEach(function (area) {
+
+        defaults.forEach(function (name) {
             var opt = document.createElement('option');
-            opt.value = area.id;
-            opt.textContent = area.name || area.area_name || area.legal_area || 'Unknown';
+            opt.value = name;
+            opt.textContent = name;
             areaSelect.appendChild(opt);
         });
     } catch (e) {
-        // Network error — keep placeholder only
+        // Fallback — keep placeholder only
     }
 }
 
