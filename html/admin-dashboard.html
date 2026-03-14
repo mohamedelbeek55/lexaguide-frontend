@@ -619,12 +619,16 @@
             <span class="notif-badge" id="notifBadge">5</span>
           </div>
           <div class="topbar-user-menu" id="topbarUserMenu">
-            <button type="button" class="topbar-user-trigger" id="topbarUserTrigger" aria-haspopup="true" aria-expanded="false" aria-label="Account menu">
+            <button type="button" class="topbar-user-trigger" id="topbarUserTrigger" aria-haspopup="true"
+              aria-expanded="false" aria-label="Account menu">
               <div class="profile-wrap">
                 <div class="profile-avatar" id="profileAvatar">AD</div>
                 <span class="profile-name" id="profileName">Admin User</span>
               </div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M6 9l6 6 6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                style="flex-shrink:0;">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
             </button>
             <div class="topbar-user-dropdown" role="menu" id="topbarUserDropdown">
               <a href="/html/profile.html" role="menuitem">Profile</a>
@@ -679,7 +683,8 @@
         </div>
         <div class="card" id="settings" style="margin-top:1.5rem;">
           <h2 class="card-title">Settings</h2>
-          <p style="color:var(--text-muted);font-size:14px;">Dashboard and account preferences. Use the sidebar to navigate.</p>
+          <p style="color:var(--text-muted);font-size:14px;">Dashboard and account preferences. Use the sidebar to
+            navigate.</p>
         </div>
       </main>
     </div>
@@ -968,7 +973,7 @@
           if (topbarTrigger) topbarTrigger.setAttribute('aria-expanded', 'false');
         });
       }
-      if (topbarLogout) topbarLogout.addEventListener('click', function () { API.Auth.logout(); });
+      if (topbarLogout) topbarLogout.addEventListener('click', function () { API.logout(); });
 
       // ── Helper: animate a stat card value ───────────────────────────────────
       function animateStat(el, end) {

@@ -53,6 +53,10 @@ async function request(path, { method = "GET", body, auth = false, isForm = fals
 }
 
 const API = {
+  logout() {
+    logoutLocal();
+    window.location.href = "/html/login.html";
+  },
   Auth: {
     async register({ fullName, email, password }) {
       const data = await request("/auth/register", {
