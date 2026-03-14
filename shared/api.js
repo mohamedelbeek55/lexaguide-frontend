@@ -365,6 +365,13 @@ const API = {
       }
     },
     applyNavbar() {
+      // Disable automatic navbar injection on admin/management pages
+      const path = window.location.pathname;
+      if (path.includes("admin-dashboard") || path.includes("-management") || path.includes("profile.html")) {
+        console.log("applyNavbar: Skipping for admin/management page");
+        return;
+      }
+
       const logged = API.isLoggedIn();
       const navRight = document.querySelector(".navbar-right");
       const navMenu = document.querySelector(".navbar-menu");
