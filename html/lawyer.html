@@ -1,58 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lawyer Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/lawyer.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lawyer Dashboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../css/lawyer.css">
 </head>
+
 <body>
-<div class="app">
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark">⚖</div>
-      <h1>Lawyer Dashboard</h1>
-    </div>
-    <a class="goto-customer" href="./customer.html">Customer Booking</a>
-  </header>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">⚖</div>
+        <h1>Lawyer Dashboard</h1>
+      </div>
+      <a class="goto-customer" href="./customer.html">Customer Booking</a>
+    </header>
 
-  <main class="main">
-    <div class="stats">
-      <div class="tile">
-        <div class="tile-label">Pending</div>
-        <div class="tile-value" id="pendingCount">0</div>
-      </div>
-      <div class="tile">
-        <div class="tile-label">Accepted</div>
-        <div class="tile-value" id="acceptedCount">0</div>
-      </div>
-      <div class="tile">
-        <div class="tile-label">Declined</div>
-        <div class="tile-value" id="declinedCount">0</div>
-      </div>
-    </div>
-
-    <!-- Chat Section -->
-    <section class="panel chat-section hidden" id="chat-section">
-      <div class="panel-header">
-        <h2 class="panel-title">Chat with Client</h2>
-      </div>
-      <div class="chat-container">
-        <div class="chat-messages" id="chat-messages">
-          <!-- Messages -->
+    <main class="main">
+      <div class="stats">
+        <div class="tile">
+          <div class="tile-label">Pending</div>
+          <div class="tile-value" id="pendingCount">0</div>
         </div>
-        <div class="chat-input-row">
-          <input type="text" id="chat-input" placeholder="Type your message...">
-          <button type="button" id="chat-send" class="btn btn-primary">Send</button>
+        <div class="tile">
+          <div class="tile-label">Accepted</div>
+          <div class="tile-value" id="acceptedCount">0</div>
+        </div>
+        <div class="tile">
+          <div class="tile-label">Declined</div>
+          <div class="tile-value" id="declinedCount">0</div>
         </div>
       </div>
-    </section>
 
-    <!-- Consultations List -->
-    <section class="list" id="bookingList"></section>
-  </main>
-</div>
-<script src="../js/lawyer.js"></script>
+      <!-- Chat Section -->
+      <section class="panel chat-section hidden" id="chat-section">
+        <div class="chat-header">
+          <div class="chat-client-info">
+            <div class="chat-avatar" id="chat-client-avatar">C</div>
+            <div class="chat-meta">
+              <h3 class="chat-client-name" id="chat-client-name">Client Name</h3>
+              <span class="chat-status" id="chat-client-status"><span class="status-dot"></span> Online</span>
+            </div>
+          </div>
+          <div class="chat-actions">
+            <button class="btn btn-outline" id="end-session">End Session</button>
+            <button class="close-chat" id="close-chat">✕</button>
+          </div>
+        </div>
+        <div class="chat-container">
+          <div class="chat-messages" id="chat-messages">
+            <!-- Messages -->
+          </div>
+          <div class="typing-indicator hidden" id="typing-indicator">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="chat-input-row">
+            <div class="input-wrapper">
+              <input type="text" id="chat-input" placeholder="Type your response...">
+              <button class="attach-btn">📎</button>
+            </div>
+            <button type="button" id="chat-send" class="btn btn-primary">
+              <span class="send-icon">➤</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Consultations List -->
+      <section class="list" id="bookingList"></section>
+    </main>
+  </div>
+  <script src="../js/lawyer.js"></script>
 </body>
+
 </html>
