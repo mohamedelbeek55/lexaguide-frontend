@@ -368,8 +368,8 @@ function renderMatchedLawyers(lawyers) {
             '</div>' +
             '<p class="me-lawyer-specialty">' + escapeHtml(bio) + '</p>' +
             '<div class="me-lawyer-actions">' +
-            '  <button type="button" class="chat" onclick="bookLawyer(' + l.id + ', \'chat\')">Chat</button>' +
-            '  <button type="button" class="video" onclick="bookLawyer(' + l.id + ', \'video_call\')">Video Call</button>' +
+            "  <button type=\"button\" class=\"chat\" onclick=\"bookLawyer('" + l.id + "', 'chat')\">Chat</button>" +
+            "  <button type=\"button\" class=\"video\" onclick=\"bookLawyer('" + l.id + "', 'video_call')\">Video Call</button>" +
             '</div>' +
             '</article>';
     }).join('');
