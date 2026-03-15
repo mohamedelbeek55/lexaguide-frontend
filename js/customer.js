@@ -74,8 +74,7 @@ async function sendChatMessage() {
 async function initChat() {
   if (!currentConsultationId) return;
 
-  // Show chat, hide booking form
-  formPanel.classList.add("hidden");
+  // Show chat section
   chatSection.classList.remove("hidden");
 
   // Initial load
@@ -88,6 +87,16 @@ async function initChat() {
   chatInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") sendChatMessage();
   });
+
+  const closeChatBtn = document.getElementById("close-chat");
+  if (closeChatBtn) {
+    closeChatBtn.addEventListener("click", () => {
+      chatSection.classList.add("hidden");
+      const newUrl = window.location.pathname;
+      window.history.pushState({}, '', newUrl);
+      currentConsultationId = null;
+    });
+  }
 }
 
 if (currentConsultationId) {
