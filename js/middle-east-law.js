@@ -378,27 +378,32 @@ function renderMatchedLawyers(lawyers) {
 // ─── Book a consultation with a matched lawyer ─────────────────────────────
 async function bookLawyer(lawyerId, communicationMethod) {
     var commMethod = communicationMethod === 'video_call' ? 'video_call' : 'chat';
-    if (commMethod === 'chat') {
-        window.location.href = 'customer.html?lawyer=' + encodeURIComponent(String(lawyerId || ''));
-        return;
-    }
+
     if (!API.isLoggedIn()) {
         window.location.href = 'login.html';
         return;
     }
+
     var areaEl = document.getElementById('me-legal-area');
-    var legalAreaId = areaEl ? parseInt(areaEl.value, 10) : 1;
+    var legalAreaId = areaEl ? areaEl.value : 'General';
 
     try {
         var resp = await API.Consult.book({
             lawyer_id: lawyerId,
             legal_area_id: legalAreaId,
-            communication_method: commMethod
+            communication_method: commMethod,
+            description: "New consultation request from Middle East Law Expert search."
         });
 
-        var consultationId = resp && resp.data && resp.data.id;
+        // Get the real ID from the backend response
+        var consultationId = resp && (resp.consultation && resp.consultation._id || resp.id);
 
-        API.UI.toast('Consultation booked successfully!', 'success');
+        if (commMethod === 'chat') {
+            // Redirect to the chat UI with the real consultation ID
+            window.location.href = 'customer.html?consultationId=' + consultationId;
+        } else {
+            API.UI.toast('Video consultation booked! An admin will contact you to schedule.', 'success');
+        }
     } catch (err) {
         API.UI.toast(err.message || 'Failed to book consultation.', 'error');
     }

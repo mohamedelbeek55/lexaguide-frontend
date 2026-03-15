@@ -210,6 +210,16 @@ const API = {
         auth: true,
         body: { lawyerId, notes }
       });
+    },
+    async sendMessage(consultationId, message) {
+      return request(`/consultations/${consultationId}/messages`, {
+        method: "POST",
+        auth: true,
+        body: { message }
+      });
+    },
+    async getMessages(consultationId) {
+      return request(`/consultations/${consultationId}/messages`, { auth: true });
     }
   },
   Lawyer: {
