@@ -26,36 +26,14 @@
 
         <main class="grid">
             <section class="panel chat-section hidden" id="chat-section">
-                <div class="chat-header">
-                    <div class="chat-lawyer-info">
-                        <div class="chat-avatar" id="chat-lawyer-avatar">L</div>
-                        <div class="chat-meta">
-                            <h3 class="chat-lawyer-name" id="chat-lawyer-name">Lawyer Name</h3>
-                            <span class="chat-status" id="chat-lawyer-status"><span class="status-dot"></span>
-                                Online</span>
-                        </div>
-                    </div>
-                    <button class="close-chat" id="close-chat" title="Back to Profile">✕</button>
-                </div>
+                <h2 class="section-title">Chat with Lawyer</h2>
                 <div class="chat-container">
                     <div class="chat-messages" id="chat-messages">
                         <!-- Messages will appear here -->
-                        <div class="chat-welcome-msg">
-                            <div class="welcome-icon">⚖</div>
-                            <p>You are now connected with your lawyer. All messages are encrypted and private.</p>
-                        </div>
-                    </div>
-                    <div class="typing-indicator hidden" id="typing-indicator">
-                        <span></span><span></span><span></span>
                     </div>
                     <div class="chat-input-row">
-                        <div class="input-wrapper">
-                            <input type="text" id="chat-input" placeholder="Type your message...">
-                            <button class="attach-btn" title="Attach file">📎</button>
-                        </div>
-                        <button type="button" id="chat-send" class="cta">
-                            <span class="send-icon">➤</span>
-                        </button>
+                        <input type="text" id="chat-input" placeholder="Type your message...">
+                        <button type="button" id="chat-send" class="cta">Send</button>
                     </div>
                 </div>
             </section>

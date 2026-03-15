@@ -16,52 +16,6 @@ const chatSection = document.getElementById("chat-section")
 const chatMessages = document.getElementById("chat-messages")
 const chatInput = document.getElementById("chat-input")
 const chatSend = document.getElementById("chat-send")
-const typingIndicator = document.getElementById("typing-indicator")
-const closeChatBtn = document.getElementById("close-chat")
-
-// Language Support
-const currentLang = localStorage.getItem('language') || 'en';
-const chatTranslations = {
-  en: {
-    welcome: "You are now connected with your lawyer. All messages are encrypted and private.",
-    inputPlaceholder: "Type your message...",
-    send: "Send",
-    online: "Online",
-    offline: "Offline",
-    ending: "Ending session...",
-    error: "Failed to send message",
-    attach: "Attach file"
-  },
-  ar: {
-    welcome: "أنت الآن متصل بمحاميك. جميع الرسائل مشفرة وخصوصية.",
-    inputPlaceholder: "اكتب رسالتك هنا...",
-    send: "إرسال",
-    online: "متصل",
-    offline: "غير متصل",
-    ending: "جاري إنهاء الجلسة...",
-    error: "فشل في إرسال الرسالة",
-    attach: "إرفاق ملف"
-  }
-};
-
-function t(key) {
-  return chatTranslations[currentLang] ? chatTranslations[currentLang][key] : chatTranslations['en'][key];
-}
-
-function applyTranslations() {
-  if (currentLang === 'ar') {
-    document.body.dir = "rtl";
-    document.body.classList.add('rtl');
-  }
-  const welcomeText = document.querySelector('.chat-welcome-msg p');
-  if (welcomeText) welcomeText.textContent = t('welcome');
-
-  const input = document.getElementById('chat-input');
-  if (input) input.placeholder = t('inputPlaceholder');
-
-  const statusText = document.getElementById('chat-lawyer-status');
-  if (statusText) statusText.innerHTML = `<span class="status-dot"></span> ${t('online')}`;
-}
 
 // State
 let currentConsultationId = consultationIdParam;
@@ -85,22 +39,11 @@ async function loadMessages() {
 }
 
 function renderMessages(messages) {
-  const welcomeHtml = `
-        <div class="chat-welcome-msg">
-            <div class="welcome-icon">⚖</div>
-            <p>${t('welcome')}</p>
+  chatMessages.innerHTML = messages.map(m => `
+        <div class="chat-bubble ${m.senderType === 'user' ? 'user' : 'lawyer'}">
+            ${m.message}
         </div>
-    `;
-
-  chatMessages.innerHTML = welcomeHtml + messages.map(m => {
-    const time = m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-    return `
-            <div class="chat-bubble ${m.senderType === 'user' ? 'user' : 'lawyer'}">
-                <div class="bubble-text">${m.message}</div>
-                ${time ? `<span class="bubble-time">${time}</span>` : ''}
-            </div>
-        `;
-  }).join('');
+    `).join('');
 }
 
 function scrollToBottom() {
@@ -115,8 +58,7 @@ async function sendChatMessage() {
     // Show local bubble immediately
     chatMessages.innerHTML += `
             <div class="chat-bubble user">
-                <div class="bubble-text">${text}</div>
-                <span class="bubble-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                ${text}
             </div>
         `;
     scrollToBottom();
@@ -125,23 +67,16 @@ async function sendChatMessage() {
     await API.Consult.sendMessage(currentConsultationId, text);
     loadMessages();
   } catch (err) {
-    alert(t('error') + ": " + err.message);
+    alert("Failed to send message: " + err.message);
   }
 }
 
 async function initChat() {
   if (!currentConsultationId) return;
 
-  applyTranslations();
-
   // Show chat, hide booking form
   formPanel.classList.add("hidden");
   chatSection.classList.remove("hidden");
-
-  // Load lawyer info into chat header
-  try {
-    // Info will be loaded by loadLawyerInfo()
-  } catch (e) { }
 
   // Initial load
   await loadMessages();
@@ -152,14 +87,6 @@ async function initChat() {
   chatSend.addEventListener("click", sendChatMessage);
   chatInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") sendChatMessage();
-  });
-
-  closeChatBtn.addEventListener("click", () => {
-    chatSection.classList.add("hidden");
-    formPanel.classList.remove("hidden");
-    const newUrl = window.location.pathname;
-    window.history.pushState({}, '', newUrl);
-    currentConsultationId = null;
   });
 }
 
@@ -172,7 +99,6 @@ let lawyer = { name: "Loading...", specialty: "", location: "", rating: 0, consu
 
 async function loadLawyerInfo() {
   if (!lawyerParam && !currentConsultationId) {
-    // If no param, we can't load anything real, but let's at least clear the fields
     updateLawyerUI();
     return;
   }
@@ -180,7 +106,6 @@ async function loadLawyerInfo() {
   try {
     let data;
     if (currentConsultationId) {
-      // Load from consultation
       const consult = await API.Consult.get(currentConsultationId);
       data = {
         name: consult.lawyer_name,
@@ -189,10 +114,9 @@ async function loadLawyerInfo() {
         rating: consult.lawyer_rating,
         consultations: consult.lawyer_consultations,
         pricePer60: consult.lawyer_price,
-        online: true // Assume online if we're in a consultation
+        online: true
       };
     } else {
-      // Load from lawyer ID
       const l = await API.Lawyer.get(lawyerParam);
       data = {
         name: l.full_name,
@@ -207,14 +131,6 @@ async function loadLawyerInfo() {
 
     lawyer = data;
     updateLawyerUI();
-
-    // Also update chat header if chat is active
-    if (currentConsultationId) {
-      const nameHeader = document.getElementById("chat-lawyer-name");
-      const avatarHeader = document.getElementById("chat-lawyer-avatar");
-      if (nameHeader) nameHeader.textContent = lawyer.name;
-      if (avatarHeader) avatarHeader.textContent = lawyer.name[0];
-    }
   } catch (err) {
     console.error("Failed to load lawyer info:", err);
   }
