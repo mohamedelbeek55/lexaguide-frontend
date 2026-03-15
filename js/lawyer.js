@@ -213,7 +213,7 @@ async function updateStatus(id, status) {
 async function load() {
   if (typeof API !== "undefined") {
     try {
-      const resp = await API.Consult.mine()
+      const resp = await API.Consult.getMine()
       const bookings = resp.data || []
       render(bookings)
 

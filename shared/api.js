@@ -185,7 +185,7 @@ const API = {
       const resp = await request("/consultations/my", { auth: true });
       const items = (resp.consultations || []).map((x) => ({
         id: x._id,
-        client_name: "",
+        client_name: (x.userId && x.userId.fullName) || "",
         lawyer_name: (x.lawyerId && x.lawyerId.fullName) || "",
         legal_area: (x.lawyerId && x.lawyerId.specialties && x.lawyerId.specialties[0]) || "",
         communication_method: x.type,
@@ -194,6 +194,26 @@ const API = {
         created_at: x.createdAt
       }));
       return { data: items };
+    },
+    async mine() { return this.getMine(); },
+    async get(id) {
+      const resp = await request(`/consultations/${id}`, { auth: true });
+      const x = resp.consultation || resp;
+      return {
+        id: x._id,
+        client_name: (x.userId && x.userId.fullName) || "",
+        lawyer_id: (x.lawyerId && x.lawyerId._id) || (x.lawyerId && x.lawyerId.id) || "",
+        lawyer_name: (x.lawyerId && x.lawyerId.fullName) || "",
+        lawyer_specialty: (x.lawyerId && x.lawyerId.specialties && x.lawyerId.specialties[0]) || "",
+        lawyer_location: (x.lawyerId && x.lawyerId.governorate) || "",
+        lawyer_rating: (x.lawyerId && x.lawyerId.ratingAvg) || 0,
+        lawyer_consultations: (x.lawyerId && x.lawyerId.ratingCount) || 0,
+        lawyer_price: (x.lawyerId && x.lawyerId.pricePerSession) || 0,
+        communication_method: x.type,
+        status: x.status,
+        description: x.notes || "",
+        created_at: x.createdAt
+      };
     },
     async updateStatus(id, status) {
       return request(`/consultations/${id}/status`, {
@@ -223,6 +243,24 @@ const API = {
     }
   },
   Lawyer: {
+    async get(id) {
+      const resp = await request(`/lawyers/${id}`, { method: "GET" });
+      const l = resp.lawyer || resp;
+      return {
+        id: l._id || l.id,
+        full_name: l.fullName,
+        specialty: (l.specialties && l.specialties[0]) || "",
+        country: l.governorate || "",
+        availability_status: l.availability_status || (l.ratingAvg ? "online_now" : "unavailable"),
+        price_per_session: l.pricePerSession,
+        session_duration_mins: 30,
+        communication_methods: "chat",
+        bio: l.bio || "",
+        rating: l.ratingAvg || 0,
+        total_consultations: l.ratingCount || 0,
+        isVerified: l.isVerified
+      };
+    },
     async getAll() {
       const resp = await request("/lawyers", { method: "GET" });
       const items = (resp.lawyers || []).map((l, idx) => ({

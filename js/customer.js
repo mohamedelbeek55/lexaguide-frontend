@@ -140,8 +140,7 @@ async function initChat() {
 
   // Load lawyer info into chat header
   try {
-    document.getElementById("chat-lawyer-name").textContent = lawyer.name;
-    document.getElementById("chat-lawyer-avatar").textContent = lawyer.name[0];
+    // Info will be loaded by loadLawyerInfo()
   } catch (e) { }
 
   // Initial load
@@ -169,21 +168,81 @@ if (currentConsultationId) {
 }
 
 // ─── Lawyer Info Logic ───────────────────────────────────────────────────────
-const lawyer = { name: "Layla Hassan", specialty: "Corporate & Contracts", location: "Dubai, UAE", rating: 4.8, consultations: 274, pricePer60: 400, online: true }
-if (nameEl) nameEl.textContent = lawyer.name
-if (specialtyEl) specialtyEl.textContent = lawyer.specialty
-if (locationEl) locationEl.textContent = lawyer.location
-if (priceEl) priceEl.textContent = "$" + lawyer.pricePer60
-if (countEl) countEl.textContent = lawyer.consultations + " sessions"
-const solid = "★★★★★"
-const hollow = "☆☆☆☆☆"
-const rounded = Math.round(lawyer.rating)
-if (starsEl) starsEl.textContent = solid.slice(0, rounded) + hollow.slice(0, 5 - rounded)
-if (badgeEl) {
-  badgeEl.textContent = lawyer.online ? "Online" : "Unavailable"
-  badgeEl.style.background = lawyer.online ? "rgba(15,190,120,.18)" : "rgba(200,80,60,.18)"
-  badgeEl.style.borderColor = lawyer.online ? "rgba(15,190,120,.35)" : "rgba(200,80,60,.35)"
+let lawyer = { name: "Loading...", specialty: "", location: "", rating: 0, consultations: 0, pricePer60: 0, online: false }
+
+async function loadLawyerInfo() {
+  if (!lawyerParam && !currentConsultationId) {
+    // If no param, we can't load anything real, but let's at least clear the fields
+    updateLawyerUI();
+    return;
+  }
+
+  try {
+    let data;
+    if (currentConsultationId) {
+      // Load from consultation
+      const consult = await API.Consult.get(currentConsultationId);
+      data = {
+        name: consult.lawyer_name,
+        specialty: consult.lawyer_specialty,
+        location: consult.lawyer_location,
+        rating: consult.lawyer_rating,
+        consultations: consult.lawyer_consultations,
+        pricePer60: consult.lawyer_price,
+        online: true // Assume online if we're in a consultation
+      };
+    } else {
+      // Load from lawyer ID
+      const l = await API.Lawyer.get(lawyerParam);
+      data = {
+        name: l.full_name,
+        specialty: l.specialty,
+        location: l.country,
+        rating: l.rating,
+        consultations: l.total_consultations,
+        pricePer60: l.price_per_session,
+        online: l.availability_status === 'online_now'
+      };
+    }
+
+    lawyer = data;
+    updateLawyerUI();
+
+    // Also update chat header if chat is active
+    if (currentConsultationId) {
+      const nameHeader = document.getElementById("chat-lawyer-name");
+      const avatarHeader = document.getElementById("chat-lawyer-avatar");
+      if (nameHeader) nameHeader.textContent = lawyer.name;
+      if (avatarHeader) avatarHeader.textContent = lawyer.name[0];
+    }
+  } catch (err) {
+    console.error("Failed to load lawyer info:", err);
+  }
 }
+
+function updateLawyerUI() {
+  if (nameEl) nameEl.textContent = lawyer.name
+  if (specialtyEl) specialtyEl.textContent = lawyer.specialty
+  if (locationEl) locationEl.textContent = lawyer.location
+  if (priceEl) priceEl.textContent = "$" + lawyer.pricePer60
+  if (countEl) countEl.textContent = (lawyer.consultations || 0) + " sessions"
+
+  const solid = "★★★★★"
+  const hollow = "☆☆☆☆☆"
+  const rounded = Math.round(lawyer.rating || 0)
+  if (starsEl) starsEl.textContent = solid.slice(0, rounded) + hollow.slice(0, 5 - rounded)
+
+  if (badgeEl) {
+    badgeEl.textContent = lawyer.online ? "Online" : "Unavailable"
+    badgeEl.style.background = lawyer.online ? "rgba(15,190,120,.18)" : "rgba(200,80,60,.18)"
+    badgeEl.style.borderColor = lawyer.online ? "rgba(15,190,120,.35)" : "rgba(200,80,60,.35)"
+  }
+
+  const avatar = document.querySelector(".avatar");
+  if (avatar && lawyer.name) avatar.textContent = lawyer.name[0];
+}
+
+loadLawyerInfo();
 
 const commToggle = document.getElementById("commToggle")
 const commInput = document.getElementById("communication")
