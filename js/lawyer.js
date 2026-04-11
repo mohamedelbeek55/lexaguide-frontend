@@ -12,11 +12,21 @@ const chatSend = document.getElementById("chat-send")
 let currentConsultationId = null;
 let lastMessageCount = 0;
 
+function formatTime(isoStr) {
+  if (!isoStr) return "";
+  const d = new Date(isoStr);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
 // ─── Chat Logic ──────────────────────────────────────────────────────────────
 async function openChat(consultationId) {
   currentConsultationId = consultationId;
   chatSection.classList.remove("hidden");
   chatSection.scrollIntoView({ behavior: 'smooth' });
+
+  // Update header if possible
+  const headerName = chatSection.querySelector(".chat-header h3");
+  if (headerName) headerName.textContent = "Chat with Client";
 
   // Initial load
   lastMessageCount = 0;
@@ -40,11 +50,15 @@ async function loadMessages() {
 }
 
 function renderMessages(messages) {
-  chatMessages.innerHTML = messages.map(m => `
-        <div class="chat-bubble ${m.senderType === 'lawyer' ? 'lawyer' : 'user'}">
-            ${m.message}
+  chatMessages.innerHTML = messages.map(m => {
+    const isLawyer = m.senderType === 'lawyer';
+    return `
+        <div class="chat-bubble ${isLawyer ? 'lawyer' : 'user'}">
+            <div class="msg-content">${m.message}</div>
+            <div class="msg-time">${formatTime(m.createdAt)}</div>
         </div>
-    `).join('');
+    `;
+  }).join('');
 }
 
 function scrollToBottom() {

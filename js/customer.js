@@ -20,11 +20,22 @@ const chatSend = document.getElementById("chat-send")
 // State
 let currentConsultationId = consultationIdParam;
 let lastMessageCount = 0;
+let consultationStatus = "pending";
+
+function formatTime(isoStr) {
+  if (!isoStr) return "";
+  const d = new Date(isoStr);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
 
 // ─── Chat Logic ──────────────────────────────────────────────────────────────
 async function loadMessages() {
   if (!currentConsultationId || typeof API === 'undefined') return;
   try {
+    // Also refresh consultation info to check status
+    const consult = await API.Consult.get(currentConsultationId);
+    consultationStatus = consult.status;
+
     const resp = await API.Consult.getMessages(currentConsultationId);
     const messages = resp.messages || [];
 
@@ -33,17 +44,33 @@ async function loadMessages() {
       lastMessageCount = messages.length;
       scrollToBottom();
     }
+
+    // Disable input if not accepted
+    if (consultationStatus !== "accepted" && consultationStatus !== "active" && consultationStatus !== "confirmed") {
+      chatInput.disabled = true;
+      chatInput.placeholder = `Chat is locked (Status: ${consultationStatus})`;
+      chatSend.disabled = true;
+    } else {
+      chatInput.disabled = false;
+      chatInput.placeholder = "Type your message...";
+      chatSend.disabled = false;
+    }
+
   } catch (err) {
     console.error("Failed to load messages:", err);
   }
 }
 
 function renderMessages(messages) {
-  chatMessages.innerHTML = messages.map(m => `
-        <div class="chat-bubble ${m.senderType === 'user' ? 'user' : 'lawyer'}">
-            ${m.message}
+  chatMessages.innerHTML = messages.map(m => {
+    const isUser = m.senderType === 'user';
+    return `
+        <div class="chat-bubble ${isUser ? 'user' : 'lawyer'}">
+            <div class="msg-content">${m.message}</div>
+            <div class="msg-time">${formatTime(m.createdAt)}</div>
         </div>
-    `).join('');
+    `;
+  }).join('');
 }
 
 function scrollToBottom() {
