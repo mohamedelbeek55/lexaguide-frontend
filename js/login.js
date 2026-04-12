@@ -105,9 +105,10 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             return;
         }
 
-        if (API.isAdmin && API.isAdmin()) {
+        const user = data.user || API.getUser();
+        if (user && user.role === 'admin') {
             window.location.href = 'admin-dashboard.html';
-        } else if (data.user && data.user.role === 'lawyer') {
+        } else if (user && user.role === 'lawyer') {
             window.location.href = 'lawyer.html';
         } else {
             window.location.href = 'middle-east-law.html';
