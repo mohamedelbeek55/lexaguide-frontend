@@ -156,6 +156,9 @@ const adminCreateSchema = z.object({
   address: z.string().optional(),
   specialties: z.array(z.string()).optional(),
   pricePerSession: z.number().optional(),
+  sessionDurationMins: z.number().optional(),
+  communicationMethods: z.string().optional(),
+  availabilityStatus: z.string().optional(),
   successRate: z.number().min(0).max(100).optional(),
   password: z.string().min(6).optional(),
   isVerified: z.boolean().optional(),
@@ -183,10 +186,12 @@ export const createLawyerAdmin = asyncHandler(async (req, res) => {
     address: data.address || "",
     specialties: data.specialties || [],
     pricePerSession: data.pricePerSession || 0,
+    sessionDurationMins: data.sessionDurationMins || 30,
+    communicationMethods: data.communicationMethods || "both",
     successRate: data.successRate || 0,
     isVerified: data.isVerified ?? false,
     isActive: data.isActive ?? true,
-    isAvailable: data.isAvailable ?? true
+    isAvailable: data.isAvailable ?? (data.availabilityStatus !== "unavailable")
   });
 
   res.status(201).json({
@@ -209,6 +214,9 @@ const adminUpdateSchema = z.object({
   address: z.string().optional(),
   specialties: z.array(z.string()).optional(),
   pricePerSession: z.number().optional(),
+  sessionDurationMins: z.number().optional(),
+  communicationMethods: z.string().optional(),
+  availabilityStatus: z.string().optional(),
   successRate: z.number().min(0).max(100).optional(),
   isVerified: z.boolean().optional(),
   isActive: z.boolean().optional(),
@@ -217,6 +225,11 @@ const adminUpdateSchema = z.object({
 
 export const updateLawyerAdmin = asyncHandler(async (req, res) => {
   const data = adminUpdateSchema.parse(req.body);
+
+  // Map availabilityStatus to isAvailable if provided
+  if (data.availabilityStatus) {
+    data.isAvailable = data.availabilityStatus !== "unavailable";
+  }
 
   const updated = await Lawyer.findByIdAndUpdate(req.params.id, data, {
     new: true
