@@ -1,4 +1,5 @@
 import { User } from "../users/user.model.js";
+import { Notification } from "../users/notification.model.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import z from "zod";
 import { cloudinary } from "../../config/cloudinary.js";
@@ -68,4 +69,19 @@ export const uploadAvatar = asyncHandler(async (req, res) => {
       avatarUrl: user.avatarUrl
     }
   });
+});
+
+export const getNotifications = asyncHandler(async (req, res) => {
+  const items = await Notification.find({ userId: req.user.sub })
+    .sort({ createdAt: -1 })
+    .limit(50);
+  return res.json({ notifications: items });
+});
+
+export const markNotificationsRead = asyncHandler(async (req, res) => {
+  await Notification.updateMany(
+    { userId: req.user.sub, isRead: false },
+    { $set: { isRead: true } }
+  );
+  return res.json({ ok: true });
 });

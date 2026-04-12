@@ -1,23 +1,6 @@
-// Dynamic API base: prod by default, switches to local on localhost or via ?api=local or localStorage override
-(function initApiBase() {
-  try {
-    var url = new URL(window.location.href);
-    var q = url.searchParams.get("api");
-    if (q === "local") localStorage.setItem("API_BASE_OVERRIDE", "http://127.0.0.1:3000/api");
-    if (q === "prod") localStorage.setItem("API_BASE_OVERRIDE", "https://graduation-backend2.vercel.app/api");
-  } catch (e) { /* ignore */ }
-})();
-const API_BASE = (() => {
-  try {
-    const override = localStorage.getItem("API_BASE_OVERRIDE");
-    if (override) return override;
-    const host = (typeof window !== "undefined" && window.location && window.location.hostname) || "";
-    if (host === "localhost" || host === "127.0.0.1") {
-      return "http://127.0.0.1:3000/api";
-    }
-  } catch (e) { /* ignore */ }
-  return "https://graduation-backend2.vercel.app/api";
-})();
+const API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:3000/api"
+  : "https://graduation-backend2.vercel.app/api";
 
 function getAccessToken() {
   return sessionStorage.getItem("accessToken") || "";
@@ -47,6 +30,22 @@ async function request(path, { method = "GET", body, auth = false, isForm = fals
     credentials: "include",
     body: body ? (isForm ? body : JSON.stringify(body)) : undefined
   });
+
+  if (res.status === 401) {
+    // Don't logout or redirect if we are trying to login
+    if (path.includes("/login")) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.message || "Invalid credentials");
+    }
+
+    logoutLocal();
+    // Only redirect if we are not already on the login page
+    if (!window.location.pathname.includes("login.html")) {
+      window.location.href = "/html/login.html";
+    }
+    throw new Error("Session expired. Please login again.");
+  }
+
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.message || "Request failed");
   return data;
@@ -68,13 +67,43 @@ const API = {
       return data;
     },
     async login(email, password) {
-      const data = await request("/auth/login", {
-        method: "POST",
-        body: { email, password }
-      });
-      setTokens(data);
-      sessionStorage.setItem("user", JSON.stringify(data.user));
-      return data;
+      try {
+        // 1. Try regular user login
+        const data = await request("/auth/login", {
+          method: "POST",
+          body: { email, password }
+        });
+        setTokens(data);
+        sessionStorage.setItem("user", JSON.stringify(data.user));
+        return data;
+      } catch (err) {
+        // 2. If user login fails with 401, try lawyer login
+        if (err.message && (err.message.includes("401") || err.message.includes("credentials"))) {
+          try {
+            const data = await request("/lawyers/login", {
+              method: "POST",
+              body: { email, password }
+            });
+            // Normalize lawyer response to match user response for the frontend
+            const lawyerData = {
+              user: {
+                id: data.lawyer.id,
+                fullName: data.lawyer.fullName,
+                email: data.lawyer.email,
+                role: "lawyer"
+              },
+              accessToken: data.accessToken,
+              refreshToken: data.refreshToken || "" // Lawyers might not have refresh tokens in the current API
+            };
+            setTokens(lawyerData);
+            sessionStorage.setItem("user", JSON.stringify(lawyerData.user));
+            return lawyerData;
+          } catch (lawyerErr) {
+            throw lawyerErr; // If lawyer login also fails, throw that error
+          }
+        }
+        throw err; // Re-throw if it wasn't a 401
+      }
     },
     async me() {
       return request("/auth/me", { auth: true });
@@ -195,6 +224,20 @@ const API = {
       }));
       return { data: items };
     },
+    async getLawyerConsultations() {
+      const resp = await request("/consultations/lawyer/me", { auth: true });
+      const items = (resp.consultations || []).map((x) => ({
+        id: x._id,
+        client_id: (x.userId && x.userId._id) || (x.userId && x.userId.id) || "",
+        client_name: (x.userId && x.userId.fullName) || "Client",
+        client_email: (x.userId && x.userId.email) || "",
+        status: x.status,
+        description: x.notes || "",
+        created_at: x.createdAt,
+        type: x.type
+      }));
+      return { data: items };
+    },
     async mine() { return this.getMine(); },
     async get(id) {
       const resp = await request(`/consultations/${id}`, { auth: true });
@@ -216,8 +259,9 @@ const API = {
       };
     },
     async updateStatus(id, status) {
-      return request(`/consultations/${id}/status`, {
-        method: "PATCH",
+      // Use PUT /bookings/:id for acceptance/rejection as requested
+      return request(`/bookings/${id}`, {
+        method: "PUT",
         auth: true,
         body: { status }
       });
@@ -225,10 +269,11 @@ const API = {
     async book({ lawyer_id, legal_area_id, communication_method, description } = {}) {
       const lawyerId = lawyer_id || "";
       const notes = description || "";
-      return request("/consultations", {
+      const type = communication_method || "chat";
+      return request("/bookings", {
         method: "POST",
         auth: true,
-        body: { lawyerId, notes }
+        body: { lawyerId, notes, type }
       });
     },
     async sendMessage(consultationId, message) {
@@ -240,6 +285,17 @@ const API = {
     },
     async getMessages(consultationId) {
       return request(`/consultations/${consultationId}/messages`, { auth: true });
+    }
+  },
+  Notifications: {
+    async get() {
+      return request("/notifications", { auth: true });
+    },
+    async markAllAsRead() {
+      return request("/notifications/read-all", { method: "PATCH", auth: true });
+    },
+    async markAsRead(id) {
+      return request(`/notifications/${id}/read`, { method: "PATCH", auth: true });
     }
   },
   Lawyer: {
@@ -450,18 +506,57 @@ const API = {
     },
     toast(message, type = "info") {
       try {
+        const existing = document.getElementById("lexa-toast-container");
+        if (existing) existing.remove();
+
+        const container = document.createElement("div");
+        container.id = "lexa-toast-container";
+        container.style.cssText = `
+          position: fixed;
+          top: 24px;
+          right: 24px;
+          z-index: 10000;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          pointer-events: none;
+        `;
+        document.body.appendChild(container);
+
         const el = document.createElement("div");
-        el.style.position = "fixed";
-        el.style.bottom = "16px";
-        el.style.right = "16px";
-        el.style.zIndex = "9999";
-        el.style.padding = "10px 12px";
-        el.style.borderRadius = "6px";
-        el.style.color = "#fff";
-        el.style.background = type === "success" ? "#27ae60" : type === "error" ? "#c0392b" : "#2c3e50";
-        el.textContent = message;
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 3000);
+        el.style.cssText = `
+          min-width: 300px;
+          padding: 16px 20px;
+          border-radius: 12px;
+          color: #fff;
+          font-family: 'DM Sans', sans-serif;
+          font-weight: 500;
+          font-size: 15px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+          transform: translateX(100%);
+          transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          background: ${type === "success" ? "#10b981" : type === "error" ? "#ef4444" : "#3b82f6"};
+          border-left: 5px solid rgba(0,0,0,0.1);
+          pointer-events: auto;
+        `;
+
+        const icon = type === "success" ? "✓" : type === "error" ? "✕" : "ℹ";
+        el.innerHTML = `<span style="font-size: 20px;">${icon}</span> <span>${message}</span>`;
+
+        container.appendChild(el);
+
+        // Trigger animation
+        requestAnimationFrame(() => {
+          el.style.transform = "translateX(0)";
+        });
+
+        setTimeout(() => {
+          el.style.transform = "translateX(120%)";
+          setTimeout(() => el.remove(), 500);
+        }, 4000);
       } catch {
         alert(message);
       }
@@ -478,7 +573,10 @@ const API = {
       const navRight = document.querySelector(".navbar-right");
       const navMenu = document.querySelector(".navbar-menu");
       const navContainer = document.querySelector(".navbar-container");
-      let container = navRight || navMenu || navContainer || document.querySelector(".navbar");
+      const topbar = document.querySelector(".topbar");
+      const navLinks = document.querySelector(".nav-links");
+
+      let container = navRight || navMenu || navContainer || topbar || navLinks || document.querySelector(".navbar");
       if (!container) return;
 
       const cta = (navRight && navRight.querySelector(".navbar-cta")) || document.querySelector(".navbar-cta");
@@ -490,6 +588,104 @@ const API = {
         if (cta) cta.style.display = "none";
         if (btnLogin) btnLogin.style.display = "none";
         if (btnSignup) btnSignup.style.display = "none";
+
+        // 1. Add notification bell before user dropdown
+        if (!container.querySelector(".nav-notif-wrap")) {
+          const notifWrap = document.createElement("div");
+          notifWrap.className = "nav-notif-wrap";
+          notifWrap.innerHTML = `
+            <div class="notif-trigger" id="notif-trigger">
+              <i class="fas fa-bell"></i>
+              <span class="notif-badge hidden" id="notif-badge"></span>
+            </div>
+            <div class="notif-dropdown hidden" id="notif-dropdown">
+              <div class="notif-header">
+                <span>Notifications</span>
+                <button id="mark-all-read">Mark all as read</button>
+              </div>
+              <div class="notif-list" id="notif-list">
+                <div class="notif-empty">No notifications</div>
+              </div>
+            </div>
+          `;
+          container.insertBefore(notifWrap, container.firstChild);
+
+          // --- Notification Logic ---
+          const trigger = notifWrap.querySelector("#notif-trigger");
+          const notifDropdown = notifWrap.querySelector("#notif-dropdown");
+          const badge = notifWrap.querySelector("#notif-badge");
+          const list = notifWrap.querySelector("#notif-list");
+          const markAll = notifWrap.querySelector("#mark-all-read");
+
+          async function updateNotifications() {
+            try {
+              const resp = await API.Notifications.get();
+              const notifications = resp.notifications || [];
+              const unreadCount = resp.unreadCount || 0;
+
+              if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.classList.remove("hidden");
+              } else {
+                badge.classList.add("hidden");
+              }
+
+              if (notifications.length > 0) {
+                list.innerHTML = notifications.map(n => `
+                  <div class="notif-item ${n.isRead ? '' : 'unread'}" data-id="${n._id}">
+                    <p>${n.message}</p>
+                    <small>${new Date(n.createdAt).toLocaleString()}</small>
+                  </div>
+                `).join('');
+
+                list.querySelectorAll(".notif-item").forEach(item => {
+                  item.addEventListener("click", async () => {
+                    const id = item.dataset.id;
+                    await API.Notifications.markAsRead(id);
+                    updateNotifications();
+                    const notif = notifications.find(x => x._id === id);
+                    if (notif && notif.link) window.location.href = notif.link;
+                  });
+                });
+              } else {
+                list.innerHTML = `<div class="notif-empty">No notifications</div>`;
+              }
+            } catch (e) { console.error("Notif update fail", e); }
+          }
+
+          if (trigger) {
+            trigger.addEventListener("click", (e) => {
+              e.stopPropagation();
+              notifDropdown.classList.toggle("hidden");
+              if (!notifDropdown.classList.contains("hidden")) updateNotifications();
+            });
+            document.addEventListener("click", () => notifDropdown.classList.add("hidden"));
+            notifDropdown.addEventListener("click", (e) => e.stopPropagation());
+          }
+
+          if (markAll) {
+            markAll.addEventListener("click", async (e) => {
+              e.stopPropagation();
+              await API.Notifications.markAllAsRead();
+              updateNotifications();
+            });
+          }
+
+          // Auto update notifications every minute
+          setInterval(updateNotifications, 60000);
+          updateNotifications();
+        }
+
+        const user = API.getUser() || {};
+
+        // Hide Lawyer Dashboard link in existing nav if user is not a lawyer
+        const dashLinks = document.querySelectorAll('a[href*="lawyer.html"]');
+        dashLinks.forEach(link => {
+          if (user.role !== 'lawyer') {
+            link.style.display = "none";
+          }
+        });
+
         if (!existing) {
           const user = API.getUser() || {};
           const name = user.full_name || user.name || user.email || "User";
@@ -533,6 +729,8 @@ const API = {
           dropdown.style.borderRadius = "10px";
           dropdown.style.boxShadow = "0 12px 40px rgba(0,0,0,0.4)";
           dropdown.style.display = "none";
+
+          // 1. Profile link
           const linkProf = document.createElement("a");
           linkProf.href = "/html/profile.html";
           linkProf.textContent = "Profile";
@@ -540,6 +738,35 @@ const API = {
           linkProf.style.padding = "10px 14px";
           linkProf.style.color = "rgba(255,255,255,0.9)";
           linkProf.style.textDecoration = "none";
+          dropdown.appendChild(linkProf);
+
+          // 2. My Consultations link
+          const linkMy = document.createElement("a");
+          linkMy.href = "/html/user-consultations.html";
+          linkMy.textContent = "My Consultations";
+          linkMy.style.display = "block";
+          linkMy.style.padding = "10px 14px";
+          linkMy.style.color = "rgba(255,255,255,0.9)";
+          linkMy.style.textDecoration = "none";
+          dropdown.appendChild(linkMy);
+
+          // 3. Notifications (Toggle the notif dropdown)
+          const linkNotify = document.createElement("a");
+          linkNotify.href = "#";
+          linkNotify.textContent = "Notifications";
+          linkNotify.style.display = "block";
+          linkNotify.style.padding = "10px 14px";
+          linkNotify.style.color = "rgba(255,255,255,0.9)";
+          linkNotify.style.textDecoration = "none";
+          linkNotify.addEventListener("click", (e) => {
+            e.preventDefault();
+            const actualTrigger = document.getElementById("notif-trigger");
+            if (actualTrigger) actualTrigger.click();
+            dropdown.style.display = "none";
+          });
+          dropdown.appendChild(linkNotify);
+
+          // 4. Logout button
           const linkLogout = document.createElement("button");
           linkLogout.textContent = "Logout";
           linkLogout.style.display = "block";
@@ -549,11 +776,11 @@ const API = {
           linkLogout.style.color = "rgba(255,255,255,0.9)";
           linkLogout.style.border = "none";
           linkLogout.style.textAlign = "left";
-          linkLogout.addEventListener("click", () => {
+          linkLogout.style.cursor = "pointer";
+          linkLogout.addEventListener("click", (e) => {
+            e.preventDefault();
             API.logout();
-            window.location.href = "/";
           });
-          dropdown.appendChild(linkProf);
           dropdown.appendChild(linkLogout);
           wrap.appendChild(avatar);
           wrap.appendChild(label);

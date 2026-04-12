@@ -54,6 +54,8 @@
     document.getElementById('fullName').value = '';
     var emailEl = document.getElementById('email');
     if (emailEl) emailEl.value = '';
+    var passEl = document.getElementById('password');
+    if (passEl) passEl.value = '';
     var specEl = document.getElementById('specialty');
     if (specEl && specEl.options.length) specEl.selectedIndex = 0;
     document.getElementById('country').value = '';
@@ -63,6 +65,8 @@
     document.getElementById('communicationMethods').value = 'both';
     document.getElementById('bio').value = '';
     document.getElementById('fgFullName').style.display = '';
+    document.getElementById('fgEmail').style.display = '';
+    document.getElementById('fgPassword').style.display = '';
     document.getElementById('fgSpecialty').style.display = '';
     document.getElementById('fgCountry').style.display = '';
     document.getElementById('fgAvailability').style.display = '';
@@ -75,6 +79,8 @@
   function setEditMode() {
     modalModeEl.value = 'edit';
     document.getElementById('fgFullName').style.display = '';
+    document.getElementById('fgEmail').style.display = 'none'; // Cannot change email
+    document.getElementById('fgPassword').style.display = 'none'; // Pass change separate
     document.getElementById('fgSpecialty').style.display = '';
     document.getElementById('fgCountry').style.display = '';
     document.getElementById('fgAvailability').style.display = '';
@@ -93,10 +99,12 @@
     }
     list.forEach(function (l) {
       var name = l.full_name || l.fullName || '—';
-      var spec = l.specialty || l.specialization || '—';
-      var country = l.country || '—';
-      var status = l.availability_status || l.status || 'unavailable';
-      var id = l.id;
+      var spec = l.specialty || (l.specialties && l.specialties[0]) || l.specialization || '—';
+      var country = l.country || l.governorate || '—';
+      var status = l.availability_status || l.availabilityStatus || l.status || 'unavailable';
+      var id = l.id || l._id;
+      var isVerified = l.isVerified || false;
+      var isActive = l.isActive !== false;
 
       var statusClass = (status === 'online_now' || status === 'available_in_30_mins')
         ? 'badge-status-active' : 'badge-status-inactive';
@@ -111,24 +119,28 @@
         '<td><span class="badge ' + statusClass + '">' + escapeHtml(status) + '</span></td>' +
         '<td class="actions-cell">' +
         '<button type="button" class="btn btn-edit" data-action="edit" data-id="' + id + '">Edit</button> ' +
-        '<button type="button" class="btn btn-secondary" data-action="verify" data-id="' + id + '">Verify</button> ' +
-        '<button type="button" class="btn btn-success" data-action="enable" data-id="' + id + '">Enable</button> ' +
+        (isVerified ? '' : '<button type="button" class="btn btn-secondary" data-action="verify" data-id="' + id + '">Verify</button> ') +
+        '<button type="button" class="btn ' + (isActive ? 'btn-danger' : 'btn-success') + '" data-action="toggle-active" data-id="' + id + '" data-active="' + isActive + '">' + (isActive ? 'Disable' : 'Enable') + '</button> ' +
         '<button type="button" class="btn btn-danger" data-action="delete" data-id="' + id + '">Delete</button>' +
         '</td>';
       tbody.appendChild(tr);
     });
 
     tbody.querySelectorAll('[data-action="edit"]').forEach(function (btn) {
-      btn.addEventListener('click', function () { openModalEdit(parseInt(btn.getAttribute('data-id'), 10)); });
+      btn.addEventListener('click', function () { openModalEdit(btn.getAttribute('data-id')); });
     });
     tbody.querySelectorAll('[data-action="verify"]').forEach(function (btn) {
-      btn.addEventListener('click', function () { verifyLawyer(parseInt(btn.getAttribute('data-id'), 10)); });
+      btn.addEventListener('click', function () { verifyLawyer(btn.getAttribute('data-id')); });
     });
-    tbody.querySelectorAll('[data-action="enable"]').forEach(function (btn) {
-      btn.addEventListener('click', function () { enableLawyer(parseInt(btn.getAttribute('data-id'), 10)); });
+    tbody.querySelectorAll('[data-action="toggle-active"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-id');
+        var currentActive = btn.getAttribute('data-active') === 'true';
+        enableLawyer(id, !currentActive);
+      });
     });
     tbody.querySelectorAll('[data-action="delete"]').forEach(function (btn) {
-      btn.addEventListener('click', function () { deleteLawyer(parseInt(btn.getAttribute('data-id'), 10)); });
+      btn.addEventListener('click', function () { deleteLawyer(btn.getAttribute('data-id')); });
     });
   }
 
@@ -140,25 +152,25 @@
   }
 
   function openModalEdit(id) {
-    var l = lawyers.find(function (x) { return x.id === id; });
+    var l = lawyers.find(function (x) { return (x.id === id || x._id === id); });
     if (!l) return;
-    editId.value = l.id;
+    editId.value = l.id || l._id;
     modalTitle.textContent = 'Edit Lawyer — ' + (l.full_name || l.fullName || '');
     document.getElementById('fullName').value = l.full_name || l.fullName || '';
     var emailEl = document.getElementById('email');
     if (emailEl) emailEl.value = l.email || '';
     var specEl = document.getElementById('specialty');
     if (specEl) {
-      var specVal = l.specialty || l.specialization || '';
+      var specVal = l.specialty || (l.specialties && l.specialties[0]) || l.specialization || '';
       for (var i = 0; i < specEl.options.length; i++) {
         if (specEl.options[i].value === specVal) { specEl.selectedIndex = i; break; }
       }
     }
-    document.getElementById('country').value = l.country || '';
-    document.getElementById('availabilityStatus').value = l.availability_status || 'unavailable';
-    document.getElementById('pricePerSession').value = l.price_per_session != null ? l.price_per_session : '';
-    document.getElementById('sessionDurationMins').value = l.session_duration_mins != null ? l.session_duration_mins : '';
-    document.getElementById('communicationMethods').value = l.communication_methods || 'both';
+    document.getElementById('country').value = l.country || l.governorate || '';
+    document.getElementById('availabilityStatus').value = l.availability_status || l.availabilityStatus || l.status || 'unavailable';
+    document.getElementById('pricePerSession').value = (l.price_per_session != null ? l.price_per_session : l.pricePerSession) || '';
+    document.getElementById('sessionDurationMins').value = (l.session_duration_mins != null ? l.session_duration_mins : l.sessionDurationMins) || '';
+    document.getElementById('communicationMethods').value = l.communication_methods || l.communicationMethods || 'both';
     document.getElementById('bio').value = l.bio || '';
     setEditMode();
     clearErrors();
@@ -182,18 +194,20 @@
   async function verifyLawyer(id) {
     try {
       await API.Lawyer.verify(id);
-      API.UI.toast('Lawyer verified.', 'success');
+      API.UI.toast('Lawyer verified successfully.', 'success');
+      loadLawyers();
     } catch (err) {
       API.UI.toast(err.message || 'Failed to verify lawyer.', 'error');
     }
   }
 
-  async function enableLawyer(id) {
+  async function enableLawyer(id, status) {
     try {
-      await API.Lawyer.setActive(id, true);
-      API.UI.toast('Lawyer enabled.', 'success');
+      await API.Lawyer.setActive(id, status);
+      API.UI.toast('Lawyer status updated.', 'success');
+      loadLawyers();
     } catch (err) {
-      API.UI.toast(err.message || 'Failed to enable lawyer.', 'error');
+      API.UI.toast(err.message || 'Failed to update lawyer status.', 'error');
     }
   }
 
@@ -217,6 +231,7 @@
 
     var fullName = (document.getElementById('fullName').value || '').trim();
     var email = (document.getElementById('email') && document.getElementById('email').value || '').trim();
+    var password = (document.getElementById('password') && document.getElementById('password').value || '').trim();
     var specEl = document.getElementById('specialty');
     var specialty = specEl ? (specEl.value || '').trim() : '';
     var country = (document.getElementById('country').value || '').trim();
@@ -228,41 +243,41 @@
 
     try {
       if (mode === 'add') {
-        if (!fullName || !email || !specialty) {
+        if (!fullName || !email || !specialty || !password) {
           restore();
-          API.UI.toast('Full name, email and specialty (legal area) are required.', 'error');
+          API.UI.toast('Full name, email, specialty and password are required.', 'error');
           return;
         }
         await API.Lawyer.create({
-          full_name: fullName,
+          fullName: fullName,
           email: email,
-          specialty: specialty,
-          country: country || undefined,
-          availability_status: availabilityStatus,
-          price_per_session: pricePerSession ? parseFloat(pricePerSession) : undefined,
-          session_duration_mins: sessionDurationMins ? parseInt(sessionDurationMins, 10) : undefined,
-          communication_methods: communicationMethods,
+          password: password,
+          specialties: [specialty],
+          governorate: country || undefined,
+          availabilityStatus: availabilityStatus,
+          pricePerSession: pricePerSession ? parseFloat(pricePerSession) : undefined,
+          sessionDurationMins: sessionDurationMins ? parseInt(sessionDurationMins, 10) : undefined,
+          communicationMethods: communicationMethods,
           bio: bio || undefined
         });
         closeModal();
-        API.UI.toast('Lawyer added.', 'success');
+        API.UI.toast('Lawyer added successfully.', 'success');
         loadLawyers();
       } else {
-        var id = editId.value ? parseInt(editId.value, 10) : null;
+        var id = editId.value;
         if (!id) { restore(); return; }
         await API.Lawyer.update(id, {
-          full_name: fullName,
-          email: email || undefined,
-          specialty: specialty,
-          country: country || undefined,
-          availability_status: availabilityStatus,
-          price_per_session: pricePerSession ? parseFloat(pricePerSession) : undefined,
-          session_duration_mins: sessionDurationMins ? parseInt(sessionDurationMins, 10) : undefined,
-          communication_methods: communicationMethods,
+          fullName: fullName,
+          specialties: [specialty],
+          governorate: country || undefined,
+          availabilityStatus: availabilityStatus,
+          pricePerSession: pricePerSession ? parseFloat(pricePerSession) : undefined,
+          sessionDurationMins: sessionDurationMins ? parseInt(sessionDurationMins, 10) : undefined,
+          communicationMethods: communicationMethods,
           bio: bio || undefined
         });
         closeModal();
-        API.UI.toast('Lawyer updated.', 'success');
+        API.UI.toast('Lawyer updated successfully.', 'success');
         loadLawyers();
       }
     } catch (err) {

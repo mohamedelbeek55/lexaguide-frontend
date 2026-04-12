@@ -1,126 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Book Consultation</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap"
-        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexaGuide - Professional Legal Support</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/customer.css">
 </head>
-
 <body>
     <div class="app">
         <header class="topbar">
             <div class="brand">
-                <div class="brand-mark">⚖</div>
-                <h1>Middle East Law</h1>
+                <div class="brand-mark"><i class="fas fa-balance-scale"></i></div>
+                <h1>LEXAGUIDE</h1>
             </div>
-            <div>
-                <a class="goto-dashboard" href="../index.html">Home</a>
-                <a class="goto-dashboard" href="./lawyer.html" style="margin-left:8px">Lawyer Dashboard</a>
+            <div class="nav-links">
+                <a class="nav-link" href="../index.html">Home</a>
+                <a class="nav-link active" href="./lawyer.html">Lawyer Dashboard</a>
             </div>
         </header>
 
         <main class="grid">
-            <section class="panel chat-section hidden" id="chat-section">
-                <h2 class="section-title">Chat with Lawyer</h2>
-                <div class="chat-container">
-                    <div class="chat-messages" id="chat-messages">
-                        <!-- Messages will appear here -->
+            <!-- Left Side: Lawyer Profile & Booking -->
+            <div class="side-panel">
+                <section class="panel profile-panel">
+                    <div class="profile-header">
+                        <div class="avatar-wrapper">
+                            <div class="avatar large" id="lawyerAvatar">L</div>
+                            <span class="status-indicator online"></span>
+                        </div>
+                        <div class="profile-info">
+                            <h2 class="name" id="lawyerName">Lawyer Name</h2>
+                            <p class="specialty" id="lawyerSpecialty">Legal Expert</p>
+                            <div class="ratings">
+                                <span class="stars" id="stars">★★★★★</span>
+                                <span class="count" id="count">0 sessions</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="chat-input-row">
-                        <input type="text" id="chat-input" placeholder="Type your message...">
-                        <button type="button" id="chat-send" class="cta">Send</button>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="label">Location</span>
+                            <span class="value" id="location">Dubai, UAE</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">Rate</span>
+                            <span class="value" id="price">$0 / hr</span>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section class="panel profile">
-                <div class="profile-card">
-                    <div class="avatar">L</div>
-                    <div class="meta">
-                        <h2 class="name"></h2>
-                        <div class="sub">
-                            <span class="specialty"></span>
-                            <span class="dot">•</span>
-                            <span class="location"></span>
-                        </div>
-                        <div class="ratings">
-                            <div class="stars"></div>
-                            <span class="count"></span>
-                        </div>
-                        <div class="price-row">
-                            <span class="label">Price/60m</span>
-                            <span class="price"></span>
-                        </div>
-                        <div class="status">
-                            <span class="badge"></span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="panel form">
-                <h2 class="section-title">Book a Consultation</h2>
-                <form id="booking-form" class="booking-form">
-                    <div class="field">
-                        <label for="clientName">Your Name</label>
-                        <input id="clientName" type="text" required placeholder="e.g., Sara Al-Masri">
-                    </div>
-                    <div class="field-group">
+                <section class="panel booking-panel" id="booking-form-panel">
+                    <h3 class="panel-title">Book a Consultation</h3>
+                    <form id="booking-form">
                         <div class="field">
-                            <label for="date">Date</label>
-                            <input id="date" type="date" required>
+                            <label>Full Name</label>
+                            <input type="text" id="clientName" placeholder="Enter your name" required>
+                        </div>
+                        <div class="field-row">
+                            <div class="field">
+                                <label>Date</label>
+                                <input type="date" id="date" required>
+                            </div>
+                            <div class="field">
+                                <label>Time</label>
+                                <input type="time" id="time" required>
+                            </div>
                         </div>
                         <div class="field">
-                            <label for="time">Start Time</label>
-                            <input id="time" type="time" required>
+                            <label>Communication Method</label>
+                            <div class="toggle-group" id="commToggle">
+                                <button type="button" class="toggle-btn active" data-mode="chat">Chat</button>
+                                <button type="button" class="toggle-btn" data-mode="video">Video</button>
+                            </div>
+                            <input type="hidden" id="communication" value="chat">
                         </div>
                         <div class="field">
-                            <label for="duration">Duration</label>
-                            <select id="duration">
-                                <option value="30">30 mins</option>
-                                <option value="60" selected>60 mins</option>
-                            </select>
+                            <label>Briefly describe your case</label>
+                            <textarea id="issue" rows="3" placeholder="Tell us about your legal needs..."></textarea>
+                        </div>
+                        <button type="submit" class="cta-full">Schedule Now</button>
+                    </form>
+                </section>
+            </div>
+
+            <!-- Right Side: Real-time Chat -->
+            <div class="chat-panel-wrapper">
+                <section class="panel chat-section hidden" id="chat-section">
+                    <div class="chat-header">
+                        <div class="active-user">
+                            <div class="avatar small" id="chat-lawyer-avatar-small">L</div>
+                            <div class="user-meta">
+                                <h4 id="chat-lawyer-name-header">Lawyer Name</h4>
+                                <span id="statusBadge" class="badge pending">PENDING</span>
+                            </div>
+                        </div>
+                        <button class="close-chat" id="close-chat"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-messages">
+                            <!-- Messages -->
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chat-input" placeholder="Waiting for lawyer..." disabled>
+                            <button type="button" id="chat-send" class="send-btn" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
                         </div>
                     </div>
-
-                    <div class="field">
-                        <label for="issue">Issue Description</label>
-                        <textarea id="issue" rows="5" required placeholder="Summarize your legal issue"></textarea>
-                    </div>
-
-                    <div class="field">
-                        <label>Preferred Communication</label>
-                        <div class="toggle" id="commToggle">
-                            <button type="button" data-mode="chat" class="toggle-btn active">Written Chat</button>
-                            <button type="button" data-mode="video" class="toggle-btn">Video Call</button>
-                        </div>
-                        <input type="hidden" id="communication" value="chat">
-                    </div>
-
-                    <button type="submit" class="cta">Book Consultation</button>
-                </form>
-
-                <div id="confirmation" class="confirmation hidden">
-                    <div class="conf-card">
-                        <div class="conf-icon">✔</div>
-                        <h3>Booking Confirmed</h3>
-                        <p>Booking ID</p>
-                        <div class="booking-id" id="bookingId"></div>
-                        <div class="conf-actions">
-                            <a class="cta ghost" href="./lawyer.html">Open Lawyer Dashboard</a>
-                            <button id="newBooking" class="cta">New Booking</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </div>
         </main>
+
+        <!-- Confirmation Overlay -->
+        <div class="confirmation hidden" id="confirmation">
+            <div class="conf-card">
+                <div class="conf-icon"><i class="fas fa-check-circle"></i></div>
+                <h3>Consultation Scheduled!</h3>
+                <p>Your request has been sent to the lawyer. You can start chatting once they accept.</p>
+                <div class="booking-id" id="bookingId">LC-XXXXX</div>
+                <div class="conf-actions">
+                    <button class="cta ghost" id="newBooking">New Booking</button>
+                    <button class="cta" onclick="location.reload()">View Status</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script src="../shared/api.js"></script>
     <script src="../js/customer.js"></script>
 </body>
-
 </html>

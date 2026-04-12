@@ -1,21 +1,33 @@
 import { Router } from "express";
-import { requireAuth, requireRole } from "../../middlewares/auth.middleware.js";
+import { requireAuth, requireRole, requireUserOrLawyer } from "../../middlewares/auth.middleware.js";
 import { requireLawyerAuth } from "../../middlewares/lawyerAuth.middleware.js";
 
 import {
   createConsultation,
   myConsultations,
   updateStatus,
-
-  sendMessageAsUser,
-  getMessagesAsUser,
-
-  myConsultationsAsLawyer,
-  sendMessageAsLawyer,
-  getMessagesAsLawyer
+  getMessages,
+  sendMessage,
+  myConsultationsAsLawyer
 } from "./consultations.controller.js";
 
 const router = Router();
+
+/**
+ * COMMON (Both User and Lawyer can use these)
+ */
+router.get("/:id/messages", requireUserOrLawyer, getMessages);
+router.post("/:id/messages", requireUserOrLawyer, sendMessage);
+
+/**
+ * STATUS (Admin or Lawyer owner)
+ */
+router.patch("/:id/status", requireUserOrLawyer, updateStatus);
+
+/**
+ * PUT /api/bookings/:id - Alias or direct for status update as requested
+ */
+router.put("/:id", requireUserOrLawyer, updateStatus);
 
 /**
  * USER
@@ -23,20 +35,9 @@ const router = Router();
 router.post("/", requireAuth, createConsultation);
 router.get("/my", requireAuth, myConsultations);
 
-router.post("/:id/messages", requireAuth, sendMessageAsUser);
-router.get("/:id/messages", requireAuth, getMessagesAsUser);
-
-/**
- * ADMIN (temporary status control)
- */
-router.patch("/:id/status", requireAuth, requireRole("admin"), updateStatus);
-
 /**
  * LAWYER
  */
-router.get("/lawyer/my", requireLawyerAuth, myConsultationsAsLawyer);
-
-router.post("/:id/messages/lawyer", requireLawyerAuth, sendMessageAsLawyer);
-router.get("/:id/messages/lawyer", requireLawyerAuth, getMessagesAsLawyer);
+router.get("/lawyer/me", requireLawyerAuth, myConsultationsAsLawyer);
 
 export default router;

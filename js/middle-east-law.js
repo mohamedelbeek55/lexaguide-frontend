@@ -74,7 +74,8 @@ const translations = {
         meFaqQ3: 'How is my information kept private?',
         meFaqA3: 'All sessions are encrypted, and your case details are visible only to you and the lawyer you choose. We never sell or share your data with third parties.',
         meFaqQ4: 'Can I download a transcript of my consultation?',
-        meFaqA4: 'Yes. For chat sessions, you can export a transcript after the consultation. For video calls, lawyers can optionally upload written follow‑up notes.'
+        meFaqA4: 'Yes. For chat sessions, you can export a transcript after the consultation. For video calls, lawyers can optionally upload written follow‑up notes.',
+        bookConsultation: 'Book Consultation'
     },
     ar: {
         home: 'الرئيسية',
@@ -140,7 +141,8 @@ const translations = {
         meFaqQ3: 'كيف يتم الحفاظ على خصوصية معلوماتي؟',
         meFaqA3: 'جميع الجلسات مشفرة، وتفاصيل حالتك لا يراها سوى أنت والمحامي الذي تختاره، ولا نبيع بياناتك أو نشاركها مع أطراف أخرى.',
         meFaqQ4: 'هل يمكنني تحميل نسخة من محادثة الاستشارة؟',
-        meFaqA4: 'نعم، في جلسات المحادثة الكتابية يمكنك حفظ نسخة من المحادثة بعد انتهاء الجلسة، وفي مكالمات الفيديو يمكن للمحامي إضافة ملاحظات مكتوبة عند الحاجة.'
+        meFaqA4: 'نعم، في جلسات المحادثة الكتابية يمكنك حفظ نسخة من المحادثة بعد انتهاء الجلسة، وفي مكالمات الفيديو يمكن للمحامي إضافة ملاحظات مكتوبة عند الحاجة.',
+        bookConsultation: 'احجز استشارة الآن'
     }
 };
 
@@ -260,8 +262,6 @@ async function simulateMatch() {
     var cityEl = document.getElementById('me-city');
     var budgetEl = document.getElementById('me-budget');
     var needEl = document.getElementById('me-need');
-    var commEl = document.querySelector('[name="me-comm"]:checked') ||
-        document.querySelector('.me-radio-input:checked');
     var matchBtn = document.querySelector('[onclick="simulateMatch()"]') ||
         document.querySelector('[data-action="match"]');
 
@@ -269,7 +269,7 @@ async function simulateMatch() {
     var city = cityEl ? cityEl.value : '';
     var budget = budgetEl ? budgetEl.value : '';
     var description = needEl ? needEl.value : '';
-    var commMethod = commEl ? commEl.value : 'chat';
+    var commMethod = 'chat'; // Default to chat for matching purposes
 
     if (!legalAreaId) {
         API.UI.toast('Please select a legal area first.', 'error');
@@ -368,14 +368,22 @@ function renderMatchedLawyers(lawyers) {
             '</div>' +
             '<p class="me-lawyer-specialty">' + escapeHtml(bio) + '</p>' +
             '<div class="me-lawyer-actions">' +
-            "  <button type=\"button\" class=\"chat\" onclick=\"bookLawyer('" + l.id + "', 'chat')\">Chat</button>" +
-            "  <button type=\"button\" class=\"video\" onclick=\"bookLawyer('" + l.id + "', 'video_call')\">Video Call</button>" +
+            "  <button type=\"button\" class=\"cta-full\" onclick=\"navigateToBooking('" + l.id + "')\">" + (translations[currentLang].bookConsultation || 'Book Consultation') + "</button>" +
             '</div>' +
             '</article>';
     }).join('');
 }
 
-// ─── Book a consultation with a matched lawyer ─────────────────────────────
+// ─── Navigate to booking details page ──────────────────────────────────────
+function navigateToBooking(lawyerId) {
+    if (!API.isLoggedIn()) {
+        window.location.href = 'login.html';
+        return;
+    }
+    window.location.href = 'customer.html?lawyer=' + lawyerId;
+}
+
+// ─── Book a consultation with a matched lawyer (Keep for compatibility) ─────
 async function bookLawyer(lawyerId, communicationMethod) {
     var commMethod = communicationMethod === 'video_call' ? 'video_call' : 'chat';
 

@@ -411,6 +411,14 @@
     color: #0d1524;
 }
 
+.me-lawyer-actions .cta-full {
+    width: 100%;
+    background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+    color: #0d1524;
+    border-radius: 12px;
+    padding: 10px;
+}
+
 .me-lawyer-actions button:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);

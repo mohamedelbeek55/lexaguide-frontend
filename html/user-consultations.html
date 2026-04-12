@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Consultations - LexaGuide</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/lawyer.css"> <!-- Reusing dashboard styles -->
+    <style>
+        :root {
+            --user-bg: #0d1117;
+            --user-card: #161b22;
+        }
+        body { background-color: var(--user-bg); color: white; font-family: 'DM Sans', sans-serif; }
+        .user-layout { display: flex; min-height: 100vh; }
+        .main-content { flex: 1; padding: 40px; }
+        .consultations-grid { display: grid; grid-template-columns: repeat(auto-fill, min-min(350px, 1fr)); gap: 24px; margin-top: 30px; }
+        .consultation-card { background: var(--user-card); border: 1px solid #30363d; border-radius: 12px; padding: 24px; transition: 0.3s; }
+        .consultation-card:hover { border-color: #c5954a; transform: translateY(-4px); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .lawyer-info { display: flex; gap: 12px; align-items: center; }
+        .lawyer-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #c5954a, #d4a55a); display: flex; align-items: center; justify-content: center; color: #0d1117; font-weight: bold; font-size: 18px; }
+        .lawyer-name { font-size: 16px; font-weight: 600; margin: 0; }
+        .lawyer-specialty { font-size: 12px; color: #8b949e; margin: 2px 0 0 0; }
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .status-badge.pending { background: rgba(212, 165, 90, 0.1); color: #d4a55a; border: 1px solid rgba(212, 165, 90, 0.2); }
+        .status-badge.accepted, .status-badge.active { background: rgba(46, 160, 67, 0.1); color: #3fb950; border: 1px solid rgba(46, 160, 67, 0.2); }
+        .status-badge.completed { background: rgba(56, 139, 253, 0.1); color: #58a6ff; border: 1px solid rgba(56, 139, 253, 0.2); }
+        .case-notes { font-size: 14px; color: #c9d1d9; line-height: 1.5; margin: 16px 0; min-height: 42px; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #30363d; pt: 16px; margin-top: 16px; }
+        .btn-chat { background: #c5954a; color: #0d1117; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn-chat:hover { background: #d4a55a; }
+        .btn-chat:disabled { background: #30363d; color: #8b949e; cursor: not-allowed; }
+        
+        /* Chat Overrides */
+        #chatSection { position: fixed; bottom: 20px; right: 20px; width: 400px; height: 550px; z-index: 1000; box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
+        .chat-bubble.user { align-self: flex-end; background: #c5954a; color: #0d1117; border-bottom-right-radius: 2px; border-bottom-left-radius: 14px; }
+        .chat-bubble.lawyer { align-self: flex-start; background: #30363d; color: white; border-bottom-left-radius: 2px; border-bottom-right-radius: 14px; }
+        .initial-msg-badge { color: #0d1117; opacity: 0.7; }
+        .chat-bubble.initial { border-color: rgba(0,0,0,0.1); background: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+    <div class="user-layout">
+        <main class="main-content">
+            <header class="content-header">
+                <div class="welcome-msg">
+                    <h1 id="welcomeText">My Consultations</h1>
+                    <p>Track your legal requests and chat with your lawyers.</p>
+                </div>
+                <div class="header-actions">
+                    <a href="../index.html" class="btn btn-secondary"><i class="fas fa-home"></i> Back to Home</a>
+                </div>
+            </header>
+
+            <div id="consultationsGrid" class="consultations-grid">
+                <div class="loading-state">Loading your consultations...</div>
+            </div>
+
+            <!-- Unified Chat Section -->
+            <section class="chat-panel hidden" id="chatSection">
+                <div class="chat-header">
+                    <div class="client-info">
+                        <div class="avatar-small" id="chatLawyerAvatar">L</div>
+                        <div>
+                            <h4 id="chatLawyerName">Lawyer Name</h4>
+                            <p id="chatStatusText">Active Consultation</p>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="close-btn" onclick="closeChat()"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="chat-body" id="chatMessages">
+                    <!-- Messages will be loaded here -->
+                </div>
+                <form class="chat-footer" id="chatForm">
+                    <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off">
+                    <button type="submit" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script src="../shared/api.js"></script>
+    <script src="../js/customer-consultations.js"></script>
+</body>
+</html>

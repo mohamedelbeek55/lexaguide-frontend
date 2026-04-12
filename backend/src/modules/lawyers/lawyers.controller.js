@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import { z } from "zod";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { Lawyer } from "./lawyer.model.js";
+import { Consultation } from "../consultations/consultation.model.js";
+import { ConsultationMessage } from "../consultations/message.model.js";
 
 const registerLawyerSchema = z.object({
   fullName: z.string().min(2),
@@ -225,8 +227,20 @@ export const updateLawyerAdmin = asyncHandler(async (req, res) => {
 });
 
 export const deleteLawyerAdmin = asyncHandler(async (req, res) => {
-  const deleted = await Lawyer.findByIdAndDelete(req.params.id);
+  const lawyerId = req.params.id;
+  const deleted = await Lawyer.findByIdAndDelete(lawyerId);
   if (!deleted) return res.status(404).json({ message: "Not found" });
+
+  // Cleanup: Find all consultations for this lawyer
+  const consultations = await Consultation.find({ lawyerId });
+  const consultationIds = consultations.map(c => c._id);
+
+  // Delete messages and consultations
+  if (consultationIds.length > 0) {
+    await ConsultationMessage.deleteMany({ consultationId: { $in: consultationIds } });
+    await Consultation.deleteMany({ lawyerId });
+  }
+
   res.json({ ok: true });
 });
 
@@ -284,4 +298,13 @@ export const recommendLawyersAI = asyncHandler(async (req, res) => {
   }));
 
   res.json({ lawyers: mapped });
+});
+
+// ✅ Get single lawyer by ID
+export const getLawyerById = asyncHandler(async (req, res) => {
+  const lawyer = await Lawyer.findById(req.params.id)
+    .select("fullName bio governorate specialties pricePerSession ratingAvg ratingCount isVerified isActive");
+
+  if (!lawyer) return res.status(404).json({ message: "Lawyer not found" });
+  res.json({ lawyer });
 });

@@ -95,10 +95,20 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     const restore = API.UI.setLoading(submitBtn, 'Signing in…');
 
     try {
-        await API.Auth.login(email, password);
+        const data = await API.Auth.login(email, password);
         // Token + user stored by api.js. Redirect based on role/email.
+
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get('redirect');
+        if (redirect) {
+            window.location.href = redirect;
+            return;
+        }
+
         if (API.isAdmin && API.isAdmin()) {
             window.location.href = 'admin-dashboard.html';
+        } else if (data.user && data.user.role === 'lawyer') {
+            window.location.href = 'lawyer.html';
         } else {
             window.location.href = 'middle-east-law.html';
         }
@@ -119,7 +129,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         if (emailQS && passwordQS) {
             document.getElementById('loginForm').dispatchEvent(new Event('submit'));
         }
-    } catch {}
+    } catch { }
 })();
 // ─── Language Selector ────────────────────────────────────────────────────────
 let currentLang = localStorage.getItem('language') || 'en';

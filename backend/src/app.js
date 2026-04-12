@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -15,6 +16,7 @@ import generatedRoutes from "./modules/generated/generated.routes.js";
 import chatbotRoutes from "./modules/chatbot/chatbot.routes.js";
 import profileRoutes from "./modules/profile/profile.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
+import notificationRoutes from "./modules/users/notifications.routes.js";
 
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 
@@ -54,7 +56,10 @@ app.use(
       }
 
       const normalizedOrigin = origin.replace(/\/$/, "");
-      if (allowlist.includes(normalizedOrigin)) {
+      if (
+        allowlist.includes(normalizedOrigin) ||
+        normalizedOrigin.endsWith(".vercel.app")
+      ) {
         return callback(null, true);
       }
 
@@ -87,11 +92,20 @@ app.use(morgan("dev"));
 =========================== */
 
 app.get("/health", (req, res) => {
-  res.json({ ok: true, service: "LexaGuide API" });
+  const dbStatus = mongoose.connection.readyState === 1 ? "connected" : "disconnected";
+  res.json({ ok: true, service: "LexaGuide API", database: dbStatus });
 });
 
 app.get("/api/health", (req, res) => {
-  res.json({ ok: true, service: "LexaGuide API" });
+  const readyState = mongoose.connection.readyState;
+  const states = ["disconnected", "connected", "connecting", "disconnecting"];
+  res.json({
+    ok: true,
+    service: "LexaGuide API",
+    database: states[readyState] || "unknown",
+    readyState: readyState,
+    uriSet: !!process.env.MONGODB_URI
+  });
 });
 
 app.get("/api", (req, res) => {
@@ -108,10 +122,12 @@ app.use("/api/procedures", proceduresRoutes);
 app.use("/api/templates", templatesRoutes);
 app.use("/api/lawyers", lawyersRoutes);
 app.use("/api/consultations", consultationsRoutes);
+app.use("/api/bookings", consultationsRoutes); // Alias for consultations
 app.use("/api/generated", generatedRoutes);
 app.use("/api/chatbot", chatbotRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 /* ===========================
    Error Handler (Always Last)

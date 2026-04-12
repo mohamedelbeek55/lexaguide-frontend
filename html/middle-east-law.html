@@ -159,37 +159,24 @@
 
                 <div class="me-select" style="margin-top: 15px;">
                     <label class="me-field-label" for="me-budget">3. Max budget (EGP)</label>
-                    <input type="number" id="me-budget" placeholder="e.g. 500" style="width: 100%; padding: 12px; border-radius: 8px; background: #1f2c45; border: 1px solid rgba(197,149,74,0.3); color: white;">
+                    <input type="number" id="me-budget" placeholder="e.g. 500"
+                        style="width: 100%; padding: 12px; border-radius: 8px; background: #1f2c45; border: 1px solid rgba(197,149,74,0.3); color: white;">
                 </div>
 
-                <div class="me-textarea" style="margin-top: 15px;">
-                    <label class="me-field-label" for="me-need" data-i18n="meMatchLabelNeed">4. Briefly describe your
-                        need</label>
+                <div class="me-textarea">
+                    <label class="me-field-label" data-i18n="meMatchLabelNeed">4. Briefly describe your need</label>
                     <textarea id="me-need"
                         placeholder="Example: I need a review of a commercial lease agreement."></textarea>
                 </div>
 
-                <div class="me-radio-group">
-                    <span class="me-field-label" data-i18n="meMatchLabelComm">5. Preferred communication method</span>
-                    <div class="me-radio-group-inner">
-                        <label class="me-radio-pill">
-                            <input type="radio" name="me-comm" value="chat" checked>
-                            <span data-i18n="meMatchChatLabel">Written Chat (faster & lower cost)</span>
-                        </label>
-                        <label class="me-radio-pill">
-                            <input type="radio" name="me-comm" value="video">
-                            <span data-i18n="meMatchVideoLabel">Video Call (more interactive)</span>
-                        </label>
-                    </div>
-                </div>
-
-                <button class="me-matching-btn" type="button" onclick="simulateMatch()">
-                    <span data-i18n="meMatchButton">Show Recommended Lawyers</span>
+                <button type="button" class="me-matching-btn" onclick="simulateMatch()" data-i18n="meMatchButton">
+                    Show Recommended Lawyers
                 </button>
             </div>
 
             <div class="me-lawyer-list" id="me-lawyer-list">
-                <p class="me-no-lawyers" id="me-lawyers-empty-state">Select your legal area above and click « Show Recommended Lawyers » to see lawyers from our database.</p>
+                <p class="me-no-lawyers" id="me-lawyers-empty-state">Select your legal area above and click « Show
+                    Recommended Lawyers » to see lawyers from our database.</p>
             </div>
         </div>
     </section>
@@ -370,10 +357,12 @@
                     <ul class="footer-links">
                         <li><a href="./contract-analysis.html" data-i18n="footerService1">Contract
                                 Analysis</a></li>
-                        <li><a href="./legal-doc-generation.html" data-i18n="footerService2">Document Generation</a></li>
+                        <li><a href="./legal-doc-generation.html" data-i18n="footerService2">Document Generation</a>
+                        </li>
                         <li><a href="./chatbot.html" data-i18n="footerService3">ChatBot</a></li>
                         <li><a href="./middle-east-law.html" data-i18n="footerService4">Law Experts</a>
-                        <li><a href="./consultations-management.html" data-i18n="footerService5">Case Management</a></li>
+                        <li><a href="./consultations-management.html" data-i18n="footerService5">Case Management</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -409,7 +398,8 @@
                                 </div>
                             </a>
                             <a href="#" class="app-button google-play" aria-label="Get it on Google Play">
-                                <img src="../assets/logos/icons8-google-play-24.png" alt="Google Play" class="app-icon-img">
+                                <img src="../assets/logos/icons8-google-play-24.png" alt="Google Play"
+                                    class="app-icon-img">
                                 <div class="app-button-text">
                                     <span class="app-button-label" data-i18n="footerGooglePlayLabel">Get it on</span>
                                     <span class="app-button-name" data-i18n="footerGooglePlayName">Google Play</span>

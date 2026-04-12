@@ -1,58 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lawyer Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/lawyer.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lawyer Dashboard - LexaGuide</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/lawyer.css">
 </head>
+
 <body>
-<div class="app">
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark">⚖</div>
-      <h1>Lawyer Dashboard</h1>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-balance-scale"></i>
+                <span>LEXAGUIDE</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" onclick="showPanel('dashboard')"><i class="fas fa-th-large"></i>
+                    Dashboard</a>
+                <a href="#" class="nav-item" onclick="showPanel('appointments')"><i class="fas fa-calendar-alt"></i>
+                    Appointments</a>
+                <a href="#" class="nav-item" onclick="showPanel('appointments')"><i class="fas fa-envelope"></i>
+                    Messages</a>
+                <a href="/html/profile.html" class="nav-item"><i class="fas fa-user-circle"></i> Profile</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="API.logout()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="welcome-msg">
+                    <h1>Welcome, <span id="lawyerName">Lawyer</span></h1>
+                    <p>Here's what's happening with your consultations today.</p>
+                </div>
+                <div class="header-actions">
+                    <div class="online-status">
+                        <span class="dot"></span> Online
+                    </div>
+                </div>
+            </header>
+
+            <!-- Stats -->
+            <section class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-icon pending"><i class="fas fa-clock"></i></div>
+                    <div class="stat-body">
+                        <h3 id="pendingCount">0</h3>
+                        <p>Pending</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon active"><i class="fas fa-comments"></i></div>
+                    <div class="stat-body">
+                        <h3 id="acceptedCount">0</h3>
+                        <p>Active</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon completed"><i class="fas fa-check-double"></i></div>
+                    <div class="stat-body">
+                        <h3 id="completedCount">0</h3>
+                        <p>Completed</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid" id="dashboardPanel">
+                <!-- Consultations List -->
+                <section class="consultations-panel">
+                    <div class="section-title">
+                        <h2>Recent Requests</h2>
+                    </div>
+                    <div id="bookingList" class="booking-list">
+                        <!-- Bookings -->
+                        <div class="loading-state">Loading consultations...</div>
+                    </div>
+                </section>
+
+                <!-- Appointments Panel (Hidden by default) -->
+                <section class="consultations-panel hidden" id="appointmentsPanel">
+                    <div class="section-title">
+                        <h2>Confirmed Appointments</h2>
+                    </div>
+                    <div id="appointmentsList" class="booking-list">
+                        <!-- Appointments -->
+                    </div>
+                </section>
+
+                <!-- Active Chat Panel -->
+                <section class="chat-panel hidden" id="chatSection">
+                    <div class="chat-header">
+                        <div class="client-info">
+                            <div class="avatar-small" id="chatClientAvatar">C</div>
+                            <div>
+                                <h4 id="chatClientName">Client Name</h4>
+                                <p>Active Consultation</p>
+                            </div>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="finish-btn" onclick="completeConsultation()" title="Complete Session">
+                                <i class="fas fa-check"></i> Finish
+                            </button>
+                            <button class="close-btn" onclick="closeChat()"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="chat-body" id="chatMessages">
+                        <!-- Messages -->
+                    </div>
+                    <form class="chat-footer" id="chatForm">
+                        <input type="text" id="chatInput" placeholder="Write a message..." required>
+                        <button type="submit" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </section>
+            </div>
+        </main>
     </div>
-    <a class="goto-customer" href="./customer.html">Customer Booking</a>
-  </header>
 
-  <main class="main">
-    <div class="stats">
-      <div class="tile">
-        <div class="tile-label">Pending</div>
-        <div class="tile-value" id="pendingCount">0</div>
-      </div>
-      <div class="tile">
-        <div class="tile-label">Accepted</div>
-        <div class="tile-value" id="acceptedCount">0</div>
-      </div>
-      <div class="tile">
-        <div class="tile-label">Declined</div>
-        <div class="tile-value" id="declinedCount">0</div>
-      </div>
-    </div>
-
-    <!-- Chat Section -->
-    <section class="panel chat-section hidden" id="chat-section">
-      <div class="panel-header">
-        <h2 class="panel-title">Chat with Client</h2>
-      </div>
-      <div class="chat-container">
-        <div class="chat-messages" id="chat-messages">
-          <!-- Messages -->
-        </div>
-        <div class="chat-input-row">
-          <input type="text" id="chat-input" placeholder="Type your message...">
-          <button type="button" id="chat-send" class="btn btn-primary">Send</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Consultations List -->
-    <section class="list" id="bookingList"></section>
-  </main>
-</div>
-<script src="../js/lawyer.js"></script>
+    <script src="../shared/api.js"></script>
+    <script src="../js/lawyer.js"></script>
 </body>
+
 </html>

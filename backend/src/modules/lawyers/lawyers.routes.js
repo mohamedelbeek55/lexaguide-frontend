@@ -10,7 +10,8 @@ import {
   createLawyerAdmin,
   updateLawyerAdmin,
   deleteLawyerAdmin,
-  recommendLawyersAI
+  recommendLawyersAI,
+  getLawyerById
 } from "./lawyers.controller.js";
 
 const router = Router();
@@ -21,6 +22,7 @@ router.post("/login", loginLawyer);
 
 // Public list/search
 router.get("/", listLawyers);
+router.get("/:id", getLawyerById);
 
 // Admin dashboard
 router.get("/pending", requireAuth, requireRole("admin"), listPendingLawyers);

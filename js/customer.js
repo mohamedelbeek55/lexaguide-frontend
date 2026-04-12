@@ -4,23 +4,27 @@ const lawyerParam = params.get("lawyer")
 const consultationIdParam = params.get("consultationId")
 
 // Elements
-const nameEl = document.querySelector(".name")
-const specialtyEl = document.querySelector(".specialty")
-const locationEl = document.querySelector(".location")
-const starsEl = document.querySelector(".stars")
-const countEl = document.querySelector(".count")
-const priceEl = document.querySelector(".price")
-const badgeEl = document.querySelector(".badge")
-const formPanel = document.querySelector(".panel.form")
+const nameEl = document.getElementById("lawyerName")
+const specialtyEl = document.getElementById("lawyerSpecialty")
+const locationEl = document.getElementById("location")
+const starsEl = document.getElementById("stars")
+const countEl = document.getElementById("count")
+const priceEl = document.getElementById("price")
+const lawyerAvatarLarge = document.getElementById("lawyerAvatar")
+
 const chatSection = document.getElementById("chat-section")
 const chatMessages = document.getElementById("chat-messages")
 const chatInput = document.getElementById("chat-input")
 const chatSend = document.getElementById("chat-send")
+const chatLawyerNameHeader = document.getElementById("chat-lawyer-name-header")
+const chatLawyerAvatarSmall = document.getElementById("chat-lawyer-avatar-small")
+const statusBadge = document.getElementById("statusBadge")
 
 // State
 let currentConsultationId = consultationIdParam;
 let lastMessageCount = 0;
 let consultationStatus = "pending";
+let currentLawyerData = null;
 
 function formatTime(isoStr) {
   if (!isoStr) return "";
@@ -32,32 +36,57 @@ function formatTime(isoStr) {
 async function loadMessages() {
   if (!currentConsultationId || typeof API === 'undefined') return;
   try {
-    // Also refresh consultation info to check status
     const consult = await API.Consult.get(currentConsultationId);
     consultationStatus = consult.status;
 
-    const resp = await API.Consult.getMessages(currentConsultationId);
-    const messages = resp.messages || [];
-
-    if (messages.length !== lastMessageCount) {
-      renderMessages(messages);
-      lastMessageCount = messages.length;
-      scrollToBottom();
+    if (statusBadge) {
+      statusBadge.textContent = consultationStatus.toUpperCase();
+      statusBadge.className = "badge " + (consultationStatus === 'accepted' || consultationStatus === 'active' ? 'active' : 'pending');
     }
 
-    // Disable input if not accepted
-    if (consultationStatus !== "accepted" && consultationStatus !== "active" && consultationStatus !== "confirmed") {
-      chatInput.disabled = true;
-      chatInput.placeholder = `Chat is locked (Status: ${consultationStatus})`;
-      chatSend.disabled = true;
-    } else {
+    // Update headers if not already set
+    if (!currentLawyerData) {
+      currentLawyerData = {
+        id: consult.lawyer_id,
+        name: consult.lawyer_name,
+        specialty: consult.lawyer_specialty,
+        location: consult.lawyer_location,
+        rating: consult.lawyer_rating,
+        consultations: consult.lawyer_consultations,
+        price: consult.lawyer_price
+      };
+      updateLawyerUI(currentLawyerData);
+    }
+
+    if (consultationStatus === "accepted" || consultationStatus === "active" || consultationStatus === "confirmed") {
+      const resp = await API.Consult.getMessages(currentConsultationId);
+      const messages = resp.messages || [];
+
+      if (messages.length !== lastMessageCount) {
+        renderMessages(messages);
+        lastMessageCount = messages.length;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
       chatInput.disabled = false;
       chatInput.placeholder = "Type your message...";
       chatSend.disabled = false;
-    }
+    } else {
+      chatInput.disabled = true;
+      chatInput.placeholder = consultationStatus === "pending" ? "Waiting for lawyer to accept..." : `Consultation ${consultationStatus}`;
+      chatSend.disabled = true;
 
+      if (chatMessages.children.length === 0 && consultationStatus === "pending") {
+        chatMessages.innerHTML = `
+            <div class="empty-chat">
+                <i class="fas fa-hourglass-half"></i>
+                <p>Your request is pending. Once the lawyer accepts, you can start chatting here.</p>
+            </div>
+          `;
+      }
+    }
   } catch (err) {
-    console.error("Failed to load messages:", err);
+    console.error("Chat load error:", err);
   }
 }
 
@@ -73,42 +102,41 @@ function renderMessages(messages) {
   }).join('');
 }
 
-function scrollToBottom() {
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
 async function sendChatMessage() {
   const text = chatInput.value.trim();
   if (!text || !currentConsultationId) return;
 
   try {
-    // Show local bubble immediately
+    // Local Echo
     chatMessages.innerHTML += `
-            <div class="chat-bubble user">
-                ${text}
-            </div>
-        `;
-    scrollToBottom();
+        <div class="chat-bubble user">
+            <div class="msg-content">${text}</div>
+            <div class="msg-time">${formatTime(new Date())}</div>
+        </div>
+    `;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
     chatInput.value = "";
 
     await API.Consult.sendMessage(currentConsultationId, text);
+    // Remove the placeholder if it exists
+    const emptyChat = chatMessages.querySelector(".empty-chat");
+    if (emptyChat) emptyChat.remove();
+
     loadMessages();
   } catch (err) {
-    alert("Failed to send message: " + err.message);
+    API.UI.toast("Failed to send", "error");
   }
 }
 
 async function initChat() {
   if (!currentConsultationId) return;
-
-  // Show chat section
   chatSection.classList.remove("hidden");
 
   // Initial load
   await loadMessages();
 
-  // Poll for new messages every 3 seconds
-  setInterval(loadMessages, 3000);
+  // Polling
+  const chatInterval = setInterval(loadMessages, 3000);
 
   chatSend.addEventListener("click", sendChatMessage);
   chatInput.addEventListener("keypress", (e) => {
@@ -118,167 +146,159 @@ async function initChat() {
   const closeChatBtn = document.getElementById("close-chat");
   if (closeChatBtn) {
     closeChatBtn.addEventListener("click", () => {
+      clearInterval(chatInterval);
       chatSection.classList.add("hidden");
-      const newUrl = window.location.pathname;
+      const newUrl = window.location.pathname + (lawyerParam ? `?lawyer=${lawyerParam}` : '');
       window.history.pushState({}, '', newUrl);
       currentConsultationId = null;
     });
   }
 }
 
-if (currentConsultationId) {
-  initChat();
-}
-
-// ─── Lawyer Info Logic ───────────────────────────────────────────────────────
-let lawyer = { name: "Loading...", specialty: "", location: "", rating: 0, consultations: 0, pricePer60: 0, online: false }
-
+// ─── Lawyer Info ─────────────────────────────────────────────────────────────
 async function loadLawyerInfo() {
-  if (!lawyerParam && !currentConsultationId) {
-    updateLawyerUI();
+  const urlParams = new URLSearchParams(window.location.search);
+  const lid = urlParams.get("lawyer");
+  const cid = urlParams.get("consultationId");
+
+  if (!lid && !cid) {
+    API.UI.toast("No lawyer or consultation specified. Redirecting...", "error");
+    setTimeout(() => window.location.href = "middle-east-law.html", 2000);
     return;
   }
 
   try {
-    let data;
-    if (currentConsultationId) {
-      const consult = await API.Consult.get(currentConsultationId);
-      data = {
+    if (cid) {
+      if (!API.isLoggedIn()) {
+        window.location.href = "login.html?redirect=" + encodeURIComponent(window.location.href);
+        return;
+      }
+      const consult = await API.Consult.get(cid);
+      currentLawyerData = {
         name: consult.lawyer_name,
         specialty: consult.lawyer_specialty,
         location: consult.lawyer_location,
         rating: consult.lawyer_rating,
         consultations: consult.lawyer_consultations,
-        pricePer60: consult.lawyer_price,
-        online: true
+        price: consult.lawyer_price,
+        id: consult.lawyer_id
       };
-    } else {
-      const l = await API.Lawyer.get(lawyerParam);
-      data = {
+    } else if (lid) {
+      const l = await API.Lawyer.get(lid);
+      if (!l || !l.full_name) {
+        throw new Error("Lawyer not found");
+      }
+      currentLawyerData = {
         name: l.full_name,
         specialty: l.specialty,
         location: l.country,
         rating: l.rating,
         consultations: l.total_consultations,
-        pricePer60: l.price_per_session,
-        online: l.availability_status === 'online_now'
+        price: l.price_per_session,
+        id: l.id
       };
     }
 
-    lawyer = data;
-    updateLawyerUI();
+    if (currentLawyerData) {
+      updateLawyerUI(currentLawyerData);
+    } else {
+      throw new Error("Could not load lawyer data");
+    }
   } catch (err) {
-    console.error("Failed to load lawyer info:", err);
+    console.error("Info load error:", err);
+    API.UI.toast("Lawyer details not found. Redirecting...", "error");
+    setTimeout(() => window.location.href = "middle-east-law.html", 2000);
   }
 }
 
-function updateLawyerUI() {
-  if (nameEl) nameEl.textContent = lawyer.name
-  if (specialtyEl) specialtyEl.textContent = lawyer.specialty
-  if (locationEl) locationEl.textContent = lawyer.location
-  if (priceEl) priceEl.textContent = "$" + lawyer.pricePer60
-  if (countEl) countEl.textContent = (lawyer.consultations || 0) + " sessions"
-
-  const solid = "★★★★★"
-  const hollow = "☆☆☆☆☆"
-  const rounded = Math.round(lawyer.rating || 0)
-  if (starsEl) starsEl.textContent = solid.slice(0, rounded) + hollow.slice(0, 5 - rounded)
-
-  if (badgeEl) {
-    badgeEl.textContent = lawyer.online ? "Online" : "Unavailable"
-    badgeEl.style.background = lawyer.online ? "rgba(15,190,120,.18)" : "rgba(200,80,60,.18)"
-    badgeEl.style.borderColor = lawyer.online ? "rgba(15,190,120,.35)" : "rgba(200,80,60,.35)"
+function updateLawyerUI(data) {
+  if (!data) {
+    if (nameEl) nameEl.textContent = "Fetching Lawyer Details...";
+    if (chatLawyerNameHeader) chatLawyerNameHeader.textContent = "Connecting...";
+    return;
   }
+  if (nameEl) nameEl.textContent = data.name;
+  if (specialtyEl) specialtyEl.textContent = data.specialty;
+  if (locationEl) locationEl.textContent = data.location;
+  if (priceEl) priceEl.textContent = `$${data.price} / session`;
+  if (countEl) countEl.textContent = `${data.consultations} sessions`;
+  if (lawyerAvatarLarge) lawyerAvatarLarge.textContent = data.name ? data.name[0].toUpperCase() : "L";
 
-  const avatar = document.querySelector(".avatar");
-  if (avatar && lawyer.name) avatar.textContent = lawyer.name[0];
+  if (chatLawyerNameHeader) chatLawyerNameHeader.textContent = data.name;
+  if (chatLawyerAvatarSmall) chatLawyerAvatarSmall.textContent = data.name ? data.name[0].toUpperCase() : "L";
+
+  const stars = "★★★★★";
+  const rounded = Math.round(data.rating || 0);
+  if (starsEl) starsEl.textContent = stars.slice(0, rounded) + "☆☆☆☆☆".slice(0, 5 - rounded);
 }
 
-loadLawyerInfo();
+// Initial placeholder state
+updateLawyerUI(null);
 
-const commToggle = document.getElementById("commToggle")
-const commInput = document.getElementById("communication")
-const issueEl = document.getElementById("issue")
-const confirmation = document.getElementById("confirmation")
-const bookingIdEl = document.getElementById("bookingId")
-const newBookingBtn = document.getElementById("newBooking")
-const form = document.getElementById("booking-form")
-
-const read = () => { try { return JSON.parse(localStorage.getItem(LS_KEY) || "[]") } catch { return [] } }
-const write = arr => localStorage.setItem(LS_KEY, JSON.stringify(arr))
-const generateId = () => "LC-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 6).toUpperCase()
-
+// ─── Booking ─────────────────────────────────────────────────────────────────
+const form = document.getElementById("booking-form");
 if (form) {
   form.addEventListener("submit", async (e) => {
-    e.preventDefault()
-    const mode = commInput.value === "video" ? "video_call" : "chat"
-    const notes = (issueEl && issueEl.value || "").trim()
+    e.preventDefault();
+    const notes = document.getElementById("issue").value;
+    const mode = document.getElementById("communication").value;
 
-    if (lawyerParam && typeof window.API !== "undefined") {
-      if (!API.isLoggedIn()) {
-        window.location.href = "./login.html"
-        return
-      }
-      try {
-        const resp = await API.Consult.book({ lawyer_id: lawyerParam, communication_method: mode, description: notes })
-        const cid = resp && (resp.consultation && resp.consultation._id || resp.id || resp.consultationId)
-
-        if (mode === "chat") {
-          window.location.href = `customer.html?consultationId=${cid}`;
-          return;
-        }
-
-        bookingIdEl.textContent = cid ? String(cid) : "—"
-        confirmation.classList.remove("hidden")
-        form.reset()
-      } catch (err) {
-        alert(err.message || "Failed to book consultation.")
-      }
-      return
+    if (!API.isLoggedIn()) {
+      window.location.href = "login.html";
+      return;
     }
 
-    // Local storage fallback
-    const all = read()
-    const id = generateId()
-    all.push({
-      id,
-      clientName: (document.getElementById("clientName").value || "Client"),
-      date: (document.getElementById("date").value || ""),
-      startTime: (document.getElementById("time").value || ""),
-      durationMinutes: parseInt((document.getElementById("duration").value || "60"), 10),
-      issue: notes,
-      communication: mode,
-      status: "pending",
-      createdAt: new Date().toISOString()
-    })
-    write(all)
-    if (bookingIdEl) bookingIdEl.textContent = String(id)
-    if (confirmation) confirmation.classList.remove("hidden")
-  })
+    try {
+      const lawyerIdToBook = lawyerParam || (currentLawyerData ? currentLawyerData.id : '');
+      if (!lawyerIdToBook) {
+        throw new Error("No lawyer selected for booking.");
+      }
+      const resp = await API.Consult.book({
+        lawyer_id: lawyerIdToBook,
+        communication_method: mode,
+        description: notes
+      });
+      const cid = resp.consultation._id || resp.id;
+
+      document.getElementById("bookingId").textContent = cid;
+      document.getElementById("confirmation").classList.remove("hidden");
+      form.reset();
+
+      // Update current consultation ID and start chat
+      currentConsultationId = cid;
+      initChat();
+    } catch (err) {
+      alert(err.message);
+    }
+  });
 }
 
-if (newBookingBtn) {
-  newBookingBtn.addEventListener("click", () => {
-    confirmation.classList.add("hidden")
-    form.reset()
-  })
-}
-
+const commToggle = document.getElementById("commToggle");
 if (commToggle) {
   commToggle.addEventListener("click", e => {
     const btn = e.target.closest(".toggle-btn");
     if (!btn) return;
-    for (const b of commToggle.querySelectorAll(".toggle-btn")) b.classList.remove("active");
+    commToggle.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    commInput.value = btn.dataset.mode
-  })
+    document.getElementById("communication").value = btn.dataset.mode;
+  });
 }
 
-const dateEl = document.getElementById("date")
-const timeEl = document.getElementById("time")
-if (dateEl && timeEl) {
-  const today = new Date()
-  const pad = n => String(n).padStart(2, "0")
-  dateEl.value = today.getFullYear() + "-" + pad(today.getMonth() + 1) + "-" + pad(today.getDate())
-  timeEl.value = pad(Math.max(9, today.getHours())) + ":" + pad(0)
+// Prefill Name
+const user = API.getUser();
+if (user && document.getElementById("clientName")) {
+  document.getElementById("clientName").value = user.fullName || "";
 }
+
+// Dates
+const dateInp = document.getElementById("date");
+const timeInp = document.getElementById("time");
+if (dateInp && timeInp) {
+  const now = new Date();
+  dateInp.value = now.toISOString().split('T')[0];
+  timeInp.value = "09:00";
+}
+
+// Run
+loadLawyerInfo();
+if (currentConsultationId) initChat();

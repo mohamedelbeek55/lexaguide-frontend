@@ -4,6 +4,7 @@ import z from "zod";
 import crypto from "crypto";
 
 import { User } from "../users/user.model.js";
+import { Lawyer } from "../lawyers/lawyer.model.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 
 import {
@@ -101,42 +102,56 @@ export const register = asyncHandler(async (req, res) => {
 export const login = asyncHandler(async (req, res) => {
   const data = loginSchema.parse(req.body);
 
-  const user = await User.findOne({ email: data.email });
-  if (!user) return res.status(401).json({ message: "Invalid credentials" });
+  // 1. Try User
+  let account = await User.findOne({ email: data.email });
+  let isLawyer = false;
+
+  // 2. Try Lawyer if not found in User
+  if (!account) {
+    account = await Lawyer.findOne({ email: data.email });
+    if (account) isLawyer = true;
+  }
+
+  if (!account) return res.status(401).json({ message: "Invalid credentials" });
 
   // ✅ block disabled accounts
-  if (user.isActive === false) {
+  if (account.isActive === false) {
     return res.status(403).json({ message: "Account disabled" });
   }
 
-  const ok = await bcrypt.compare(data.password, user.passwordHash);
-  if (!ok) return res.status(401).json({ message: "Invalid credentials" });
-
-  const accessToken = signAccessToken({ sub: user._id.toString(), role: user.role });
-
-  const jti = newJti();
-  const refreshToken = signRefreshToken({ sub: user._id.toString(), jti });
-
-  user.refreshTokens = user.refreshTokens || [];
-  user.refreshTokens.push({
-    tokenHash: hashToken(refreshToken),
-    jti,
-    expiresAt: refreshExpiresAt(),
-    userAgent: req.headers["user-agent"] || "",
-    ip: req.ip || ""
-  });
-
-  // keep last 10 sessions
-  if (user.refreshTokens.length > 10) {
-    user.refreshTokens = user.refreshTokens.slice(user.refreshTokens.length - 10);
+  // ✅ for lawyers, check verification
+  if (isLawyer && account.isVerified === false) {
+    return res.status(403).json({ message: "Lawyer account not verified by admin yet" });
   }
 
-  await user.save();
+  const ok = await bcrypt.compare(data.password, account.passwordHash);
+  if (!ok) return res.status(401).json({ message: "Invalid credentials" });
+
+  const accessToken = signAccessToken({ sub: account._id.toString(), role: account.role });
+
+  const jti = newJti();
+  const refreshToken = signRefreshToken({ sub: account._id.toString(), jti });
+
+  if (!isLawyer) {
+    // Standard User refresh token logic
+    account.refreshTokens = account.refreshTokens || [];
+    account.refreshTokens.push({
+      tokenHash: hashToken(refreshToken),
+      jti,
+      expiresAt: refreshExpiresAt(),
+      userAgent: req.headers["user-agent"] || "",
+      ip: req.ip || ""
+    });
+    if (account.refreshTokens.length > 10) {
+      account.refreshTokens = account.refreshTokens.slice(account.refreshTokens.length - 10);
+    }
+    await account.save();
+  }
 
   setRefreshCookie(res, refreshToken);
 
   return res.json({
-    user: { id: user._id, fullName: user.fullName, email: user.email, role: user.role },
+    user: { id: account._id, fullName: account.fullName, email: account.email, role: account.role },
     accessToken,
     refreshToken
   });
