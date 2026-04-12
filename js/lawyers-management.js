@@ -255,8 +255,8 @@
           specialties: [specialty],
           governorate: country || undefined,
           availabilityStatus: availabilityStatus,
-          pricePerSession: pricePerSession ? parseFloat(pricePerSession) : undefined,
-          sessionDurationMins: sessionDurationMins ? parseInt(sessionDurationMins, 10) : undefined,
+          pricePerSession: pricePerSession ? parseFloat(pricePerSession) : 0,
+          sessionDurationMins: sessionDurationMins ? parseInt(sessionDurationMins, 10) : 30,
           communicationMethods: communicationMethods,
           bio: bio || undefined
         });
@@ -271,8 +271,8 @@
           specialties: [specialty],
           governorate: country || undefined,
           availabilityStatus: availabilityStatus,
-          pricePerSession: pricePerSession ? parseFloat(pricePerSession) : undefined,
-          sessionDurationMins: sessionDurationMins ? parseInt(sessionDurationMins, 10) : undefined,
+          pricePerSession: pricePerSession ? parseFloat(pricePerSession) : 0,
+          sessionDurationMins: sessionDurationMins ? parseInt(sessionDurationMins, 10) : 30,
           communicationMethods: communicationMethods,
           bio: bio || undefined
         });
