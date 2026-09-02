@@ -21,6 +21,14 @@
         // Language handling
         let currentLang = localStorage.getItem('language') || 'en';
 
+        function formatText(text) {
+            if (!text) return '';
+            // Handle \n1. \n2. etc by replacing them with newlines
+            return text.replace(/\\n(\d+)\./g, '\n$1.')
+                       .replace(/\\n/g, '\n')
+                       .replace(/\n/g, '<br>');
+        }
+
         const translations = {
             en: {
                 home: 'Home',
@@ -33,8 +41,8 @@
                 heroSubtitle: 'Legal Contracts & Procedures Hub',
                 heroOnline: 'Guided • 24/7',
                 heroMetaRegion: 'Middle East Legal Procedures',
-                heroTitle: 'Legal Contracts Guide',
-                heroText: 'Search Egyptian government legal contracts. Find required documents, steps, fees, and timelines for any official contract.',
+                heroTitle: 'Legal Procedures Guide',
+                heroText: 'Search Egyptian government legal procedures. Find required documents, steps, fees, and timelines for any official procedure.',
                 heroSnapshotTitle: 'Snapshot: Typical Contract Journey',
                 heroStep1Title: 'Select contract category',
                 heroStep1Text: 'Choose Real Estate, Labor, Commercial, or other specialized contracts.',
@@ -114,10 +122,10 @@
                 faqNotice2: 'Laws and fees can change frequently across Middle Eastern jurisdictions.',
                 faqNotice3: 'For critical decisions, consult a licensed lawyer in your country.',
                 faqNoticeFootnote: 'Use this as a neutral starting point to brief your legal advisor and prepare your documents efficiently.',
-                searchButton: 'Search Contract',
+                searchButton: 'Search Procedure',
                 searchHintPrefix: 'Example searches:',
                 searchHintExamples: '"Birth Certificate", "Business License", "Marriage Registration"',
-                searchPlaceholder: 'Search contracts (e.g. "lease", "sale", "employment")',
+                searchPlaceholder: 'Search procedures (e.g. "birth certificate", "passport", "license")',
                 tagProperty: 'Property',
                 tagHR: 'HR',
                 tagBusiness: 'Business',
@@ -177,8 +185,8 @@
                 heroSubtitle: 'مركز موحد لعقودك وإجراءات المستندات',
                 heroOnline: 'إرشاد مستمر ٢٤/٧',
                 heroMetaRegion: 'إجراءات قانونية مهيأة للشرق الأوسط',
-                heroTitle: 'دليل العقود القانونية',
-                heroText: 'ابحث عن العقود الحكومية والقانونية المصرية. اعرف المستندات المطلوبة، والخطوات، والرسوم، والمدة لأي عقد رسمي.',
+                heroTitle: 'دليل الإجراءات القانونية',
+                heroText: 'ابحث عن الإجراءات الحكومية والقانونية المصرية. اعرف المستندات المطلوبة، والخطوات، والرسوم، والمدة لأي إجراء رسمي.',
                 heroSnapshotTitle: 'لمحة سريعة عن رحلة العقد',
                 heroStep1Title: 'اختر نوع العقد',
                 heroStep1Text: 'اختر من عقود العقار أو العمل أو التجارة أو غيرها من العقود المتخصصة.',
@@ -258,10 +266,10 @@
                 faqNotice2: 'تتغير القوانين والرسوم بشكل متكرر في دول الشرق الأوسط.',
                 faqNotice3: 'في القرارات المصيرية، استعن بمحامٍ مرخّص في بلدك.',
                 faqNoticeFootnote: 'استخدم هذا الدليل كنقطة انطلاق لشرح حالتك لمحاميك وتحضير مستنداتك بكفاءة.',
-                searchButton: 'ابحث عن العقد',
+                searchButton: 'ابحث عن الإجراء',
                 searchHintPrefix: 'أمثلة للبحث:',
                 searchHintExamples: '«شهادة الميلاد»، «السجل التجاري»، «جواز السفر»',
-                searchPlaceholder: 'ابحث عن عقد (مثال: إيجار، بيع، عمل)',
+                searchPlaceholder: 'ابحث عن إجراء (مثال: شهادة ميلاد، جواز سفر، رخصة)',
                 tagProperty: 'عقار',
                 tagHR: 'موارد بشرية',
                 tagBusiness: 'أعمال',
@@ -360,7 +368,7 @@
 
             try {
                 // Fetch a sample of procedures (use a broad search or list)
-                const resp = await fetch('http://localhost:3000/api/procedures/search?query=عقد');
+                const resp = await fetch('http://localhost:3000/api/procedures/search?query=شهادة');
                 const data = await resp.json();
                 let procedures = (data.procedures || []);
 
@@ -392,17 +400,17 @@
                 if (chip) {
                     chip.style.display = '';
                     chip.textContent = currentLang === 'ar'
-                        ? `${shown.length} عقود متاحة – انقر لبحث سريع`
-                        : `${shown.length} contracts available – click to quick search`;
+                        ? `${shown.length} إجراء متاح – انقر لبحث سريع`
+                        : `${shown.length} procedures available – click to quick search`;
                 }
 
                 const input = document.getElementById('procedureSearch');
 
                 grid.innerHTML = shown.map(function(p, idx) {
                     const name = p.name || p.title || '—';
-                    const desc = (p.description || p.summary || '').substring(0, 100) + (((p.description || p.summary || '').length > 100) ? '…' : '');
+                    const desc = formatText((p.description || p.summary || '').substring(0, 100)) + (((p.description || p.summary || '').length > 100) ? '…' : '');
                     const docs = (p.required_documents || []).slice(0, 3).map(function(d) {
-                        return '<li style="font-size:.8rem;color:#bbb;margin-bottom:3px;">📎 ' + (d.name || d || '') + '</li>';
+                        return '<li style="font-size:.8rem;color:#bbb;margin-bottom:3px;">📎 ' + formatText(d.name || d || '') + '</li>';
                     }).join('');
                     const fees = p.fees && p.fees.amountEgp ? p.fees.amountEgp + ' ' + (currentLang === 'ar' ? 'جنيه' : 'EGP') : '—';
                     const icon = icons[idx % icons.length];
@@ -462,10 +470,10 @@
             // Update categories title & subtitle
             const catTitle = document.querySelector('[data-i18n="categoriesTitle"]');
             const catSub   = document.querySelector('[data-i18n="categoriesSubtitle"]');
-            if (catTitle) catTitle.textContent = currentLang === 'ar' ? 'نماذج من العقود المتاحة' : 'Sample Available Contracts';
+            if (catTitle) catTitle.textContent = currentLang === 'ar' ? 'نماذج من الإجراءات المتاحة' : 'Sample Available Procedures';
             if (catSub)   catSub.textContent   = currentLang === 'ar'
-                ? 'هذه نماذج من عقودنا القانونية. انقر على أي عقد للبحث عنه، أو ابحث مباشرة في الأعلى.'
-                : 'These are sample contracts from our database. Click any card to quick-search, or type above.';
+                ? 'هذه نماذج من إجراءاتنا القانونية. انقر على أي إجراء للبحث عنه، أو ابحث مباشرة في الأعلى.'
+                : 'These are sample procedures from our database. Click any card to quick-search, or type above.';
             loadProcedureCards();
         });
 
@@ -508,35 +516,27 @@
                     ? `نتائج البحث عن: «${query}» (${procedures.length} إجراء)`
                     : `Search results for: "${query}" (${procedures.length} found)`;
 
-                const cards = procedures.map(p => {
-                    const docs = (p.required_documents || []).slice(0, 3).map(d =>
-                        `<li style="color:#bbb;font-size:0.85rem;margin-bottom:4px;">📎 ${d.name || d}</li>`
+                const cards = procedures.map((p, idx) => {
+                    const docs = (p.required_documents || []).map(d =>
+                        `<li style="color:#bbb;font-size:0.85rem;margin-bottom:4px;">📎 ${formatText(d.name || d)}</li>`
                     ).join('');
-                    const steps = (p.steps || []).slice(0, 3).map(s =>
-                        `<li style="color:#bbb;font-size:0.85rem;margin-bottom:4px;">${s.order || ''}. ${s.title || s}</li>`
+                    const steps = (p.steps || []).map(s =>
+                        `<li style="color:#bbb;font-size:0.85rem;margin-bottom:4px;">${s.order || ''}. ${formatText(s.title || s)}</li>`
                     ).join('');
                     const fees = p.fees && p.fees.amountEgp ? `${p.fees.amountEgp} ${currentLang === 'ar' ? 'جنيه' : 'EGP'}` : (currentLang === 'ar' ? 'متفاوتة' : 'Varies');
                     const eta = p.duration && p.duration.value ? `${p.duration.value} ${p.duration.unit || ''}` : '—';
                     const channel = getChannelLabel(p.type);
 
+                    // Add unique ID for each procedure to handle selection
+                    const pId = p.id || p._id || `proc-${idx}`;
+
                     return `
-                    <article style="background:rgba(255,255,255,0.04);border:1px solid rgba(197,149,74,0.25);border-radius:16px;padding:1.5rem;transition:border-color .2s;" 
-                             onmouseover="this.style.borderColor='rgba(197,149,74,0.6)'" onmouseout="this.style.borderColor='rgba(197,149,74,0.25)'">
+                    <article class="procedure-card" data-proc-id="${pId}" style="background:rgba(255,255,255,0.04);border:1px solid rgba(197,149,74,0.25);border-radius:16px;padding:1.5rem;transition:all .2s;cursor:pointer;">
                         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;">
                             <h3 style="color:#C5954A;font-size:1.05rem;margin:0;">${p.name}</h3>
                             <span style="background:rgba(197,149,74,0.15);color:#C5954A;padding:4px 12px;border-radius:20px;font-size:0.78rem;white-space:nowrap;">${channel}</span>
                         </div>
-                        <p style="color:#ccc;font-size:0.9rem;line-height:1.6;margin-bottom:1rem;">${p.description}</p>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-                            <div>
-                                <p style="color:#888;font-size:0.75rem;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">${currentLang === 'ar' ? 'المستندات المطلوبة' : 'Required Documents'}</p>
-                                <ul style="margin:0;padding-right:${currentLang === 'ar' ? '1rem' : '0'};padding-left:${currentLang === 'ar' ? '0' : '1rem'};">${docs || `<li style="color:#666;font-size:0.85rem;">${currentLang === 'ar' ? 'غير محدد' : 'N/A'}</li>`}</ul>
-                            </div>
-                            <div>
-                                <p style="color:#888;font-size:0.75rem;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">${currentLang === 'ar' ? 'الخطوات' : 'Steps'}</p>
-                                <ul style="margin:0;padding-right:${currentLang === 'ar' ? '1rem' : '0'};padding-left:${currentLang === 'ar' ? '0' : '1rem'};">${steps || `<li style="color:#666;font-size:0.85rem;">${currentLang === 'ar' ? 'غير محدد' : 'N/A'}</li>`}</ul>
-                            </div>
-                        </div>
+                        <p style="color:#ccc;font-size:0.9rem;line-height:1.6;margin-bottom:1rem;">${formatText(p.description || p.summary || (currentLang === 'ar' ? 'لا يوجد وصف متاح.' : 'No description provided.'))}</p>
                         <div style="display:flex;gap:1.5rem;border-top:1px solid rgba(255,255,255,0.06);padding-top:0.75rem;flex-wrap:wrap;">
                             <span style="color:#888;font-size:0.8rem;">💰 ${currentLang === 'ar' ? 'الرسوم:' : 'Fees:'} <strong style="color:#C5954A;">${fees}</strong></span>
                             <span style="color:#888;font-size:0.8rem;">⏱ ${currentLang === 'ar' ? 'المدة:' : 'Time:'} <strong style="color:#fff;">${eta}</strong></span>
@@ -545,14 +545,114 @@
                 }).join('');
 
                 resultsContainer.innerHTML = `
-                    <div style="margin-bottom:1.5rem;">
+                    <div style="margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;">
                         <h2 style="color:#C5954A;font-size:1.1rem;">${title}</h2>
                     </div>
-                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;">
-                        ${cards}
+                    <div style="display:grid;grid-template-columns:1fr 400px;gap:2rem;align-items:start;">
+                        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;" id="cardsGrid">
+                            ${cards}
+                        </div>
+                        <div id="procedureDetailPanel" style="position:sticky;top:100px;background:rgba(15,23,42,0.95);border:1px solid rgba(197,149,74,0.4);border-radius:20px;padding:1.5rem;min-height:300px;box-shadow:0 20px 50px rgba(0,0,0,0.5);">
+                            <div style="text-align:center;color:#666;margin-top:4rem;">
+                                <div style="font-size:3rem;margin-bottom:1rem;">👈</div>
+                                <p>${currentLang === 'ar' ? 'اختر إجراءً من القائمة لعرض كامل التفاصيل هنا' : 'Select a procedure to see full details here'}</p>
+                            </div>
+                        </div>
                     </div>`;
 
+                // Add click events to cards
+                resultsContainer.querySelectorAll('.procedure-card').forEach((card, idx) => {
+                    card.addEventListener('click', () => {
+                        // Highlight card
+                        resultsContainer.querySelectorAll('.procedure-card').forEach(c => c.style.borderColor = 'rgba(197,149,74,0.25)');
+                        card.style.borderColor = 'rgba(197,149,74,0.8)';
+                        card.style.background = 'rgba(197,149,74,0.05)';
+                        
+                        showProcedureDetails(procedures[idx]);
+                    });
+                });
+
                 resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function showProcedureDetails(p) {
+                const panel = document.getElementById('procedureDetailPanel');
+                if (!panel) return;
+
+                const fees = p.fees && p.fees.amountEgp ? `${p.fees.amountEgp} ${currentLang === 'ar' ? 'جنيه' : 'EGP'}` : (currentLang === 'ar' ? 'متفاوتة' : 'Varies');
+                const eta = p.duration && p.duration.value ? `${p.duration.value} ${p.duration.unit || ''}` : '—';
+                const channel = getChannelLabel(p.type);
+
+                const docsList = (p.required_documents || []).map(d =>
+                    `<li style="color:#ccc;margin-bottom:12px;display:flex;gap:12px;background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;">
+                        <span style="color:#C5954A;">📎</span> 
+                        <span>${formatText(d.name || d)}</span>
+                    </li>`
+                ).join('');
+
+                const stepsList = (p.steps || []).map(s =>
+                    `<li style="color:#ccc;margin-bottom:15px;display:flex;gap:15px;background:rgba(255,255,255,0.03);padding:12px;border-radius:10px;border-right:3px solid rgba(197,149,74,0.3);">
+                        <span style="background:linear-gradient(135deg, #C5954A, #9a7236);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem;font-weight:bold;box-shadow:0 4px 10px rgba(197,149,74,0.2);">${s.order || ''}</span>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <span style="font-weight:600;color:#fff;">${formatText(s.title || s)}</span>
+                            ${s.description ? `<span style="font-size:0.85rem;color:#aaa;">${formatText(s.description)}</span>` : ''}
+                        </div>
+                    </li>`
+                ).join('');
+
+                panel.innerHTML = `
+                    <div style="animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); height: 100%; display: flex; flex-direction: column;">
+                        <div style="margin-bottom:2rem;border-bottom:1px solid rgba(197,149,74,0.2);padding-bottom:1.5rem;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.75rem;align-items:center;">
+                                <span style="background:rgba(197,149,74,0.1);color:#C5954A;padding:4px 10px;border-radius:6px;font-size:0.7rem;font-weight:bold;letter-spacing:1px;text-transform:uppercase;">${currentLang === 'ar' ? 'تفاصيل الإجراء' : 'Procedure Details'}</span>
+                                <span style="color:#888;font-size:0.8rem;display:flex;align-items:center;gap:5px;">
+                                    <span style="width:8px;height:8px;border-radius:50%;background:#10b981;"></span>
+                                    ${channel}
+                                </span>
+                            </div>
+                            <h2 style="color:#fff;font-size:1.6rem;margin:0;line-height:1.3;font-weight:700;">${p.name}</h2>
+                        </div>
+
+                        <div style="flex:1;overflow-y:auto;padding-right:5px;" class="custom-scrollbar">
+                            <div style="margin-bottom:2rem;">
+                                <h3 style="color:#C5954A;font-size:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:10px;">
+                                    <span style="width:24px;height:2px;background:#C5954A;"></span>
+                                    ${currentLang === 'ar' ? 'المستندات المطلوبة' : 'Required Documents'}
+                                </h3>
+                                <ul style="list-style:none;padding:0;margin:0;">
+                                    ${docsList || `<li style="color:#666;text-align:center;padding:20px;">${currentLang === 'ar' ? 'لا يوجد مستندات محددة' : 'No documents specified'}</li>`}
+                                </ul>
+                            </div>
+
+                            <div style="margin-bottom:2rem;">
+                                <h3 style="color:#C5954A;font-size:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:10px;">
+                                    <span style="width:24px;height:2px;background:#C5954A;"></span>
+                                    ${currentLang === 'ar' ? 'خطوات التنفيذ' : 'Execution Steps'}
+                                </h3>
+                                <ul style="list-style:none;padding:0;margin:0;">
+                                    ${stepsList || `<li style="color:#666;text-align:center;padding:20px;">${currentLang === 'ar' ? 'لا يوجد خطوات محددة' : 'No steps specified'}</li>`}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div style="background:linear-gradient(to right, rgba(197,149,74,0.1), rgba(197,149,74,0.05));border:1px solid rgba(197,149,74,0.2);border-radius:15px;padding:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
+                            <div>
+                                <span style="color:#aaa;font-size:0.8rem;display:block;margin-bottom:5px;">${currentLang === 'ar' ? 'الرسوم الرسمية' : 'Official Fees'}</span>
+                                <strong style="color:#C5954A;font-size:1.2rem;font-weight:700;">${fees}</strong>
+                            </div>
+                            <div style="border-right:1px solid rgba(255,255,255,0.1);padding-right:1.5rem;">
+                                <span style="color:#aaa;font-size:0.8rem;display:block;margin-bottom:5px;">${currentLang === 'ar' ? 'المدة المتوقعة' : 'Estimated Time'}</span>
+                                <strong style="color:#fff;font-size:1.2rem;font-weight:700;">${eta}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <style>
+                        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+                        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+                        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(197,149,74,0.3); border-radius: 10px; }
+                        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+                    </style>
+                `;
             }
 
             async function doSearch() {

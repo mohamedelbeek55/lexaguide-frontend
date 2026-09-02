@@ -1,0 +1,1126 @@
+@import url("./home.css");
+
+/* Page-specific layout - matches home page look */
+.lc-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.lc-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* Hero - same section style as home */
+.lc-hero {
+    border-bottom: 1px solid rgba(197, 149, 74, 0.25);
+    background: radial-gradient(circle at top, #1f2c45 0%, #0d1524 40%);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+}
+
+.lc-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(197, 149, 74, 0.12) 0%, transparent 55%),
+        radial-gradient(circle at 90% 80%, rgba(197, 149, 74, 0.08) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.lc-hero .lc-container {
+    position: relative;
+    z-index: 1;
+}
+
+.lc-hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 0 1rem;
+}
+
+.lc-hero-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.lc-hero-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: radial-gradient(circle at 20% 0, #c5954a 0, #1f2c45 50%, #0d1524 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(197, 149, 74, 0.4);
+}
+
+.lc-hero-logo {
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    font-size: 0.7rem;
+    color: #c5954a;
+    margin-bottom: 0.1rem;
+}
+
+.lc-hero-subtitle {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.lc-hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.lc-hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.lc-dot-online {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #22c55e;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18);
+}
+
+.lc-hero-meta-divider {
+    color: rgba(197, 149, 74, 0.6);
+}
+
+.lc-hero-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    padding: 0 0 1.75rem 0;
+}
+
+.lc-hero-left {
+    padding-bottom: 0.75rem;
+}
+
+.lc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(197, 149, 74, 0.5);
+    background: rgba(197, 149, 74, 0.12);
+    color: #c5954a;
+    font-size: 0.7rem;
+    margin-bottom: 0.9rem;
+}
+
+.lc-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #22c55e;
+}
+
+.lc-hero-title {
+    font-size: 2.6rem;
+    line-height: 1.2;
+    font-weight: 650;
+    margin-bottom: 0.65rem;
+    background: linear-gradient(135deg, #ffffff 0%, #cda669 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.lc-hero-text {
+    font-size: 1.05rem;
+    color: rgba(209, 213, 219, 0.9);
+    max-width: 32rem;
+    margin-bottom: 1.25rem;
+}
+
+.lc-search-card {
+    background: radial-gradient(circle at top left, rgba(30, 64, 175, 0.6), rgba(15, 23, 42, 0.98));
+    border-radius: 1.3rem;
+    padding: 0.9rem 1rem 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    box-shadow: 0 16px 45px rgba(15, 23, 42, 0.9);
+}
+
+.lc-search-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.lc-search-input-wrap {
+    flex: 1 1 220px;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: rgba(15, 23, 42, 0.9);
+    border-radius: 0.85rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid rgba(148, 163, 184, 0.7);
+}
+
+.lc-search-input-wrap:focus-within {
+    border-color: rgba(205, 166, 105, 0.9);
+    box-shadow: 0 0 0 1px rgba(205, 166, 105, 0.7);
+}
+
+.lc-search-icon {
+    font-size: 0.95rem;
+    color: rgba(148, 163, 184, 0.9);
+}
+
+.lc-search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: #e5e7eb;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.lc-search-input::placeholder {
+    color: rgba(148, 163, 184, 0.9);
+}
+
+.lc-search-button {
+    border: none;
+    border-radius: 0.85rem;
+    padding: 0.6rem 1.25rem;
+    background: linear-gradient(135deg, #cda669 0%, #facc6b 100%);
+    color: #020617;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 14px 35px rgba(250, 204, 21, 0.45);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.lc-search-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 40px rgba(250, 204, 21, 0.6);
+}
+
+.lc-search-button:active {
+    transform: translateY(0);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+}
+
+.lc-search-hints {
+    margin-top: 0.45rem;
+    font-size: 0.7rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-search-hints span {
+    color: rgba(226, 232, 240, 0.95);
+}
+
+.lc-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.lc-hero-aside {
+    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 1));
+    border-radius: 1.25rem;
+    padding: 1.25rem 1.25rem 1rem;
+    border: 1px solid rgba(51, 65, 85, 0.9);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.8);
+}
+
+.lc-aside-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #e5e7eb;
+    margin-bottom: 0.7rem;
+}
+
+.lc-aside-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    font-size: 0.78rem;
+    color: rgba(203, 213, 225, 0.95);
+}
+
+.lc-aside-steps li {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.lc-step-number {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: rgba(205, 166, 105, 0.18);
+    border: 1px solid rgba(205, 166, 105, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #cda669;
+    margin-top: 2px;
+}
+
+.lc-step-title {
+    font-weight: 550;
+    margin-bottom: 0.2rem;
+    color: #e5e7eb;
+}
+
+.lc-step-text {
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-aside-footer {
+    margin-top: 0.8rem;
+    padding-top: 0.55rem;
+    border-top: 1px solid rgba(51, 65, 85, 0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-aside-tag {
+    color: #cda669;
+}
+
+/* Main */
+.lc-main {
+    flex: 1;
+}
+
+.lc-main-inner {
+    padding: 2.5rem 0 2.8rem;
+}
+
+.lc-section {
+    margin-bottom: 2.8rem;
+}
+
+.lc-section-last {
+    margin-bottom: 2rem;
+}
+
+.lc-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.2rem;
+    margin-bottom: 0.9rem;
+}
+
+.lc-section-header-row {
+    align-items: flex-end;
+}
+
+.lc-section-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #f9fafb;
+    margin-bottom: 0.1rem;
+}
+
+.lc-section-subtitle {
+    font-size: 0.9rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-chip-info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-chip-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #cda669;
+}
+
+.lc-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.lc-grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lc-grid-2 {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 1.3rem;
+}
+
+.lc-grid-faq {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.2fr);
+    gap: 1.3rem;
+}
+
+.lc-flex {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.lc-card {
+    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.98));
+    border-radius: 1.15rem;
+    border: 1px solid rgba(51, 65, 85, 0.95);
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.85);
+    padding: 1rem 1.05rem 0.95rem;
+}
+
+.lc-category-card {
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.lc-category-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(205, 166, 105, 0.9);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
+    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 1));
+}
+
+.lc-category-active {
+    box-shadow: 0 0 0 1px rgba(205, 166, 105, 0.8), 0 22px 55px rgba(205, 166, 105, 0.25);
+    border-color: rgba(205, 166, 105, 0.95);
+}
+
+.lc-card-dashed {
+    border-style: dashed;
+    background: rgba(15, 23, 42, 0.85);
+}
+
+.lc-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+}
+
+.lc-card-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.lc-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 0.9rem;
+    background: rgba(205, 166, 105, 0.16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.lc-card-icon-muted {
+    border: 1px solid rgba(75, 85, 99, 0.9);
+    background: rgba(15, 23, 42, 0.95);
+}
+
+.lc-card-header-left h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.lc-card-tag {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: rgba(148, 163, 184, 0.9);
+}
+
+.lc-card-text {
+    font-size: 0.9rem;
+    color: rgba(203, 213, 225, 0.95);
+    margin-bottom: 0.35rem;
+}
+
+.lc-card-list {
+    list-style: none;
+    font-size: 0.7rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-card-list li {
+    margin-bottom: 0.15rem;
+}
+
+.lc-card-footnote {
+    font-size: 0.7rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+/* Stepper */
+.lc-stepper {
+    list-style: none;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.lc-step {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.lc-step-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lc-step-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    border: 2px solid rgba(75, 85, 99, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(209, 213, 219, 0.95);
+    background: rgba(15, 23, 42, 0.95);
+}
+
+.lc-step-circle-active {
+    border-color: rgba(205, 166, 105, 0.95);
+    background: rgba(205, 166, 105, 0.18);
+    color: #cda669;
+}
+
+.lc-step-connector {
+    flex: 1 1 auto;
+    width: 2px;
+    background: linear-gradient(to bottom, rgba(55, 65, 81, 0.8), rgba(31, 41, 55, 0.7));
+    margin-top: 0.2rem;
+}
+
+.lc-step-card {
+    flex: 1 1 auto;
+    border-radius: 1rem;
+    border: 1px solid rgba(55, 65, 81, 0.95);
+    background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
+    padding: 0.8rem 0.85rem 0.8rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.lc-step-card:hover {
+    border-color: rgba(205, 166, 105, 0.7);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.85);
+}
+
+.lc-step-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.35rem;
+}
+
+.lc-step-card-title {
+    font-size: 0.93rem;
+    font-weight: 600;
+}
+
+.lc-step-pill {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.9);
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-step-pill-green {
+    border-color: rgba(34, 197, 94, 0.8);
+    color: #6ee7b7;
+}
+
+.lc-step-pill-blue {
+    border-color: rgba(56, 189, 248, 0.8);
+    color: #7dd3fc;
+}
+
+.lc-step-pill-gold {
+    border-color: rgba(205, 166, 105, 0.9);
+    color: #cda669;
+}
+
+.lc-step-card-text {
+    font-size: 0.88rem;
+    color: rgba(203, 213, 225, 0.95);
+    margin-bottom: 0.25rem;
+}
+
+.lc-step-card-list {
+    list-style: none;
+    font-size: 0.7rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-step-card-list li {
+    margin-bottom: 0.15rem;
+}
+
+.lc-mode-card {
+    flex: 0 0 260px;
+    border-radius: 1.2rem;
+    border: 1px solid rgba(55, 65, 81, 0.95);
+    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
+    padding: 0.95rem 0.95rem 0.9rem;
+    box-shadow: 0 16px 42px rgba(0, 0, 0, 0.86);
+    font-size: 0.78rem;
+}
+
+.lc-mode-card h3 {
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.lc-mode-card p {
+    color: rgba(203, 213, 225, 0.95);
+    margin-bottom: 0.5rem;
+}
+
+.lc-mode-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin-bottom: 0.6rem;
+}
+
+.lc-mode-toggle {
+    border-radius: 0.9rem;
+    border: 1px solid rgba(55, 65, 81, 0.95);
+    background: rgba(15, 23, 42, 0.95);
+    padding: 0.48rem 0.6rem;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.lc-mode-toggle:hover {
+    border-color: rgba(205, 166, 105, 0.7);
+}
+
+.lc-mode-active {
+    border-color: rgba(205, 166, 105, 0.9);
+    background: radial-gradient(circle at top, rgba(30, 64, 175, 0.75), rgba(15, 23, 42, 1));
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+}
+
+.lc-mode-title {
+    font-size: 0.76rem;
+    font-weight: 600;
+}
+
+.lc-mode-text {
+    font-size: 0.7rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-mode-footnote {
+    border-top: 1px solid rgba(55, 65, 81, 0.95);
+    padding-top: 0.45rem;
+    font-size: 0.7rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-mode-footnote p {
+    margin-bottom: 0.25rem;
+}
+
+.lc-mode-footnote p:last-child {
+    margin-bottom: 0;
+}
+
+.lc-mode-chip {
+    font-size: 0.7rem;
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid rgba(55, 65, 81, 0.95);
+    background: rgba(15, 23, 42, 0.95);
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-mode-chip span {
+    color: #cda669;
+    margin-left: 0.2rem;
+    font-weight: 600;
+}
+
+.lc-step-muted {
+    opacity: 0.9;
+}
+
+.lc-text-gold {
+    color: #cda669;
+}
+
+.lc-text-green {
+    color: #6ee7b7;
+}
+
+/* Requirements */
+.lc-req-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.lc-req-card {
+    border-radius: 1.1rem;
+    border: 1px solid rgba(51, 65, 85, 0.95);
+    background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
+    padding: 0.85rem 0.9rem 0.8rem;
+    box-shadow: 0 12px 38px rgba(0, 0, 0, 0.8);
+}
+
+.lc-req-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.2fr) minmax(0, 1.1fr);
+    gap: 0.85rem;
+    align-items: flex-start;
+}
+
+.lc-req-category {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: rgba(148, 163, 184, 0.95);
+    margin-bottom: 0.2rem;
+}
+
+.lc-req-title {
+    font-size: 0.86rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.lc-req-items {
+    list-style: none;
+    font-size: 0.8rem;
+    color: rgba(203, 213, 225, 0.95);
+}
+
+.lc-req-items li {
+    margin-bottom: 0.15rem;
+}
+
+.lc-req-authority {
+    font-size: 0.82rem;
+    color: rgba(203, 213, 225, 0.95);
+}
+
+.lc-req-authority-title {
+    font-size: 0.76rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.lc-req-hours {
+    margin-top: 0.3rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-req-hours span {
+    color: rgba(229, 231, 235, 0.95);
+    font-weight: 500;
+}
+
+.lc-req-map {
+    font-size: 0.82rem;
+}
+
+.lc-req-map-title {
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.lc-req-map-box {
+    height: 78px;
+    border-radius: 0.9rem;
+    border: 1px dashed rgba(75, 85, 99, 0.9);
+    background: rgba(15, 23, 42, 0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-req-aside {
+    border-radius: 1.15rem;
+    border: 1px solid rgba(51, 65, 85, 0.95);
+    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+    padding: 0.9rem 0.95rem 0.85rem;
+    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.85);
+    font-size: 0.76rem;
+}
+
+.lc-req-aside-title {
+    font-size: 0.86rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+.lc-req-aside-list {
+    list-style: none;
+    color: rgba(203, 213, 225, 0.95);
+    margin-bottom: 0.45rem;
+}
+
+.lc-req-aside-list li {
+    margin-bottom: 0.2rem;
+}
+
+.lc-req-aside-footnote {
+    border-top: 1px solid rgba(55, 65, 81, 0.95);
+    padding-top: 0.35rem;
+    font-size: 0.72rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+/* Fees */
+.lc-fees-grid {
+    margin-top: 0.4rem;
+}
+
+.lc-fee-card {
+    padding-top: 0.95rem;
+    padding-bottom: 0.8rem;
+}
+
+.lc-fee-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.lc-fee-head h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.lc-fee-pill {
+    font-size: 0.7rem;
+    border-radius: 999px;
+    padding: 0.12rem 0.6rem;
+    border: 1px solid rgba(34, 197, 94, 0.8);
+}
+
+.lc-fee-pill-green {
+    border-color: rgba(34, 197, 94, 0.8);
+    color: #6ee7b7;
+    background: rgba(21, 128, 61, 0.18);
+}
+
+.lc-fee-pill-blue {
+    border-color: rgba(56, 189, 248, 0.8);
+    color: #7dd3fc;
+    background: rgba(12, 74, 110, 0.2);
+}
+
+.lc-fee-pill-gold {
+    border-color: rgba(245, 158, 11, 0.9);
+    color: #facc6b;
+    background: rgba(120, 53, 15, 0.24);
+}
+
+.lc-fee-dl {
+    font-size: 0.82rem;
+    color: rgba(203, 213, 225, 0.95);
+}
+
+.lc-fee-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-bottom: 0.15rem;
+}
+
+.lc-fee-row dt {
+    color: rgba(148, 163, 184, 0.95);
+}
+
+.lc-fee-row dd {
+    text-align: right;
+}
+
+.lc-fee-note {
+    margin-top: 0.4rem;
+    font-size: 0.7rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+/* FAQ */
+.lc-faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.lc-faq-item {
+    border-radius: 1rem;
+    border: 1px solid rgba(51, 65, 85, 0.95);
+    background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
+    overflow: hidden;
+    box-shadow: 0 12px 38px rgba(0, 0, 0, 0.85);
+}
+
+.lc-faq-toggle {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: inherit;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.75rem 0.9rem;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.lc-faq-toggle span:first-child {
+    font-weight: 550;
+}
+
+.lc-faq-icon {
+    font-size: 1.1rem;
+    color: rgba(148, 163, 184, 0.95);
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.lc-faq-icon-open {
+    color: #cda669;
+}
+
+.lc-faq-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.lc-faq-panel p {
+    padding: 0 0.9rem 0.8rem;
+    font-size: 0.88rem;
+    color: rgba(203, 213, 225, 0.98);
+}
+
+.lc-faq-aside {
+    border-radius: 1.15rem;
+    border: 1px solid rgba(55, 65, 81, 0.95);
+    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+    padding: 0.9rem 0.95rem 0.85rem;
+    box-shadow: 0 14px 42px rgba(0, 0, 0, 0.85);
+    font-size: 0.78rem;
+}
+
+.lc-faq-aside h3 {
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.lc-faq-aside p {
+    color: rgba(203, 213, 225, 0.98);
+    margin-bottom: 0.4rem;
+}
+
+.lc-faq-aside ul {
+    list-style: none;
+    margin-bottom: 0.5rem;
+}
+
+.lc-faq-aside ul li {
+    margin-bottom: 0.2rem;
+}
+
+.lc-faq-aside-footnote {
+    border-top: 1px solid rgba(55, 65, 81, 0.95);
+    padding-top: 0.35rem;
+    font-size: 0.72rem;
+    color: rgba(148, 163, 184, 0.95);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .lc-hero-main {
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+        gap: 2rem;
+    }
+
+    .lc-grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lc-grid-2 {
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .lc-hero-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .lc-hero-meta-divider,
+    .lc-hero-meta-text {
+        display: none;
+    }
+
+    .lc-hero-main {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lc-hero-aside {
+        order: 2;
+    }
+
+    .lc-hero-left {
+        order: 1;
+    }
+
+    .lc-hero-title {
+        font-size: 1.9rem;
+    }
+
+    .lc-section {
+        margin-bottom: 2.2rem;
+    }
+
+    .lc-grid-3 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lc-grid-2 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lc-grid-faq {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lc-flex {
+        flex-direction: column;
+    }
+
+    .lc-mode-card {
+        width: 100%;
+    }
+
+    .lc-req-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lc-fees-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lc-main-inner {
+        padding: 2.1rem 0 2.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .lc-container {
+        padding: 0 1.1rem;
+    }
+
+    .lc-hero-top {
+        padding-top: 1.1rem;
+    }
+
+    .lc-hero-main {
+        padding-bottom: 1.3rem;
+    }
+
+    .lc-hero-title {
+        font-size: 1.7rem;
+    }
+
+    .lc-search-card {
+        padding: 0.8rem 0.85rem 0.9rem;
+        border-radius: 1.1rem;
+    }
+
+    .lc-search-input-wrap {
+        padding: 0.5rem 0.6rem;
+    }
+
+    .lc-search-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .lc-aside-steps {
+        font-size: 0.75rem;
+    }
+
+    .lc-section-title {
+        font-size: 1.1rem;
+    }
+
+    .lc-section-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .lc-fee-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .lc-fee-row dd {
+        text-align: left;
+    }
+}
+

@@ -83,31 +83,31 @@
                     <form id="signupForm">
                         <div class="input-group">
                             <label for="fullname" data-i18n="fullNameLabel">Full Name</label>
-                            <input type="text" id="fullname" name="fullname" placeholder="Mohamed Ragaa" required>
+                            <input type="text" id="fullname" name="fullname"  autocomplete="name" required>
                         </div>
                         <div class="input-group">
                             <label for="nationalId" data-i18n="nationalIdLabel">National ID number</label>
-                            <input type="text" id="nationalId" name="nationalId" placeholder="ex.1234567890" required>
+                            <input type="text" id="nationalId" name="nationalId" placeholder="ex.123456789101214" required>
                         </div>
                         <div class="input-group">
                             <label for="phone" data-i18n="phoneLabel">Phone Number</label>
-                            <input type="text" id="phone" name="phone" placeholder="ex.01032238765" required>
+                            <input type="text" id="phone" name="phone" placeholder="ex.01*********" autocomplete="tel" required>
                         </div>
 
                         <div class="input-group">
                             <label for="email" data-i18n="emailLabel">E-mail Address</label>
-                            <input type="email" id="email" name="email" placeholder="yourmail@gmail.com" required>
+                            <input type="email" id="email" name="email" placeholder="yourmail@gmail.com" autocomplete="email" required>
                         </div>
 
                         <div class="input-group">
                             <label for="password" data-i18n="passwordLabel">Password</label>
-                            <input type="password" id="password" name="password" placeholder="••••••••••" required>
+                            <input type="password" id="password" name="password" placeholder="************" autocomplete="new-password" required>
                         </div>
 
                         <div class="input-group">
                             <label for="confirm-password" data-i18n="confirmPasswordLabel">Confirm Password</label>
                             <input type="password" id="confirm-password" name="confirm-password"
-                                placeholder="••••••••••" required>
+                                placeholder="••••••••••" autocomplete="new-password" required>
                         </div>
 
                         <button type="submit" class="submit-btn" data-i18n="signupButton">CREATE ACCOUNT</button>
@@ -127,8 +127,8 @@
         </div>
     </section>
 
+    <script src="../shared/i18n.js"></script>
     <script src="../shared/api.js"></script>
     <script src="../js/signup.js"></script>
 </body>
-
 </html>

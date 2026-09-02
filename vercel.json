@@ -1,0 +1,40 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/about", "destination": "/html/about.html" },
+    { "source": "/contact", "destination": "/html/contact.html" },
+    { "source": "/login", "destination": "/html/login.html" },
+    { "source": "/signup", "destination": "/html/signup.html" },
+    { "source": "/profile", "destination": "/html/profile.html" },
+    { "source": "/chatbot", "destination": "/html/chatbot.html" },
+    { "source": "/customer", "destination": "/html/customer.html" },
+    { "source": "/lawyer", "destination": "/html/lawyer.html" },
+    { "source": "/admin", "destination": "/html/admin-dashboard.html" },
+    { "source": "/legal-contracts", "destination": "/html/legal-contracts.html" },
+    { "source": "/legal-doc-generation", "destination": "/html/legal-doc-generation.html" },
+    { "source": "/generate-document", "destination": "/html/generate-document.html" },
+    { "source": "/contract-analysis", "destination": "/html/contract-analysis.html" },
+    { "source": "/legal-procedures", "destination": "/html/legal-procedures.html" },
+    { "source": "/procedures", "destination": "/html/procedures.html" },
+    { "source": "/middle-east-law", "destination": "/html/middle-east-law.html" },
+    { "source": "/consultations-management", "destination": "/html/consultations-management.html" },
+    { "source": "/users-management", "destination": "/html/users-management.html" },
+    { "source": "/lawyers-management", "destination": "/html/lawyers-management.html" },
+    { "source": "/user-consultations", "destination": "/html/user-consultations.html" },
+    { "source": "/privacy", "destination": "/html/privacy.html" },
+    { "source": "/terms", "destination": "/html/terms.html" },
+    { "source": "/:path*", "destination": "/html/:path*.html" }
+  ]
+}

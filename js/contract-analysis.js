@@ -238,29 +238,20 @@ document.addEventListener('DOMContentLoaded', function () {
             var docData = uploadResp && uploadResp.data;
             if (!docData) throw new Error('Upload failed — no document data returned.');
 
-            // Step 2: Analyze with AI
-            analyzeBtn.textContent = currentLang === 'ar' ? 'جارٍ التحليل…' : 'Analyzing…';
-            var question = currentLang === 'ar'
-                ? 'قم بتحليل هذا العقد. اذكر الملخص، والبنود الرئيسية، والمخاطر المحتملة، وأي توصيات للتحسين.'
-                : 'Analyze this contract. Provide a summary, key clauses, potential risks, and improvement recommendations.';
-            var aiResp = await API.AI.analyze({
-                question: question,
-                documentId: docData.id
-            });
-
-            var analysisText = (aiResp && aiResp.data && (
-                aiResp.data.answer || aiResp.data.result || aiResp.data.response || aiResp.data.text || JSON.stringify(aiResp.data, null, 2)
-            )) || (aiResp && aiResp.answer) || 'Analysis complete — but no text was returned from the AI service.';
+            // Step 2: Display result (AI placeholder - wire real AI service when available)
+            var fileName = docData.originalFilename || docData.original_name || selectedFile.name;
+            var fileUrl  = docData.fileUrl || docData.url || '';
+            var mockAnalysis = currentLang === 'ar'
+                ? '\u2705 \u062a\u0645 \u0631\u0641\u0639 \u0627\u0644\u0645\u0644\u0641 \u0628\u0646\u062c\u0627\u062d!\n\n\ud83d\udcc4 \u0627\u0644\u0645\u0644\u0641: ' + fileName + '\n\n\ud83d\udccb \u0627\u0644\u062a\u062d\u0644\u064a\u0644:\n\u062a\u0645 \u0627\u0633\u062a\u0644\u0627\u0645 \u0627\u0644\u0648\u062b\u064a\u0642\u0629. \u062a\u0648\u0627\u0635\u0644 \u0645\u0639 \u0645\u062d\u0627\u0645\u064d \u0644\u0645\u0631\u0627\u062c\u0639\u062a\u0647\u0627.\n\n\u26a0\ufe0f \u062e\u062f\u0645\u0629 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0642\u064a\u062f \u0627\u0644\u062a\u0637\u0648\u064a\u0631.'
+                : '\u2705 File uploaded successfully!\n\n\ud83d\udcc4 File: ' + fileName + '\n\n\ud83d\udccb Analysis:\nYour document was received. Consult one of our lawyers to review it.\n\n\u26a0\ufe0f AI analysis is under development.';
 
             panel.innerHTML =
-                '<h3 style="margin:0 0 1rem;color:#c4a44b;font-size:1rem;letter-spacing:.5px;">📋 ' +
-                (currentLang === 'ar' ? 'نتيجة تحليل العقد' : 'Contract Analysis Result') +
-                '</h3>' +
-                '<div style="white-space:pre-wrap">' + analysisText + '</div>' +
-                '<p style="margin:1rem 0 0;font-size:12px;color:#888;">' +
-                (currentLang === 'ar' ? '📎 الملف: ' : '📎 File: ') + (docData.original_name || docData.filename || selectedFile.name) +
-                '</p>';
-            API.UI.toast(currentLang === 'ar' ? 'اكتمل التحليل!' : 'Analysis complete!', 'success');
+                '<h3 style="margin:0 0 1rem;color:#c4a44b;font-size:1rem;">' +
+                (currentLang === 'ar' ? '\ud83d\udccb \u0646\u062a\u064a\u062c\u0629' : '\ud83d\udccb Result') +
+                '</h3><div style="white-space:pre-wrap">' + mockAnalysis + '</div>' +
+                (fileUrl ? '<p style="margin:1rem 0 0"><a href="' + fileUrl + '" target="_blank" style="color:#c4a44b">' + (currentLang === 'ar' ? '\ud83d\udcce \u0639\u0631\u0636 \u0627\u0644\u0645\u0644\u0641' : '\ud83d\udcce View File') + '</a></p>' : '');
+
+            API.UI.toast(currentLang === 'ar' ? '\u062a\u0645 \u0631\u0641\u0639 \u0627\u0644\u0645\u0644\u0641!' : 'File uploaded!', 'success');
 
         } catch (err) {
             var msg = err && err.message ? err.message : String(err);

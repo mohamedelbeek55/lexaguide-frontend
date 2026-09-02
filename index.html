@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./shared/home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <title>LexaGuide</title>
     
 </head>
@@ -13,7 +14,7 @@
         <div class="navbar-container">
             <a href="./index.html" class="navbar-logo" aria-label="LexaGuide home">
                 <div class="navbar-logo-img">
-                    <img src="./assets/logos/logo-removebg-preview.png" alt="LexaGuide logo">
+                    <img src="./assets/logos/logo-removebg-preview.png" alt="LexaGuide logo" loading="lazy">
                     <div class="navbar-logo-text">
                         <span class="navbar-brand">LexaGuide</span>
                         <span class="navbar-tagline">AI-Powered Legal Guidance</span>
@@ -96,6 +97,7 @@
                 <img src="./assets/logos/360_F_516209984_APT701DWSDCUPzErByEByUrqEjHwRYCX-removebg-preview.png"
                      alt="Lady Justice"
                      class="hero-visual-image"
+                     loading="lazy"
                      onerror="this.style.display='none';">
             </div>
         </div>
@@ -155,11 +157,11 @@
                 </p>
             </div>
             <div class="how-help-grid">
-                <a href="./html/legal-contracts.html" class="help-card" style="cursor: pointer; text-decoration: none; color: inherit;">
+                <a href="./html/legal-procedures.html" class="help-card" style="cursor: pointer; text-decoration: none; color: inherit;">
                     <div class="help-icon-wrapper teal-icon">
                         <img src="./assets/logos/icons8-scale-48.png" alt="Legal Contracts &amp; Procedures" class="help-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                     </div>
-                    <h3 class="help-card-title">Legal Contracts &amp; Document Procedures</h3>
+                    <h3 class="help-card-title">Legal Procedures</h3>
                     <p class="help-card-description">Step-by-step guidance on issuing, authenticating, and managing legal contracts and required documents.</p>
                 </a>
                 <div class="help-card" onclick="window.location.href='./html/legal-doc-generation.html'" style="cursor: pointer;">
@@ -210,34 +212,34 @@
                     </svg>
                 </div>
                 <h2 class="faq-title"><span data-i18n="faqTitle1">Common</span> <span class="faq-title-accent" data-i18n="faqTitle2">Questions</span></h2>
-                <p class="faq-subtitle" data-i18n="faqSubtitle">Here are answers to questions people often ask about Untitled</p>
+                <p class="faq-subtitle" data-i18n="faqSubtitle">Here are answers to questions people often ask about LexaGuide</p>
             </div>
                 <div class="faq-list">
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFaq(this)">
-                            <span data-i18n="faqQ1">What is Untitled?</span>
+                            <span data-i18n="faqQ1">What is LexaGuide?</span>
                             <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </div>
                         <div class="faq-answer">
-                            <p data-i18n="faqA1">Untitled is an AI-powered legal assistance platform that provides expert legal guidance and document services. Our system delivers exceptional legal expertise that outperforms 90% of lawyers across the Middle East.</p>
+                            <p data-i18n="faqA1">LexaGuide is an AI-powered legal assistance platform that provides expert legal guidance and document services. Our system delivers exceptional legal expertise that outperforms 90% of lawyers across the Middle East.</p>
                         </div>
                     </div>
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <span data-i18n="faqQ2">How does Untitled work?</span>
+                        <span data-i18n="faqQ2">How does LexaGuide work?</span>
                         <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
                     <div class="faq-answer">
-                        <p data-i18n="faqA2">Untitled uses advanced AI technology to understand your legal questions and provide clear, simple answers. You can ask questions in everyday language, create legal documents, check contracts, and get advice specific to Middle East laws.</p>
+                        <p data-i18n="faqA2">LexaGuide uses advanced AI technology to understand your legal questions and provide clear, simple answers. You can ask questions in everyday language, create legal documents, check contracts, and get advice specific to Middle East laws.</p>
                     </div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <span data-i18n="faqQ3">Is Untitled's advice reliable?</span>
+                        <span data-i18n="faqQ3">Is LexaGuide's advice reliable?</span>
                         <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -270,13 +272,13 @@
                 </div>
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <span data-i18n="faqQ6">Do I need to know legal terms to use Untitled?</span>
+                        <span data-i18n="faqQ6">Do I need to know legal terms to use LexaGuide?</span>
                         <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
                     <div class="faq-answer">
-                        <p data-i18n="faqA6">Not at all! Untitled is designed to be user-friendly. You can ask questions in everyday language, and we'll provide answers in clear, simple terms that anyone can understand. No legal knowledge required.</p>
+                        <p data-i18n="faqA6">Not at all! LexaGuide is designed to be user-friendly. You can ask questions in everyday language, and we'll provide answers in clear, simple terms that anyone can understand. No legal knowledge required.</p>
                     </div>
                 </div>
             </div>
@@ -313,8 +315,8 @@
                     <ul class="footer-links">
                         <li><a href="./index.html" data-i18n="footerLinkHome">Home</a></li>
                         <li><a href="./html/about.html" data-i18n="footerLinkAbout">About</a></li>
-                        <li><a href="#" data-i18n="footerLinkServices">Services</a></li>
-                        <li><a href="#" data-i18n="footerLinkContact">FAQ</a></li>
+                        <li><a href="./index.html#services-section" data-i18n="footerLinkServices">Services</a></li>
+                        <li><a href="./index.html#faq-section" data-i18n="footerLinkContact">FAQ</a></li>
                     </ul>
                 </div>
 
@@ -322,10 +324,10 @@
                     <h3 class="footer-title" data-i18n="footerServicesTitle">Services</h3>
                     <ul class="footer-links">
                         <li><a href="./html/contract-analysis.html" data-i18n="footerService1">Contract Analysis</a></li>
-                        <li><a href="#" data-i18n="footerService2">Document Generation</a></li>
+                        <li><a href="./html/legal-doc-generation.html" data-i18n="footerService2">Document Generation</a></li>
                         <li><a href="./html/chatbot.html" data-i18n="footerService3">ChatBot</a></li>
                         <li><a href="./html/middle-east-law.html" data-i18n="footerService4">Law Experts</a></li>
-                        <li><a href="#" data-i18n="footerService5">Case Management</a></li>
+                        <li><a href="./html/legal-procedures.html" data-i18n="footerService5">Legal Procedures</a></li>
                     </ul>
                 </div>
 
@@ -375,17 +377,18 @@
                 <div class="footer-bottom-content">
                     <p data-i18n="footerCopyright">&copy; 2026 LexaGuide. All rights reserved.</p>
                     <div class="footer-legal">
-                        <a href="#" data-i18n="footerPrivacy">Privacy Policy</a>
+                        <a href="./html/privacy.html" data-i18n="footerPrivacy">Privacy Policy</a>
                         <span>|</span>
-                        <a href="#" data-i18n="footerTerms">Terms of Service</a>
+                        <a href="./html/terms.html" data-i18n="footerTerms">Terms of Service</a>
                         <span>|</span>
-                        <a href="#" data-i18n="footerCookies">Cookie Policy</a>
+                        <a href="./html/privacy.html" data-i18n="footerCookies">Cookie Policy</a>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
 
+    <script src="./shared/i18n.js"></script>
     <script src="./shared/api.js"></script>
     <script src="./js/home.js"></script>
 </body>

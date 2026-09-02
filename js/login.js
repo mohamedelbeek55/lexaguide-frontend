@@ -38,10 +38,13 @@ window.addEventListener('resize', function () {
 
 // ─── If already logged in, redirect away ─────────────────────────────────────
 if (API.isLoggedIn()) {
-    if (API.isAdmin && API.isAdmin()) {
+    const user = API.getUser();
+    if (user && (user.role === 'admin' || user.role === 'Admin')) {
         window.location.href = 'admin-dashboard.html';
+    } else if (user && (user.role === 'lawyer' || user.role === 'Lawyer')) {
+        window.location.href = 'lawyer.html';
     } else {
-        window.location.href = 'middle-east-law.html';
+        window.location.href = '../index.html';
     }
 }
 
@@ -102,16 +105,16 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         const redirect = params.get('redirect');
         if (redirect) {
             window.location.href = redirect;
-            return;
+                return;
         }
 
         const user = data.user || API.getUser();
-        if (user && user.role === 'admin') {
+        if (user && (user.role === 'admin' || user.role === 'Admin')) {
             window.location.href = 'admin-dashboard.html';
-        } else if (user && user.role === 'lawyer') {
+        } else if (user && (user.role === 'lawyer' || user.role === 'Lawyer')) {
             window.location.href = 'lawyer.html';
         } else {
-            window.location.href = 'middle-east-law.html';
+            window.location.href = '../index.html';
         }
     } catch (err) {
         restore();

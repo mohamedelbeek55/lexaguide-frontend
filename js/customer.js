@@ -25,6 +25,7 @@ let currentConsultationId = consultationIdParam;
 let lastMessageCount = 0;
 let consultationStatus = "pending";
 let currentLawyerData = null;
+let isMessagesLoading = false;
 
 function formatTime(isoStr) {
   if (!isoStr) return "";
@@ -34,7 +35,8 @@ function formatTime(isoStr) {
 
 // ─── Chat Logic ──────────────────────────────────────────────────────────────
 async function loadMessages() {
-  if (!currentConsultationId || typeof API === 'undefined') return;
+  if (!currentConsultationId || typeof API === 'undefined' || document.visibilityState === 'hidden' || isMessagesLoading) return;
+  isMessagesLoading = true;
   try {
     const consult = await API.Consult.get(currentConsultationId);
     consultationStatus = consult.status;
@@ -87,16 +89,18 @@ async function loadMessages() {
     }
   } catch (err) {
     console.error("Chat load error:", err);
+  } finally {
+    isMessagesLoading = false;
   }
 }
 
 function renderMessages(messages) {
   chatMessages.innerHTML = messages.map(m => {
-    const isUser = m.senderType === 'user';
+    const isUser = m.senderType === 'user' || m.senderRole === 'user';
     return `
         <div class="chat-bubble ${isUser ? 'user' : 'lawyer'}">
-            <div class="msg-content">${m.message}</div>
-            <div class="msg-time">${formatTime(m.createdAt)}</div>
+            <div class="msg-content">${m.message || m.content}</div>
+            <div class="msg-time">${formatTime(m.createdAt || m.created_at)}</div>
         </div>
     `;
   }).join('');
@@ -104,7 +108,7 @@ function renderMessages(messages) {
 
 async function sendChatMessage() {
   const text = chatInput.value.trim();
-  if (!text || !currentConsultationId) return;
+  if (!text || !currentConsultationId || isMessagesLoading) return;
 
   try {
     // Local Echo
@@ -136,7 +140,7 @@ async function initChat() {
   await loadMessages();
 
   // Polling
-  const chatInterval = setInterval(loadMessages, 3000);
+  const chatInterval = setInterval(loadMessages, 5000); // Increased to 5s
 
   chatSend.addEventListener("click", sendChatMessage);
   chatInput.addEventListener("keypress", (e) => {
@@ -162,6 +166,13 @@ async function loadLawyerInfo() {
   const cid = urlParams.get("consultationId");
 
   if (!lid && !cid) {
+    // Check session storage as fallback if redirecting from match page
+    const lastMatched = sessionStorage.getItem('last_matched_lawyer');
+    if (lastMatched) {
+      window.history.pushState({}, '', `?lawyer=${lastMatched}`);
+      loadLawyerInfo(); // retry
+      return;
+    }
     API.UI.toast("No lawyer or consultation specified. Redirecting...", "error");
     setTimeout(() => window.location.href = "middle-east-law.html", 2000);
     return;
@@ -254,11 +265,11 @@ if (form) {
         throw new Error("No lawyer selected for booking.");
       }
       const resp = await API.Consult.book({
-        lawyer_id: lawyerIdToBook,
-        communication_method: mode,
-        description: notes
+        lawyerId: lawyerIdToBook,
+        type: mode,
+        notes: notes
       });
-      const cid = resp.consultation._id || resp.id;
+      const cid = (resp.consultation && resp.consultation._id) || resp._id || resp.id;
 
       document.getElementById("bookingId").textContent = cid;
       document.getElementById("confirmation").classList.remove("hidden");

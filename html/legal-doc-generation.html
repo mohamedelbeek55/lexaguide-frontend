@@ -92,27 +92,36 @@
                             <label class="ldg-label" data-i18n="ldgDocType">Document Type</label>
                             <div class="ldg-radio-group">
                                 <label class="ldg-radio-label">
-                                    <input type="radio" name="docType" value="contract-lease" checked
-                                        onchange="updateFormFields()">
+                                    <input type="radio" name="docCategory" value="contract-lease" checked
+                                        onchange="onCategoryChange()">
                                     <span data-i18n="ldgContractLease">Contract (Lease)</span>
                                 </label>
                                 <label class="ldg-radio-label">
-                                    <input type="radio" name="docType" value="contract-general"
-                                        onchange="updateFormFields()">
+                                    <input type="radio" name="docCategory" value="contract-general" onchange="onCategoryChange()">
                                     <span data-i18n="ldgContractGeneral">Contract (General)</span>
                                 </label>
                                 <label class="ldg-radio-label">
-                                    <input type="radio" name="docType" value="complaint" onchange="updateFormFields()">
+                                    <input type="radio" name="docCategory" value="complaint" onchange="onCategoryChange()">
                                     <span data-i18n="ldgComplaint">Complaint (Service Dispute)</span>
                                 </label>
                             </div>
+                        </div>
+
+                        <!-- Template Selection -->
+                        <div class="ldg-form-group">
+                            <label class="ldg-label" for="templateSelect" data-i18n="ldgTemplateSelect">Select
+                                Template</label>
+                            <select id="templateSelect" class="ldg-select" onchange="onTemplateChange()">
+                                <option value="">-- Select a template --</option>
+                            </select>
                         </div>
 
                         <!-- Dynamic Form Fields Container -->
                         <div id="dynamicFields"></div>
 
                         <!-- Submit Button -->
-                        <button type="submit" class="ldg-submit-btn" data-i18n="ldgGenerateBtn">Generate
+                        <button type="submit" class="ldg-submit-btn" id="generateBtn" data-i18n="ldgGenerateBtn"
+                            disabled>Generate
                             Document</button>
                     </form>
                 </div>
@@ -121,7 +130,11 @@
                 <div class="ldg-output-container" id="outputContainer" style="display: none;">
                     <div class="ldg-output-header">
                         <h2 class="ldg-output-title" data-i18n="ldgOutputTitle">Generated Document</h2>
-                        <button class="ldg-copy-btn" id="copyBtn" data-i18n="ldgCopyBtn">Copy Document</button>
+                        <div class="ldg-actions">
+                            <button class="ldg-copy-btn" id="copyBtn" data-i18n="ldgCopyBtn">Copy</button>
+                            <button class="ldg-download-btn" id="downloadBtn" data-i18n="ldgDownloadBtn">Download
+                                PDF</button>
+                        </div>
                     </div>
 
                     <!-- Tabs -->
@@ -190,10 +203,12 @@
                     <ul class="footer-links">
                         <li><a href="./contract-analysis.html" data-i18n="footerService1">Contract
                                 Analysis</a></li>
-                        <li><a href="./legal-doc-generation.html" data-i18n="footerService2">Document Generation</a></li>
+                        <li><a href="./legal-doc-generation.html" data-i18n="footerService2">Document Generation</a>
+                        </li>
                         <li><a href="./chatbot.html" data-i18n="footerService3">ChatBot</a></li>
                         <li><a href="./middle-east-law.html" data-i18n="footerService4">Law Experts</a>
-                        <li><a href="./consultations-management.html" data-i18n="footerService5">Case Management</a></li>
+                        <li><a href="./consultations-management.html" data-i18n="footerService5">Case Management</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -229,7 +244,8 @@
                                 </div>
                             </a>
                             <a href="#" class="app-button google-play" aria-label="Get it on Google Play">
-                                <img src="../assets/logos/icons8-google-play-24.png" alt="Google Play" class="app-icon-img">
+                                <img src="../assets/logos/icons8-google-play-24.png" alt="Google Play"
+                                    class="app-icon-img">
                                 <div class="app-button-text">
                                     <span class="app-button-label" data-i18n="footerGooglePlayLabel">Get it on</span>
                                     <span class="app-button-name" data-i18n="footerGooglePlayName">Google Play</span>
@@ -255,6 +271,7 @@
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="../shared/api.js"></script>
     <script src="../js/legal-doc-generation.js"></script>
 </body>

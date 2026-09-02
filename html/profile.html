@@ -2,81 +2,284 @@
 <html lang="en" id="htmlLang">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../shared/home.css">
-  <link rel="stylesheet" href="../css/profile.css">
-  <title>Profile | LexaGuide</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../shared/home.css">
+    <link rel="stylesheet" href="../css/profile.css">
+    <title>Profile | LexaGuide</title>
+    <style>
+        .profile-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .profile-container { grid-template-columns: 1fr; }
+        }
+        .profile-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(197, 149, 74, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        .profile-avatar-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .profile-avatar-lg {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c5954a 0%, #d4a55a 100%);
+            color: #0d1524;
+            font-weight: 700;
+            font-size: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            border: 4px solid rgba(197, 149, 74, 0.3);
+            overflow: hidden;
+        }
+        .profile-avatar-lg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .btn-upload {
+            background: rgba(197, 149, 74, 0.1);
+            color: #C5954A;
+            border: 1px solid #C5954A;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-upload:hover { background: #C5954A; color: #fff; }
+        
+        .profile-info-group { margin-bottom: 1.5rem; }
+        .profile-info-label { color: #888; font-size: 0.85rem; margin-bottom: 0.5rem; display: block; }
+        .profile-info-value { color: #fff; font-size: 1.1rem; font-weight: 500; }
+        
+        .edit-form-group { margin-bottom: 1.25rem; }
+        .edit-form-label { color: #ccc; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; }
+        .edit-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .edit-input:focus { border-color: #C5954A; }
+        
+        .btn-save {
+            background: #C5954A;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .notification-item.unread { background: rgba(197, 149, 74, 0.05); }
+        .notification-dot { width: 8px; height: 8px; border-radius: 50%; background: #C5954A; margin-top: 6px; }
+        .notification-content { flex: 1; }
+        .notification-time { color: #666; font-size: 0.75rem; margin-top: 4px; }
+
+        /* Stats & Lists */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-item {
+            background: rgba(31, 44, 69, 0.4);
+            border: 1px solid rgba(197, 149, 74, 0.15);
+            padding: 1.25rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .stat-val { font-size: 1.5rem; font-weight: 700; color: #C5954A; display: block; }
+        .stat-lbl { font-size: 0.75rem; color: #888; text-transform: uppercase; margin-top: 4px; }
+
+        .list-section { margin-top: 2rem; }
+        .list-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(197, 149, 74, 0.2);
+        }
+        .list-title { color: #C5954A; font-size: 1.1rem; margin: 0; }
+        
+        .data-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .data-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .data-item:hover { transform: translateX(5px); background: rgba(197, 149, 74, 0.05); }
+        .data-main { display: flex; flex-direction: column; }
+        .data-title { color: #fff; font-weight: 500; font-size: 0.95rem; }
+        .data-sub { color: #888; font-size: 0.8rem; margin-top: 2px; }
+        .data-status {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .status-pending { background: rgba(230, 198, 84, 0.15); color: #e6c654; }
+        .status-accepted { background: rgba(82, 183, 136, 0.15); color: #52b788; }
+        .status-closed { background: rgba(255, 255, 255, 0.1); color: #aaa; }
+    </style>
 </head>
 
 <body>
-  <!-- Navbar (same as public pages; user menu appears when logged in via api.js) -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <a href="../index.html" class="navbar-logo" aria-label="LexaGuide home">
-        <div class="navbar-logo-img">
-          <img src="../assets/logos/logo-removebg-preview.png" alt="LexaGuide logo">
-          <div class="navbar-logo-text">
-            <span class="navbar-brand">LexaGuide</span>
-            <span class="navbar-tagline">AI-Powered Legal Guidance</span>
-          </div>
-        </div>
-      </a>
-      <button class="navbar-toggle" id="navbarToggle" onclick="toggleMenu()">
-        <span></span><span></span><span></span>
-      </button>
-      <div class="navbar-menu" id="navbarMenu">
-        <ul class="navbar-links">
-          <li><a href="../index.html" data-i18n="home">Home</a></li>
-          <li><a href="../index.html#services-section" data-i18n="services">Services</a></li>
-          <li><a href="./about.html" data-i18n="about">About</a></li>
-          <li><a href="../index.html#faq-section" data-i18n="faq">FAQ</a></li>
-        </ul>
-        <div class="navbar-right">
-          <div class="language-selector">
-            <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
-              <svg class="lang-globe" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M2 12H22M12 2C14.5 4.74 15.92 8.29 16 12C15.92 15.71 14.5 19.26 12 22C9.5 19.26 8.08 15.71 8 12C8.08 8.29 9.5 4.74 12 2Z" stroke="currentColor" stroke-width="2"/></svg>
-              <span class="lang-text" id="langText">English</span>
-              <svg class="lang-chevron" viewBox="0 0 24 24"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2"/></svg>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../index.html" class="navbar-logo">
+                <div class="navbar-logo-img">
+                    <img src="../assets/logos/logo-removebg-preview.png" alt="LexaGuide logo">
+                    <div class="navbar-logo-text">
+                        <span class="navbar-brand">LexaGuide</span>
+                        <span class="navbar-tagline">AI-Powered Legal Guidance</span>
+                    </div>
+                </div>
+            </a>
+            <button class="navbar-toggle" id="navbarToggle" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
             </button>
-            <div class="lang-dropdown" id="langDropdown">
-              <button class="lang-option" onclick="changeLanguage('en')"><span>English</span></button>
-              <button class="lang-option" onclick="changeLanguage('ar')"><span>العربية</span></button>
+            <div class="navbar-menu" id="navbarMenu">
+                <ul class="navbar-links">
+                    <li><a href="../index.html" data-i18n="home">Home</a></li>
+                    <li><a href="../index.html#services-section" data-i18n="services">Services</a></li>
+                    <li><a href="./about.html" data-i18n="about">About</a></li>
+                    <li><a href="../index.html#faq-section" data-i18n="faq">FAQ</a></li>
+                </ul>
+                <div class="navbar-right">
+                    <div class="language-selector">
+                        <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+                            <svg class="lang-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            <span class="lang-text" id="langText">English</span>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" onclick="changeLanguage('en')">English</button>
+                            <button class="lang-option" onclick="changeLanguage('ar')">العربية</button>
+                        </div>
+                    </div>
+                    <div class="navbar-cta" id="navbarCta">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="navbar-cta">
-            <a href="./login.html" class="btn-login" data-i18n="login">Login</a>
-            <a href="./signup.html" class="btn-signup" data-i18n="signup">Sign Up</a>
-          </div>
         </div>
-      </div>
+    </nav>
+
+    <div class="profile-container">
+        <!-- Sidebar: View Profile -->
+        <aside>
+            <div class="profile-card">
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar-lg" id="profileAvatarLg">
+                        <span id="initials">—</span>
+                    </div>
+                    <input type="file" id="avatarInput" hidden accept="image/*">
+                    <button class="btn-upload" onclick="document.getElementById('avatarInput').click()" data-i18n="changePhoto">Change Photo</button>
+                </div>
+                
+                <div class="profile-info-group">
+                    <span class="profile-info-label" data-i18n="fullName">Full Name</span>
+                    <div class="profile-info-value" id="displayFullName">—</div>
+                </div>
+                <div class="profile-info-group">
+                    <span class="profile-info-label" data-i18n="email">Email Address</span>
+                    <div class="profile-info-value" id="displayEmail">—</div>
+                </div>
+                <div class="profile-info-group">
+                    <span class="profile-info-label" data-i18n="role">Account Type</span>
+                    <div class="profile-info-value" id="displayRole" style="text-transform: capitalize;">—</div>
+                </div>
+                <div class="profile-info-group">
+                    <span class="profile-info-label" data-i18n="memberSince">Member Since</span>
+                    <div class="profile-info-value" id="displayDate">—</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content: Edit Profile & Notifications -->
+        <main>
+            <!-- Stats Dashboard Section -->
+            <div id="statsSection" class="stats-grid">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- List Sections (Dynamic) -->
+            <div id="dynamicLists">
+                <!-- Populated by JS (Consultations, Documents, etc.) -->
+            </div>
+
+            <!-- Edit Section -->
+            <div class="profile-card" style="margin-bottom: 2rem;">
+                <h2 style="color: #C5954A; margin-bottom: 1.5rem;" data-i18n="editProfile">Edit Profile</h2>
+                <form id="editProfileForm">
+                    <div class="edit-form-group">
+                        <label class="edit-form-label" data-i18n="fullName">Full Name</label>
+                        <input type="text" id="inputFullName" class="edit-input" required>
+                    </div>
+                    <div class="edit-form-group">
+                        <label class="edit-form-label" data-i18n="phone">Phone Number</label>
+                        <input type="text" id="inputPhone" class="edit-input">
+                    </div>
+                    <div class="edit-form-group">
+                        <label class="edit-form-label" data-i18n="bio">Bio / About Me</label>
+                        <textarea id="inputBio" class="edit-input" rows="3" style="resize: none;"></textarea>
+                    </div>
+                    <button type="submit" class="btn-save" id="saveBtn" data-i18n="saveChanges">Save Changes</button>
+                </form>
+            </div>
+
+            <!-- Notifications Section -->
+            <div class="profile-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="color: #C5954A; margin: 0;" data-i18n="notifications">Notifications</h2>
+                    <button onclick="markAllRead()" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.8rem;" data-i18n="markAllRead">Mark all as read</button>
+                </div>
+                <div id="notificationsList">
+                    <p style="color: #666; text-align: center; padding: 2rem;" data-i18n="noNotifications">No new notifications</p>
+                </div>
+            </div>
+        </main>
     </div>
-  </nav>
 
-  <main class="profile-main">
-    <section class="profile-section card">
-      <h1>Profile</h1>
-      <div class="profile-avatar-lg" id="profileAvatarLg">—</div>
-      <div class="profile-details" id="profileDetails">
-        <p class="profile-loading">Loading…</p>
-      </div>
-    </section>
-
-    <section class="profile-section card" id="settings">
-      <h2>Settings</h2>
-      <p class="profile-settings-intro">Preferences and account options.</p>
-      <div class="settings-row">
-        <label>Language</label>
-        <select id="settingsLang">
-          <option value="en">English</option>
-          <option value="ar">العربية</option>
-        </select>
-      </div>
-    </section>
-  </main>
-
-  <script src="../shared/api.js"></script>
-  <script src="../js/profile.js"></script>
+    <script src="../shared/i18n.js"></script>
+    <script src="../shared/api.js"></script>
+    <script src="../js/profile.js"></script>
 </body>
-
 </html>

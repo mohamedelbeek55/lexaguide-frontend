@@ -46,7 +46,7 @@ window.addEventListener('resize', function () {
             API.logout();
         }
         if (API.isLoggedIn() && !force) {
-            window.location.href = 'middle-east-law.html';
+            window.location.href = '../index.html';
         }
     } catch { }
 })();

@@ -21,6 +21,8 @@ const chatClientName = document.getElementById("chatClientName")
 let currentConsultationId = null;
 let lastMessageCount = 0;
 let pollingInterval = null;
+let isMessagesLoading = false;
+let isListLoading = false;
 
 function formatTime(isoStr) {
   if (!isoStr) return "";
@@ -34,9 +36,10 @@ function render(bookings) {
   listEl.innerHTML = ""
   if (appointmentsListEl) appointmentsListEl.innerHTML = "";
 
-  // Separate Pending from Accepted (Appointments)
+  // Add a section for completed consultations if they exist
   const pending = bookings.filter(b => b.status === "pending");
   const appointments = bookings.filter(b => b.status === "accepted" || b.status === "active" || b.status === "confirmed");
+  const completedList = bookings.filter(b => b.status === "completed");
 
   // Render Requests
   if (pending.length === 0) {
@@ -47,10 +50,23 @@ function render(bookings) {
 
   // Render Appointments
   if (appointmentsListEl) {
-    if (appointments.length === 0) {
+    if (appointments.length === 0 && completedList.length === 0) {
       appointmentsListEl.innerHTML = `<div class="loading-state">No confirmed appointments.</div>`;
     } else {
       appointments.forEach(b => appointmentsListEl.appendChild(createBookingCard(b, false)));
+
+      // Render completed consultations in the appointments panel but at the bottom
+      if (completedList.length > 0) {
+        const divider = document.createElement("div");
+        divider.className = "section-divider";
+        divider.innerHTML = `<h3 style="margin: 20px 0; color: var(--gold); border-top: 1px solid var(--border); padding-top: 20px;">Completed Consultations</h3>`;
+        appointmentsListEl.appendChild(divider);
+
+        completedList.forEach(b => {
+          const card = createBookingCard(b, false);
+          appointmentsListEl.appendChild(card);
+        });
+      }
     }
   }
 }
@@ -58,6 +74,7 @@ function render(bookings) {
 function showPanel(panel) {
   const requestsSection = document.querySelector(".consultations-panel:not(#appointmentsPanel)");
   const appointmentsSection = document.getElementById("appointmentsPanel");
+  const chatSection = document.getElementById("chatSection");
   const navItems = document.querySelectorAll(".nav-item");
 
   // Remove active from all
@@ -66,15 +83,27 @@ function showPanel(panel) {
   if (panel === 'dashboard') {
     requestsSection.classList.remove("hidden");
     appointmentsSection.classList.add("hidden");
+    if (chatSection) chatSection.classList.add("hidden");
     // Find the dashboard link and make it active
     const dashLink = Array.from(navItems).find(i => i.textContent.includes('Dashboard'));
     if (dashLink) dashLink.classList.add('active');
   } else if (panel === 'appointments') {
     requestsSection.classList.add("hidden");
     appointmentsSection.classList.remove("hidden");
+    if (chatSection) chatSection.classList.add("hidden");
     // Find the appointments link and make it active
     const apptLink = Array.from(navItems).find(i => i.textContent.includes('Appointments'));
     if (apptLink) apptLink.classList.add('active');
+  } else if (panel === 'messages') {
+    // For lawyers, "Messages" usually means active consultations where chat is possible
+    requestsSection.classList.add("hidden");
+    appointmentsSection.classList.remove("hidden"); // Show appointments as they are chat-ready
+    if (chatSection) chatSection.classList.add("hidden");
+    
+    const msgLink = Array.from(navItems).find(i => i.textContent.includes('Messages'));
+    if (msgLink) msgLink.classList.add('active');
+    
+    API.UI.toast("Select an active consultation to start messaging", "info");
   }
 }
 
@@ -83,32 +112,40 @@ window.showPanel = showPanel;
 function createBookingCard(b, isPending) {
   const card = document.createElement("div")
   card.className = "booking-card"
-  const isAccepted = b.status === "accepted" || b.status === "active" || b.status === "confirmed";
-  const statusLabel = b.status.toUpperCase();
+  
+  const id = b._id || b.id;
+  const clientName = b.client_name || (b.userId && b.userId.fullName) || "Client";
+  const date = b.createdAt || b.created_at || new Date();
+  const description = b.notes || b.description || "No notes provided.";
+  const status = (b.status || "pending").toLowerCase();
+  
+  const isAccepted = status === "accepted" || status === "active" || status === "confirmed";
+  const isCompleted = status === "completed";
+  const statusLabel = status.toUpperCase();
 
   card.innerHTML = `
     <div class="card-header">
       <div class="client-info">
-        <div class="avatar-small">${b.client_name ? b.client_name[0].toUpperCase() : 'C'}</div>
+        <div class="avatar-small">${clientName[0].toUpperCase()}</div>
         <div>
-          <div class="client-name">${b.client_name}</div>
-          <div class="booking-time">${new Date(b.created_at).toLocaleDateString()}</div>
+          <div class="client-name">${clientName}</div>
+          <div class="booking-time">${new Date(date).toLocaleDateString()}</div>
         </div>
       </div>
-      <span class="badge ${b.status}">${statusLabel}</span>
+      <span class="badge ${status}">${statusLabel}</span>
     </div>
-    <div class="case-desc">${b.description || "No notes provided."}</div>
+    <div class="case-desc">${description}</div>
     <div class="card-actions">
       ${isPending ? `
-        <button class="btn btn-primary" onclick="updateStatus('${b.id}', 'accepted')">
+        <button class="btn btn-primary" onclick="updateStatus('${id}', 'accepted')">
           <i class="fas fa-check"></i> Accept
         </button>
-        <button class="btn btn-secondary" onclick="updateStatus('${b.id}', 'declined')">
+        <button class="btn btn-secondary" onclick="updateStatus('${id}', 'declined')">
           <i class="fas fa-times"></i> Decline
         </button>
-      ` : isAccepted ? `
-        <button class="btn btn-chat" onclick="openChat('${b.id}', '${b.client_name}')">
-          <i class="fas fa-comments"></i> Open Chat
+      ` : (isAccepted || isCompleted) ? `
+        <button class="btn btn-chat" style="width: 100%; margin-top: 10px; background: var(--gold); color: #0d1117;" onclick="openChat('${id}', '${clientName}')">
+          <i class="fas fa-comments"></i> ${isCompleted ? 'Review Chat' : 'Open Chat'}
         </button>
       ` : ""}
     </div>
@@ -152,7 +189,8 @@ async function updateStatus(id, status) {
 }
 
 async function load() {
-  if (typeof API === "undefined") return;
+  if (typeof API === "undefined" || isListLoading) return;
+  isListLoading = true;
 
   const user = API.getUser();
   if (user && lawyerNameEl) {
@@ -160,9 +198,10 @@ async function load() {
   }
 
   try {
-    const resp = await API.Consult.getLawyerConsultations()
-    const bookings = resp.data || []
-    render(bookings)
+    const resp = await API.Consult.getLawyerConsultations();
+    // Support both direct array and {consultations: []}
+    const bookings = Array.isArray(resp) ? resp : (resp.consultations || resp.data || []);
+    render(bookings);
 
     if (pendingCountEl) pendingCountEl.textContent = bookings.filter(b => b.status === "pending").length
     if (acceptedCountEl) acceptedCountEl.textContent = bookings.filter(b => b.status === "accepted" || b.status === "active" || b.status === "confirmed").length
@@ -170,19 +209,24 @@ async function load() {
 
     // Update availability toggle based on user data if exists
     const availToggle = document.getElementById('availabilityToggle');
-    if (user && availToggle) {
-      // We might need an endpoint to get full lawyer profile details including isAvailable
+    if (user && availToggle && !availToggle.dataset.loaded) {
       const profile = await API.Profile.get();
       availToggle.checked = profile.isAvailable !== false;
+      availToggle.dataset.loaded = "true"; // Prevent redundant profile calls
     }
   } catch (err) {
     console.error("Load failed:", err)
+  } finally {
+    isListLoading = false;
   }
 }
 
 // ─── Chat Logic ──────────────────────────────────────────────────────────────
 async function openChat(consultationId, clientName) {
   currentConsultationId = consultationId;
+  
+  // Update UI to show messages panel and chat section
+  showPanel('messages');
   chatSection.classList.remove("hidden");
 
   if (chatClientName) chatClientName.textContent = clientName;
@@ -190,8 +234,8 @@ async function openChat(consultationId, clientName) {
 
   if (pollingInterval) clearInterval(pollingInterval);
   lastMessageCount = 0;
-  loadMessages();
-  pollingInterval = setInterval(loadMessages, 3000);
+  await loadMessages();
+  pollingInterval = setInterval(loadMessages, 5000); // Increased interval to 5s
 }
 
 function closeChat() {
@@ -201,48 +245,73 @@ function closeChat() {
 }
 
 async function loadMessages() {
-  if (!currentConsultationId) return;
+  if (!currentConsultationId || document.visibilityState === 'hidden' || isMessagesLoading) return;
+  isMessagesLoading = true;
   try {
     const resp = await API.Consult.getMessages(currentConsultationId);
-    const messages = resp.messages || [];
+    const messages = resp.messages || resp.data || [];
 
-    if (messages.length !== lastMessageCount) {
+    if (messages.length > lastMessageCount) {
+      if (lastMessageCount > 0) {
+        const lastMsg = messages[messages.length - 1];
+        const currentUser = API.getUser();
+        // Notify if the message is from the user
+        if (lastMsg.senderId !== currentUser.id && lastMsg.senderRole === 'user') {
+          API.UI.toast(localStorage.getItem('language') === 'ar' ? 'رسالة جديدة من العميل' : 'New message from client', 'info');
+          try { new Audio('../assets/notification.mp3').play(); } catch(e) {}
+        }
+      }
       renderMessages(messages);
       lastMessageCount = messages.length;
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
   } catch (err) {
-    console.error("Messages load failed:", err);
+    console.error("Failed to load messages:", err);
+  } finally {
+    isMessagesLoading = false;
   }
 }
 
 function renderMessages(messages) {
-  chatMessages.innerHTML = messages.map(m => {
-    const isLawyer = m.senderType === 'lawyer';
-    const initialBadge = m.isInitial ? `<span class="initial-msg-badge">Booking Note</span>` : '';
-    return `
-      <div class="chat-bubble ${isLawyer ? 'lawyer' : 'user'} ${m.isInitial ? 'initial' : ''}">
-        ${initialBadge}
-        <div class="msg-content">${m.message}</div>
-        <div class="msg-time">${formatTime(m.createdAt)}</div>
-      </div>
+  if (messages.length === lastMessageCount && lastMessageCount > 0) return;
+  
+  const currentUser = API.getUser();
+  chatMessages.innerHTML = "";
+  
+  messages.forEach(msg => {
+    const isMe = msg.senderId === currentUser.id || msg.senderRole === "lawyer";
+    const bubble = document.createElement("div");
+    bubble.className = `chat-bubble ${isMe ? "lawyer" : "user"}`;
+    
+    const time = new Date(msg.createdAt || msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    
+    bubble.innerHTML = `
+      <div class="msg-content">${msg.message || msg.content}</div>
+      <span class="msg-time">${time}</span>
     `;
-  }).join('');
-
-  // Auto-scroll to bottom
+    chatMessages.appendChild(bubble);
+  });
+  
   chatMessages.scrollTop = chatMessages.scrollHeight;
+  lastMessageCount = messages.length;
 }
 
 async function completeConsultation() {
   if (!currentConsultationId) return;
-  if (!confirm("Mark this session as completed?")) return;
+  
+  const isAr = localStorage.getItem('language') === 'ar';
+  const confirmMsg = isAr ? 'هل أنت متأكد من إنهاء هذه الاستشارة؟' : 'Are you sure you want to finish this consultation?';
+  
+  if (!confirm(confirmMsg)) return;
+
   try {
     await API.Consult.updateStatus(currentConsultationId, 'completed');
+    API.UI.toast(isAr ? 'تم إنهاء الاستشارة بنجاح' : 'Consultation completed successfully', "success");
+    
     closeChat();
-    load();
-    API.UI.toast("Consultation completed", "success");
+    await load(); // Refresh stats and lists
   } catch (err) {
-    API.UI.toast("Action failed", "error");
+    API.UI.toast(err.message || "Failed to complete consultation", "error");
   }
 }
 

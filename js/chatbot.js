@@ -99,8 +99,28 @@ function changeLanguage(lang) {
     } else {
         langText.textContent = 'English';
     }
+    updateNavbarAuth();
+}
 
-    document.getElementById('langDropdown').classList.remove('active');
+function updateNavbarAuth() {
+    const navbarCta = document.querySelector('.navbar-right .navbar-cta');
+    if (!navbarCta) return;
+
+    if (API.isLoggedIn()) {
+        const user = API.getUser();
+        const isAdmin = user && (user.role === 'admin' || user.role === 'Admin');
+        const isLawyer = user && (user.role === 'lawyer' || user.role === 'Lawyer');
+        
+        let dashboardUrl = '../index.html';
+        if (isAdmin) dashboardUrl = './admin-dashboard.html';
+        else if (isLawyer) dashboardUrl = './lawyer.html';
+        else dashboardUrl = './profile.html';
+
+        navbarCta.innerHTML = `
+            <a href="${dashboardUrl}" class="btn-login" style="margin-left: 10px;">${currentLang === 'ar' ? 'حسابي' : 'My Account'}</a>
+            <button onclick="API.logout()" class="btn-signup" style="cursor:pointer; border:none; padding: 10px 20px;">${currentLang === 'ar' ? 'خروج' : 'Logout'}</button>
+        `;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {

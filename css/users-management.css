@@ -99,7 +99,7 @@ body {
 }
 
 .main-content {
-  padding: 24px;
+  padding: calc(64px + 24px) 24px 24px;
 }
 
 .page-header {
@@ -298,9 +298,14 @@ td { font-size: 14px; color: var(--text); }
 .badge-role-admin { background: rgba(197, 149, 74, 0.25); color: var(--gold-light); border: 1px solid rgba(197, 149, 74, 0.4); }
 .badge-role-user { background: rgba(65, 90, 119, 0.5); color: #a0c4e8; border: 1px solid rgba(160, 196, 232, 0.3); }
 .badge-role-lawyer { background: rgba(157, 78, 221, 0.3); color: #c77dff; border: 1px solid rgba(199, 125, 255, 0.4); }
-.badge-status-active { background: rgba(45, 106, 79, 0.35); color: var(--green); }
-.badge-status-banned { background: rgba(230, 57, 70, 0.3); color: var(--red); }
+.badge-status-active, .badge-active { background: rgba(45, 106, 79, 0.35); color: var(--green); }
+.badge-status-banned, .badge-closed { background: rgba(230, 57, 70, 0.3); color: var(--red); }
 .badge-status-pending { background: rgba(230, 198, 84, 0.3); color: var(--yellow); }
+
+.btn-danger { background: rgba(230, 57, 70, 0.2); color: var(--red); border: 1px solid rgba(230, 57, 70, 0.4); }
+.btn-danger:hover { background: rgba(230, 57, 70, 0.3); }
+.btn-success { background: rgba(82, 183, 136, 0.2); color: var(--green); border: 1px solid rgba(82, 183, 136, 0.4); }
+.btn-success:hover { background: rgba(82, 183, 136, 0.3); }
 
 .actions-cell { display: flex; gap: 8px; flex-wrap: wrap; }
 

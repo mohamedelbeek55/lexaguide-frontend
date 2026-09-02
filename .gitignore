@@ -8,17 +8,35 @@ yarn-error.log*
 pnpm-debug.log*
 
 # ========================
+# Python (AI Service)
+# ========================
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.py[cod]
+**/*.pyo
+**/*.pyd
+**/.Python
+**/pip-log.txt
+**/pip-delete-this-directory.txt
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# ========================
 # Environment Variables
 # ========================
 .env
 .env.local
 .env.development
 .env.production
+.env.example.bak
 
 # ========================
 # Logs
 # ========================
-logs
+logs/
 *.log
 
 # ========================
@@ -26,11 +44,16 @@ logs
 # ========================
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # ========================
-# VS Code
+# Editor / IDE
 # ========================
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # ========================
 # Build / Output
@@ -38,25 +61,37 @@ Thumbs.db
 dist/
 build/
 .vercel/
+.next/
+.out/
 
 # ========================
 # Uploaded / Local Data
 # ========================
 uploads/
 Data/
+local_data/
 
 # ========================
-# Zip files
+# Archives / Zip / RAR
 # ========================
 *.zip
+*.rar
+*.7z
+*.tar.gz
 
 # ========================
-# Coverage
+# Coverage / Testing
 # ========================
 coverage/
+.nyc_output/
+htmlcov/
+.pytest_cache/
 
 # ========================
-# Misc
+# Project-specific Temp Files / Scratch Notes
 # ========================
 *.tmp
 *.temp
+fix_lp.ps1
+generate docs plan
+procdure pln

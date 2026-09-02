@@ -256,6 +256,24 @@ async function loadLegalAreas() {
     }
 }
 
+async function loadFeaturedLawyers() {
+    var grid = document.getElementById('me-lawyers-grid') ||
+        document.getElementById('me-lawyer-list') ||
+        document.querySelector('.me-lawyers-grid');
+    if (!grid) return;
+
+    if (typeof API === 'undefined' || !API.Lawyer || !API.Lawyer.getAll) return;
+
+    try {
+        var resp = await API.Lawyer.getAll();
+        var lawyers = (resp && resp.data) ? resp.data : [];
+        if (lawyers.length === 0) return;
+        renderMatchedLawyers(lawyers);
+    } catch {
+        // ignore, keep the empty-state
+    }
+}
+
 // ─── Show matched lawyers from real API ───────────────────────────────────
 async function simulateMatch() {
     var areaEl = document.getElementById('me-legal-area');
@@ -279,15 +297,18 @@ async function simulateMatch() {
     var restore = matchBtn ? API.UI.setLoading(matchBtn, 'Matching…') : function () { };
 
     try {
-        var response = await API.Match.match({
-            legal_area_id: legalAreaId,
+        var matchFn = API && API.Match && (API.Match.match || API.Match.recommend);
+        if (!matchFn) throw new Error("Matching service is not available.");
+
+        var response = await matchFn.call(API.Match, {
+            case_type: legalAreaId,
             city: city,
             budget: budget,
-            communication_method: commMethod === 'video' ? 'video_call' : 'chat',
+            consultation_type: commMethod === 'video' ? 'video_call' : 'chat',
             description: description || undefined
         });
 
-        var lawyers = (response && response.data) ? response.data : (Array.isArray(response) ? response : []);
+        var lawyers = (response && response.lawyers) ? response.lawyers : (Array.isArray(response) ? response : []);
         renderMatchedLawyers(lawyers);
         restore();
 
@@ -324,35 +345,52 @@ function renderMatchedLawyers(lawyers) {
 
     if (!lawyers || lawyers.length === 0) {
         API.UI.toast('No lawyers found for your criteria. Try broadening your search.', 'info');
-        grid.innerHTML = '<p class="me-no-lawyers" id="me-lawyers-empty-state">No lawyers match this legal area yet. Add lawyers from the Lawyers management page (admin).</p>';
+        grid.innerHTML = '<p class="me-no-lawyers" id="me-lawyers-empty-state" style="grid-column: 1/-1; text-align: center; padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px dashed rgba(197,149,74,0.3);">No lawyers match this legal area yet. Add lawyers from the Lawyers management page (admin).</p>';
         return;
     }
 
     grid.innerHTML = lawyers.map(function (l) {
-        var name = l.full_name || l.name || 'Lawyer';
-        var specialty = l.specialty || l.legal_area || l.specialization || '';
-        var country = l.country || l.region || '';
+        var id = l.id || l._id;
+        var name = l.full_name || l.fullName || 'Lawyer';
+        var specialty = l.specialization || l.specialty || l.legal_area || l.specialties?.[0] || '';
+        var country = l.city || l.country || l.governorate || '';
         var specialtyLine = specialty + (country ? ' · ' + country : '');
-        var rating = l.rating != null ? parseFloat(l.rating) : 0;
+        
+        var rating = 0;
+        if (l.avg_rating != null) rating = parseFloat(l.avg_rating);
+        else if (l.ratingAvg != null) rating = parseFloat(l.ratingAvg);
+        else if (l.rating != null) rating = parseFloat(l.rating);
+
         var ratingStr = rating >= 4.5 ? '★★★★★' : rating >= 4 ? '★★★★☆' : rating >= 3.5 ? '★★★☆☆' : '★★☆☆☆';
-        var consultations = l.total_consultations != null ? l.total_consultations : 0;
-        var price = l.price_per_session != null ? parseFloat(l.price_per_session) : 0;
-        var mins = l.session_duration_mins != null ? l.session_duration_mins : 30;
-        var avail = l.availability_status || '';
+        
+        var consultations = 0;
+        if (l.reviews_count != null) consultations = l.reviews_count;
+        else if (l.ratingCount != null) consultations = l.ratingCount;
+        else if (l.total_consultations != null) consultations = l.total_consultations;
+
+        var price = 0;
+        if (l.price != null) price = parseFloat(l.price);
+        else if (l.pricePerSession != null) price = parseFloat(l.pricePerSession);
+        else if (l.price_per_session != null) price = parseFloat(l.price_per_session);
+
+        var mins = l.session_duration_mins || l.sessionDurationMins || 30;
+        
+        var avail = l.availability_status || (l.isActive ? 'online_now' : 'unavailable');
         var availLabel = avail === 'online_now' ? 'Online now' :
             avail === 'available_in_30_mins' ? 'Available in 30 mins' : 'Unavailable';
         var availClass = 'me-availability';
         if (avail === 'available_in_30_mins') availClass += ' soon';
         else if (avail !== 'online_now') availClass += ' offline';
+        
         var bio = (l.bio || '').trim() || 'Specialised legal support for your needs.';
-        var initials = (l.initials || '').trim();
-        if (!initials && name) {
+        var initials = '';
+        if (name) {
             var parts = name.trim().split(/\s+/);
             initials = parts.map(function (p) { return p[0]; }).join('').slice(0, 2).toUpperCase();
         }
-        if (!initials) initials = '??';
+        if (!initials) initials = 'LG';
 
-        return '<article class="me-lawyer-card" data-id="' + l.id + '">' +
+        return '<article class="me-lawyer-card" data-id="' + id + '" style="opacity: 1; transform: translateY(0);">' +
             '<div class="me-lawyer-head">' +
             '  <div class="me-lawyer-avatar">' + escapeHtml(initials) + '</div>' +
             '  <div>' +
@@ -366,9 +404,9 @@ function renderMatchedLawyers(lawyers) {
             '  <span class="me-price">From $' + Math.round(price) + ' / ' + mins + ' mins</span>' +
             '  <span class="' + availClass + '">' + escapeHtml(availLabel) + '</span>' +
             '</div>' +
-            '<p class="me-lawyer-specialty">' + escapeHtml(bio) + '</p>' +
+            '<p class="me-lawyer-bio" style="font-size: 0.9rem; color: #888; margin: 15px 0; line-height: 1.4;">' + escapeHtml(bio) + '</p>' +
             '<div class="me-lawyer-actions">' +
-            "  <button type=\"button\" class=\"cta-full\" onclick=\"navigateToBooking('" + l.id + "')\">" + (translations[currentLang].bookConsultation || 'Book Consultation') + "</button>" +
+            "  <button type=\"button\" class=\"cta-full\" onclick=\"navigateToBooking('" + id + "')\">" + (translations[currentLang].bookConsultation || 'Book Consultation') + "</button>" +
             '</div>' +
             '</article>';
     }).join('');
@@ -376,8 +414,11 @@ function renderMatchedLawyers(lawyers) {
 
 // ─── Navigate to booking details page ──────────────────────────────────────
 function navigateToBooking(lawyerId) {
+    if (lawyerId) {
+        try { sessionStorage.setItem('last_matched_lawyer', lawyerId); } catch { }
+    }
     if (!API.isLoggedIn()) {
-        window.location.href = 'login.html';
+        window.location.href = 'login.html?redirect=' + encodeURIComponent('customer.html?lawyer=' + lawyerId);
         return;
     }
     window.location.href = 'customer.html?lawyer=' + lawyerId;
@@ -421,4 +462,5 @@ async function bookLawyer(lawyerId, communicationMethod) {
 document.addEventListener('DOMContentLoaded', function () {
     changeLanguage(currentLang);
     if (typeof API !== 'undefined') loadLegalAreas();
+    if (typeof API !== 'undefined') loadFeaturedLawyers();
 });

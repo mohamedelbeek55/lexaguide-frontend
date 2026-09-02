@@ -12,6 +12,8 @@ const welcomeText = document.getElementById("welcomeText");
 let currentConsultationId = null;
 let lastMessageCount = 0;
 let pollingInterval = null;
+let isMessagesLoading = false;
+let isListLoading = false;
 
 function formatTime(isoStr) {
   if (!isoStr) return "";
@@ -21,7 +23,8 @@ function formatTime(isoStr) {
 
 // ─── List Logic ──────────────────────────────────────────────────────────────
 async function load() {
-  if (typeof API === "undefined") return;
+  if (typeof API === "undefined" || isListLoading) return;
+  isListLoading = true;
 
   const user = API.getUser();
   if (user && welcomeText) {
@@ -30,11 +33,14 @@ async function load() {
 
   try {
     const resp = await API.Consult.getMine();
-    const items = resp.data || [];
+    // Support both new {consultations, data} and old formats
+    const items = Array.isArray(resp) ? resp : (resp.consultations || resp.data || []);
     render(items);
   } catch (err) {
     console.error("Load failed:", err);
     API.UI.toast("Failed to load consultations", "error");
+  } finally {
+    isListLoading = false;
   }
 }
 
@@ -60,12 +66,18 @@ function render(items) {
     return;
   }
 
+  const isAr = localStorage.getItem('language') === 'ar';
+  
   items.forEach(c => {
     const card = document.createElement("div");
     card.className = "consultation-card dynamic-card";
 
     const isAccepted = c.status === "accepted" || c.status === "active" || c.status === "confirmed";
+    const isCompleted = c.status === "completed";
     const statusLabel = c.status.toUpperCase();
+
+    let btnLabel = isAr ? 'دردشة' : 'Chat';
+    if (isCompleted) btnLabel = isAr ? 'مراجعة المحادثة' : 'Review Chat';
 
     card.innerHTML = `
       <div class="card-header">
@@ -73,24 +85,24 @@ function render(items) {
           <div class="lawyer-avatar">${c.lawyer_name ? c.lawyer_name[0].toUpperCase() : 'L'}</div>
           <div>
             <h3 class="lawyer-name">${c.lawyer_name}</h3>
-            <p class="lawyer-specialty">${c.legal_area || 'Legal Expert'}</p>
+            <p class="lawyer-specialty">${c.legal_area || (isAr ? 'خبير قانوني' : 'Legal Expert')}</p>
           </div>
         </div>
         <span class="status-badge ${c.status}">${statusLabel}</span>
       </div>
       <div class="case-notes">
-        <strong>Notes:</strong> ${c.description || "No notes provided."}
+        <strong>${isAr ? 'ملاحظات:' : 'Notes:'}</strong> ${c.description || (isAr ? "لا توجد ملاحظات." : "No notes provided.")}
       </div>
-      <div class="card-footer">
+      <div class="card-footer" style="display: flex; flex-direction: column; gap: 10px;">
         <div style="font-size: 11px; color: #8b949e;">
-          Booked: ${new Date(c.created_at).toLocaleDateString()}
+          ${isAr ? 'تاريخ الحجز:' : 'Booked:'} ${new Date(c.created_at).toLocaleDateString(isAr ? 'ar-EG' : 'en-US')}
         </div>
-        ${isAccepted ? `
-          <button class="btn-chat" onclick="openChat('${c.id}', '${c.lawyer_name}')">
-            <i class="fas fa-comments"></i> Chat
+        ${(isAccepted || isCompleted) ? `
+          <button class="btn-chat" style="width: 100%; background: var(--gold); color: #0d1117; font-weight: bold; border-radius: 8px; padding: 12px;" onclick="openChat('${c.id}', '${c.lawyer_name}')">
+            <i class="fas fa-comments"></i> ${btnLabel}
           </button>
         ` : `
-          <button class="btn-chat" disabled style="background: #30363d; color: #8b949e;">
+          <button class="btn-chat" disabled style="width: 100%; background: #30363d; color: #8b949e; border-radius: 8px; padding: 12px;">
             <i class="fas fa-clock"></i> ${statusLabel}
           </button>
         `}
@@ -103,52 +115,90 @@ function render(items) {
 // ─── Chat Logic ──────────────────────────────────────────────────────────────
 async function openChat(consultationId, lawyerName) {
   currentConsultationId = consultationId;
-  chatSection.classList.remove("hidden");
-
+  
+  // Reset chat UI
+  chatMessages.innerHTML = '';
   if (chatLawyerName) chatLawyerName.textContent = lawyerName;
   if (chatLawyerAvatar) chatLawyerAvatar.textContent = lawyerName[0].toUpperCase();
+  
+  const grid = document.querySelector(".grid");
+  if (grid) grid.classList.add("chat-active");
+  
+  chatSection.classList.remove("hidden");
+  
+  // Initial messages load
+  lastMessageCount = 0;
+  await loadMessages();
+  
+  // Scroll to bottom
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 
   if (pollingInterval) clearInterval(pollingInterval);
   lastMessageCount = 0;
-  loadMessages();
-  pollingInterval = setInterval(loadMessages, 3000);
+  await loadMessages();
+  pollingInterval = setInterval(loadMessages, 5000); // Increased interval to 5s
 }
 
 function closeChat() {
-  chatSection.classList.add("hidden");
   currentConsultationId = null;
+  const grid = document.querySelector(".grid");
+  if (grid) grid.classList.remove("chat-active");
+
+  chatSection.classList.add("hidden");
   if (pollingInterval) clearInterval(pollingInterval);
 }
 
 async function loadMessages() {
-  if (!currentConsultationId) return;
+  if (!currentConsultationId || document.visibilityState === 'hidden' || isMessagesLoading) return;
+  isMessagesLoading = true;
   try {
     const resp = await API.Consult.getMessages(currentConsultationId);
-    const messages = resp.messages || [];
-
-    if (messages.length !== lastMessageCount) {
+    const messages = resp.messages || resp.data || [];
+    
+    if (messages.length > lastMessageCount) {
+      // New messages arrived
+      if (lastMessageCount > 0) {
+        const lastMsg = messages[messages.length - 1];
+        const currentUser = API.getUser();
+        // Notify only if someone else sent the message
+        if (lastMsg.senderId !== currentUser.id && lastMsg.senderRole !== 'user') {
+          API.UI.toast(localStorage.getItem('language') === 'ar' ? 'رسالة جديدة من المحامي' : 'New message from lawyer', 'info');
+          // Optional: Play notification sound
+          try { new Audio('../assets/notification.mp3').play(); } catch(e) {}
+        }
+      }
       renderMessages(messages);
-      lastMessageCount = messages.length;
     }
   } catch (err) {
-    console.error("Messages load failed:", err);
+    console.error("Failed to load messages:", err);
+  } finally {
+    isMessagesLoading = false;
   }
 }
 
 function renderMessages(messages) {
-  chatMessages.innerHTML = messages.map(m => {
-    const isUser = m.senderType === 'user';
-    const initialBadge = m.isInitial ? `<span class="initial-msg-badge">Your Initial Request</span>` : '';
-    return `
-      <div class="chat-bubble ${isUser ? 'user' : 'lawyer'} ${m.isInitial ? 'initial' : ''}">
-        ${initialBadge}
-        <div class="msg-content">${m.message}</div>
-        <div class="msg-time">${formatTime(m.createdAt)}</div>
-      </div>
+  if (messages.length === lastMessageCount && lastMessageCount > 0) return;
+  
+  const currentUser = API.getUser();
+  chatMessages.innerHTML = '';
+  
+  messages.forEach(msg => {
+    // Determine if I am the sender
+    const isMe = msg.senderId === currentUser.id || msg.senderRole === 'user';
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble ${isMe ? 'user' : 'lawyer'}`;
+    
+    const time = new Date(msg.createdAt || msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    bubble.innerHTML = `
+      <div class="msg-content">${msg.message || msg.content}</div>
+      <span class="msg-time">${time}</span>
     `;
-  }).join('');
-
+    chatMessages.appendChild(bubble);
+  });
+  
   chatMessages.scrollTop = chatMessages.scrollHeight;
+  lastMessageCount = messages.length;
 }
 
 if (chatForm) {
