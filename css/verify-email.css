@@ -1,0 +1,246 @@
+@import url("./home.css");
+
+/* ── Page shell ─────────────────────────────────────────────────────────── */
+.auth-section {
+  padding: 120px 0 80px;
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+}
+
+.auth-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(197, 149, 74, 0.12) 0%, transparent 55%),
+    radial-gradient(circle at 90% 80%, rgba(197, 149, 74, 0.08) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.auth-container {
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-form-wrapper {
+  background: radial-gradient(circle at top, rgba(31, 44, 69, 0.85), rgba(13, 21, 36, 0.98));
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 50px 40px;
+  border: 1px solid rgba(197, 149, 74, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Email icon ─────────────────────────────────────────────────────────── */
+.verify-icon {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.verify-icon svg {
+  width: 64px;
+  height: 64px;
+  filter: drop-shadow(0 0 12px rgba(197, 149, 74, 0.4));
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.form-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.form-header h2 {
+  font-size: 30px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff 0%, #c5954a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+}
+
+.form-header p {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.form-header p strong {
+  color: #c5954a;
+}
+
+/* ── 6-box OTP input ─────────────────────────────────────────────────────── */
+.otp-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.otp-input {
+  width: 48px;
+  height: 58px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(13, 21, 36, 0.6);
+  border: 2px solid rgba(197, 149, 74, 0.35);
+  border-radius: 12px;
+  caret-color: #c5954a;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+  /* override global input padding */
+  padding: 0;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: #c5954a;
+  box-shadow: 0 0 0 3px rgba(197, 149, 74, 0.18);
+  background: rgba(13, 21, 36, 0.85);
+}
+
+.otp-input.filled {
+  border-color: rgba(197, 149, 74, 0.7);
+  background: rgba(197, 149, 74, 0.08);
+}
+
+.otp-input.error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15);
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-5px); }
+  60%       { transform: translateX(5px); }
+  80%       { transform: translateX(-3px); }
+}
+
+/* ── Error banner ───────────────────────────────────────────────────────── */
+.error-banner {
+  color: #c0392b;
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ── Submit button ──────────────────────────────────────────────────────── */
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #c5954a 0%, #b8863a 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #b8863a 0%, #a6752a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(197, 149, 74, 0.4);
+}
+
+.submit-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Resend section ─────────────────────────────────────────────────────── */
+.resend-section {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.resend-text {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.resend-btn {
+  background: none;
+  border: none;
+  color: #c5954a;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.25s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.resend-btn:hover:not(:disabled) {
+  color: #d4a55a;
+}
+
+.resend-btn:disabled {
+  color: rgba(197, 149, 74, 0.4);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.countdown-text {
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  min-height: 18px;
+}
+
+/* ── Back link ──────────────────────────────────────────────────────────── */
+.back-link {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.back-link a {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  text-decoration: none;
+  transition: color 0.25s;
+}
+
+.back-link a:hover {
+  color: #c5954a;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .auth-form-wrapper {
+    padding: 36px 24px;
+  }
+
+  .otp-input {
+    width: 40px;
+    height: 50px;
+    font-size: 18px;
+    border-radius: 10px;
+  }
+
+  .otp-group {
+    gap: 7px;
+  }
+
+  .form-header h2 {
+    font-size: 24px;
+  }
+}

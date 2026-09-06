@@ -13,6 +13,9 @@
 ## ✨ Features
 
 - 🔐 **Authentication** — Unified login/register for Users, Lawyers, and Admins
+- 🔑 **Google Sign-In** — One-click sign-in / sign-up via Google Identity Services (GSI)
+- ✉️ **Email Verification** — 6-digit OTP flow after registration with resend cooldown
+- 🔒 **Forgot Password** — 3-step OTP-based password reset (email → OTP → new password)
 - 👨‍⚖️ **Lawyer Directory** — Search and filter verified lawyers
 - 💬 **Consultation Chat** — Real-time-like chat via smart polling with toast notifications
 - 📄 **Legal Templates** — Browse and search contracts and complaint templates
@@ -74,8 +77,14 @@ Every backend call goes through the centralized `API` object — **never use `fe
 ```js
 // Authentication
 API.Auth.register(data)
-API.Auth.login(data)
+API.Auth.login(email, password)
 API.Auth.me()
+API.Auth.googleAuth(idToken)           // Google Sign-In (ID-token flow)
+API.Auth.sendVerificationOTP()         // Resend email OTP (Bearer)
+API.Auth.verifyEmail({ email, otp })
+API.Auth.forgotPassword({ email })
+API.Auth.verifyResetOTP({ email, otp }) // → { resetToken }
+API.Auth.resetPassword({ resetToken, newPassword })
 
 // Profile
 API.Profile.get()
@@ -143,7 +152,10 @@ All styles are in the `/css` folder. Each page has its own CSS file.
 | Page | Description |
 |---|---|
 | Landing (`index.html`) | Hero, features, call to action |
-| Login / Signup | Auth forms for all roles |
+| Login / Signup | Auth forms — email/password + Google Sign-In button |
+| Verify Email | 6-digit OTP entry after registration |
+| Forgot Password | Enter email to receive reset OTP |
+| Reset Password | Enter OTP → verify → set new password |
 | Profile | Edit info, upload avatar |
 | Lawyer Dashboard | Manage consultations (lawyer side) |
 | Customer Area | Create & track consultations (user side) |
@@ -164,6 +176,8 @@ The project is pre-configured for Vercel static deployment via `vercel.json`.
 ```bash
 vercel --prod
 ```
+
+> **Google Sign-In setup**: Add your production domain to **Authorized JavaScript origins** in Google Cloud Console → APIs & Services → Credentials → your OAuth Client. Also add `http://localhost:5500` (or your local dev port) for local development. Without this, the Google button will not render.
 
 ---
 

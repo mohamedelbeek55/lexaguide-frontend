@@ -105,7 +105,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         const redirect = params.get('redirect');
         if (redirect) {
             window.location.href = redirect;
-                return;
+            return;
         }
 
         const user = data.user || API.getUser();
@@ -152,7 +152,9 @@ const translations = {
         forgotPassword: 'Forgot password?',
         loginButton: 'LOGIN',
         noAccount: "Don't have an account?",
-        createAccount: 'Create account'
+        createAccount: 'Create account',
+        orContinueWith: 'or continue with',
+        signInWithGoogle: 'Sign in with Google'
     },
     ar: {
         home: 'الرئيسية',
@@ -168,7 +170,9 @@ const translations = {
         forgotPassword: 'نسيت كلمة المرور؟',
         loginButton: 'تسجيل الدخول',
         noAccount: 'ليس لديك حساب؟',
-        createAccount: 'إنشاء حساب'
+        createAccount: 'إنشاء حساب',
+        orContinueWith: 'أو تابع باستخدام',
+        signInWithGoogle: 'تسجيل الدخول بـ Google'
     }
 };
 
@@ -204,3 +208,91 @@ document.addEventListener('click', function (event) {
         document.getElementById('langDropdown').classList.remove('active');
     }
 });
+
+// ─── Google Sign-In (GSI) ─────────────────────────────────────────────────────
+//
+// Uses google.accounts.oauth2.initTokenClient — opens a real popup every time.
+// GOOGLE_CLIENT_ID comes from shared/api.js (exposed on window).
+
+function showGoogleError(message) {
+    const banner = document.getElementById('googleErrorBanner');
+    if (banner) { banner.textContent = message; banner.style.display = 'block'; }
+}
+
+function clearGoogleError() {
+    const banner = document.getElementById('googleErrorBanner');
+    if (banner) banner.style.display = 'none';
+}
+
+function setGoogleLoading(isLoading) {
+    const btn = document.getElementById('googleBtn');
+    const text = btn && btn.querySelector('.google-btn-text');
+    const spinner = document.getElementById('googleSpinner');
+    if (!btn) return;
+    btn.disabled = isLoading;
+    if (text) text.style.opacity = isLoading ? '0.5' : '1';
+    if (spinner) spinner.style.display = isLoading ? 'flex' : 'none';
+}
+
+function redirectAfterLogin(data) {
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect');
+    if (redirect) { window.location.href = redirect; return; }
+    const user = data.user || API.getUser();
+    if (user && (user.role === 'admin' || user.role === 'Admin')) {
+        window.location.href = 'admin-dashboard.html';
+    } else if (user && (user.role === 'lawyer' || user.role === 'Lawyer')) {
+        window.location.href = 'lawyer.html';
+    } else {
+        window.location.href = '../index.html';
+    }
+}
+
+function initGoogleSignIn() {
+    // Guard: need both the GSI library and the client ID
+    if (!window.google || !window.google.accounts || !window.GOOGLE_CLIENT_ID) return;
+
+    const tokenClient = window.google.accounts.oauth2.initTokenClient({
+        client_id: window.GOOGLE_CLIENT_ID,
+        scope: 'openid email profile',
+        callback: async function (tokenResponse) {
+            if (tokenResponse.error) {
+                setGoogleLoading(false);
+                showGoogleError('Google sign-in was cancelled. Please try again.');
+                return;
+            }
+            try {
+                // Send access token to backend — backend fetches userinfo from Google
+                const data = await API.Auth.googleAuth(tokenResponse.access_token);
+                redirectAfterLogin(data);
+            } catch (err) {
+                setGoogleLoading(false);
+                const msg = err.message || '';
+                if (msg.toLowerCase().includes('local') || msg.toLowerCase().includes('password')) {
+                    showGoogleError('This email is already registered. Please log in with your password instead.');
+                } else {
+                    showGoogleError(msg || 'Google sign-in failed. Please try again.');
+                }
+            }
+        }
+    });
+
+    const btn = document.getElementById('googleBtn');
+    if (btn) {
+        btn.addEventListener('click', function () {
+            clearGoogleError();
+            clearError();
+            setGoogleLoading(true);
+            tokenClient.requestAccessToken({ prompt: 'select_account' });
+        });
+        btn.disabled = false; // enable now that GSI is ready
+    }
+}
+
+// Called by GSI library when it finishes loading (set before the script tag)
+window.onGoogleLibraryLoad = initGoogleSignIn;
+
+// Fallback: if GSI already loaded before this script ran, init immediately
+if (window.google && window.google.accounts) {
+    initGoogleSignIn();
+}
