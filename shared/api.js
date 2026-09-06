@@ -1,6 +1,14 @@
 const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname.startsWith("192.168.");
 const API_BASE = isLocal ? "http://localhost:3000/api" : "https://graduation-backend2.vercel.app/api";
 
+// ── Google OAuth Client ID ────────────────────────────────────────────────────
+// Must match GOOGLE_CLIENT_ID in the backend .env.
+// Also add your dev origin (e.g. http://localhost:5500) to "Authorized JavaScript
+// origins" in Google Cloud Console → APIs & Services → Credentials → your OAuth client.
+const GOOGLE_CLIENT_ID = "234729508376-016l8vi99f38m071fi012b3ttjinbdqm.apps.googleusercontent.com";
+// Expose on window so login.js / signup.js can access it regardless of load order
+window.GOOGLE_CLIENT_ID = GOOGLE_CLIENT_ID;
+
 function getAccessToken() {
   return sessionStorage.getItem("accessToken") || "";
 }
@@ -163,6 +171,41 @@ const API = {
     },
     async me() {
       return request("/auth/me", { auth: true });
+    },
+
+    // ── Email Verification (OTP) ────────────────────────────────────────────
+    async sendVerificationOTP() {
+      // Requires Bearer token (user just registered). No body needed.
+      return request("/auth/send-verification-otp", { method: "POST", auth: true, body: {} });
+    },
+    async verifyEmail({ email, otp }) {
+      return request("/auth/verify-email", { method: "POST", body: { email, otp } });
+    },
+
+    // ── Forgot / Reset Password (OTP) ────────────────────────────────────────
+    async forgotPassword({ email }) {
+      return request("/auth/forgot-password", { method: "POST", body: { email } });
+    },
+    async verifyResetOTP({ email, otp }) {
+      // Returns { ok: true, resetToken } on success
+      return request("/auth/verify-reset-otp", { method: "POST", body: { email, otp } });
+    },
+    async resetPassword({ resetToken, newPassword }) {
+      return request("/auth/reset-password", { method: "POST", body: { resetToken, newPassword } });
+    },
+
+    // ── Google OAuth ─────────────────────────────────────────────────────────
+    // idToken comes from Google Identity Services (GSI) callback response.credential.
+    // On success, backend returns the same shape as login: { user, accessToken, refreshToken }
+    async googleAuth(idToken) {
+      const data = await request("/auth/google", {
+        method: "POST",
+        body: { idToken }
+      });
+      setTokens(data);
+      sessionStorage.setItem("user", JSON.stringify(data.user));
+      try { updateNavbarAuthUI(); } catch { }
+      return data;
     }
   },
   Admin: {

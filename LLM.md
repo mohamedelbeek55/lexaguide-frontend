@@ -11,7 +11,9 @@
 
 ### What This Frontend Does
 - Landing page + public lawyer directory
-- User / Lawyer / Admin login & registration flows
+- User / Lawyer / Admin login & registration flows with **Google Sign-In (GSI)**
+- **Email OTP verification** after registration (6-digit code, resend cooldown, lockout)
+- **Forgot password** flow: email → OTP → new password (3-step, single page)
 - Consultation creation, tracking, and real-time-like chat (polling)
 - Legal template browsing (contracts + complaints)
 - Document generation flow (fills legal forms dynamically)
@@ -50,6 +52,9 @@ lexaguide-frontend/
 ├── html/                   # All inner pages
 │   ├── login.html
 │   ├── signup.html
+│   ├── verify-email.html   # ← NEW: OTP verification after signup
+│   ├── forgot-password.html # ← NEW: Step 1 — enter email to receive OTP
+│   ├── reset-password.html  # ← NEW: Step 2+3 — enter OTP → set new password
 │   ├── profile.html
 │   ├── lawyer.html         # Lawyer dashboard
 │   ├── customer.html       # Client area
@@ -74,6 +79,9 @@ lexaguide-frontend/
 │   ├── home.js
 │   ├── login.js
 │   ├── signup.js
+│   ├── verify-email.js     # ← NEW: OTP input + resend countdown
+│   ├── forgot-password.js  # ← NEW: Email entry → sends OTP
+│   ├── reset-password.js   # ← NEW: OTP verify → new password
 │   ├── profile.js
 │   ├── lawyer.js
 │   ├── customer.js
@@ -95,6 +103,8 @@ lexaguide-frontend/
 ├── css/                    # Per-page stylesheets
 │   ├── login.css
 │   ├── signup.css
+│   ├── verify-email.css    # ← NEW: OTP box styles
+│   ├── forgot-password.css # ← NEW: shared by forgot + reset pages
 │   ├── profile.css
 │   ├── lawyer.css
 │   ├── customer.css
@@ -135,10 +145,16 @@ This is the **single source of truth** for all frontend → backend communicatio
 
 ### API Namespaces
 ```js
-API.Auth.register(data)       // POST /api/auth/register
-API.Auth.login(data)          // POST /api/auth/login
-API.Auth.me()                 // GET  /api/auth/me
-API.Auth.changePassword(data) // POST /api/auth/change-password
+API.Auth.register(data)                  // POST /api/auth/register
+API.Auth.login(data)                     // POST /api/auth/login
+API.Auth.me()                            // GET  /api/auth/me
+API.Auth.changePassword(data)            // POST /api/auth/change-password
+API.Auth.googleAuth(idToken)             // POST /api/auth/google — Google Sign-In (GSI ID-token flow)
+API.Auth.sendVerificationOTP()           // POST /api/auth/send-verification-otp (Bearer)
+API.Auth.verifyEmail({ email, otp })     // POST /api/auth/verify-email
+API.Auth.forgotPassword({ email })       // POST /api/auth/forgot-password
+API.Auth.verifyResetOTP({ email, otp })  // POST /api/auth/verify-reset-otp → { resetToken }
+API.Auth.resetPassword({ resetToken, newPassword }) // POST /api/auth/reset-password
 
 API.Profile.get()             // GET  /api/profile
 API.Profile.update(data)      // PATCH /api/profile
@@ -227,7 +243,10 @@ All pages follow a unified **Glassmorphism** design language:
 |---|---|---|
 | `index.html` | `js/home.js` | Landing page |
 | `html/login.html` | `js/login.js` | Unified login (User / Lawyer / Admin) |
-| `html/signup.html` | `js/signup.js` | User registration |
+| `html/signup.html` | `js/signup.js` | User registration — redirects to verify-email |
+| `html/verify-email.html` | `js/verify-email.js` | 6-digit OTP input + resend (after signup) |
+| `html/forgot-password.html` | `js/forgot-password.js` | Forgot password — enter email to get OTP |
+| `html/reset-password.html` | `js/reset-password.js` | Enter OTP → verify → set new password |
 | `html/profile.html` | `js/profile.js` | Profile editing + avatar upload |
 | `html/lawyer.html` | `js/lawyer.js` | Lawyer dashboard |
 | `html/customer.html` | `js/customer.js` | Client home area |
@@ -260,8 +279,9 @@ All pages follow a unified **Glassmorphism** design language:
 5. **Auth Redirect**: Do not manually redirect on 401 — `api.js` handles it automatically
 6. **Arabic RTL**: Ensure all new layouts work correctly in RTL mode (test with language=ar)
 7. **No Frameworks**: This is a Zero-dependency vanilla JS project — do not introduce npm modules or bundlers
+8. **Google Sign-In**: Uses GSI `window.onGoogleLibraryLoad` callback pattern — `GOOGLE_CLIENT_ID` is defined at the top of `shared/api.js`. The GSI `<script>` tag is loaded async/defer AFTER `api.js` in the HTML. Add any new origin to Authorized JavaScript origins in Google Cloud Console.
 
 ---
 
-**Last Updated**: 2026-09-03
+**Last Updated**: 2026-09-06
 **Scope**: Frontend repo only (`lexaguide-frontend`)

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlLang">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../shared/home.css" />
+  <link rel="stylesheet" href="../css/verify-email.css" />
+  <title>LexaGuide - Verify Your Email</title>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="../index.html" class="navbar-logo" aria-label="LexaGuide home">
+        <div class="navbar-logo-img">
+          <img src="../assets/logos/logo-removebg-preview.png" alt="LexaGuide logo" />
+          <div class="navbar-logo-text">
+            <span class="navbar-brand">LexaGuide</span>
+            <span class="navbar-tagline">AI-Powered Legal Guidance</span>
+          </div>
+        </div>
+      </a>
+
+      <button class="navbar-toggle" id="navbarToggle" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="navbar-menu" id="navbarMenu">
+        <ul class="navbar-links">
+          <li><a href="../index.html" data-i18n="home">Home</a></li>
+          <li><a href="../index.html#services-section" data-i18n="services">Services</a></li>
+          <li><a href="./about.html" data-i18n="about">About</a></li>
+          <li><a href="../index.html#faq-section" data-i18n="faq">FAQ</a></li>
+        </ul>
+        <div class="navbar-right">
+          <div class="language-selector">
+            <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+              <svg class="lang-globe" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M2 12H22M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <span class="lang-text" id="langText">English</span>
+              <svg class="lang-chevron" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="lang-dropdown" id="langDropdown">
+              <button class="lang-option" onclick="changeLanguage('en')"><span>English</span></button>
+              <button class="lang-option" onclick="changeLanguage('ar')"><span>العربية</span></button>
+            </div>
+          </div>
+          <div class="navbar-cta">
+            <a href="./login.html" class="btn-login" data-i18n="login">Login</a>
+            <a href="./signup.html" class="btn-signup" data-i18n="signup">Sign Up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Verify Email Section -->
+  <section class="auth-section">
+    <div class="auth-container">
+      <div class="auth-form-wrapper">
+        <div class="form-container">
+
+          <!-- Icon -->
+          <div class="verify-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="30" stroke="#c5954a" stroke-width="2.5"/>
+              <path d="M12 22L32 36L52 22" stroke="#c5954a" stroke-width="2.5" stroke-linecap="round"/>
+              <rect x="12" y="20" width="40" height="28" rx="3" stroke="#c5954a" stroke-width="2.5"/>
+            </svg>
+          </div>
+
+          <div class="form-header">
+            <h2 data-i18n="verifyTitle">Check Your Email</h2>
+            <p id="verifySubtitle">
+              We sent a 6-digit code to <strong id="emailDisplay"></strong>.<br/>
+              Enter it below to verify your account.
+            </p>
+          </div>
+
+          <!-- OTP Inputs (6 individual boxes) -->
+          <form id="verifyForm" autocomplete="off">
+            <div class="otp-group" id="otpGroup" role="group" aria-label="One-time password">
+              <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 1" />
+              <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2" />
+              <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3" />
+              <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4" />
+              <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 5" />
+              <input class="otp-input" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 6" />
+            </div>
+
+            <div id="verifyErrorBanner" class="error-banner" style="display:none;"></div>
+
+            <button type="submit" class="submit-btn" id="verifyBtn" data-i18n="verifyButton">Verify Email</button>
+          </form>
+
+          <!-- Resend -->
+          <div class="resend-section">
+            <p class="resend-text" data-i18n="noCode">Didn't receive the code?</p>
+            <button id="resendBtn" class="resend-btn" disabled data-i18n="resendCode">Resend Code</button>
+            <p id="countdownText" class="countdown-text"></p>
+          </div>
+
+          <!-- Back to login -->
+          <div class="back-link">
+            <a href="./login.html" data-i18n="backToLogin">← Back to Login</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="../shared/i18n.js"></script>
+  <script src="../shared/api.js"></script>
+  <script src="../js/verify-email.js"></script>
+</body>
+</html>

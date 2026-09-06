@@ -105,9 +105,11 @@ document.getElementById('signupForm').addEventListener('submit', async function 
 
         await API.Auth.register(payload);
 
-        // Pass success message to login page via sessionStorage
-        sessionStorage.setItem('signupSuccess', 'Account created! Please sign in.');
-        window.location.href = 'login.html';
+        // Store email so verify-email page knows where to send/verify the OTP
+        sessionStorage.setItem('pendingVerifyEmail', email);
+
+        // Redirect to email verification page instead of login
+        window.location.href = 'verify-email.html';
     } catch (err) {
         restore();
         showError(err.message || 'Registration failed. Please try again.');
@@ -138,7 +140,9 @@ const translations = {
         termsLink: 'Terms of Service',
         privacyLink: 'Privacy Policy',
         alreadyHaveAccount: 'Already have an account?',
-        goToLogin: 'Go to Login'
+        goToLogin: 'Go to Login',
+        orContinueWith: 'or continue with',
+        signUpWithGoogle: 'Sign up with Google'
     },
     ar: {
         home: 'الرئيسية',
@@ -152,6 +156,8 @@ const translations = {
         loginLink: 'تسجيل الدخول',
         alreadyHaveAccount: 'لديك حساب بالفعل؟',
         goToLogin: 'انتقل إلى تسجيل الدخول',
+        orContinueWith: 'أو تابع باستخدام',
+        signUpWithGoogle: 'إنشاء حساب بـ Google',
         fullNameLabel: 'الاسم الكامل',
         nationalIdLabel: 'رقم الهوية الوطنية',
         phoneLabel: 'رقم الهاتف',
@@ -221,5 +227,81 @@ document.addEventListener('click', function (event) {
         if (fullnameQS && emailQS && passwordQS && confirmQS && passwordQS === confirmQS) {
             document.getElementById('signupForm').dispatchEvent(new Event('submit'));
         }
-    } catch {}
+    } catch { }
 })();
+
+// ─── Google Sign-In (GSI) ─────────────────────────────────────────────────────
+//
+// Uses oauth2.initTokenClient (popup) — reliable in all browsers.
+// Google users skip email verification (Google already verified the email).
+
+function showGoogleError(message) {
+    const banner = document.getElementById('googleErrorBanner');
+    if (banner) { banner.textContent = message; banner.style.display = 'block'; }
+}
+
+function clearGoogleError() {
+    const banner = document.getElementById('googleErrorBanner');
+    if (banner) banner.style.display = 'none';
+}
+
+function setGoogleLoading(isLoading) {
+    const btn = document.getElementById('googleBtn');
+    const text = btn && btn.querySelector('.google-btn-text');
+    const spinner = document.getElementById('googleSpinner');
+    if (!btn) return;
+    btn.disabled = isLoading;
+    if (text) text.style.opacity = isLoading ? '0.5' : '1';
+    if (spinner) spinner.style.display = isLoading ? 'flex' : 'none';
+}
+
+window.onGoogleLibraryLoad = function () {
+    if (!window.google || !window.google.accounts || !window.GOOGLE_CLIENT_ID) return;
+
+    const tokenClient = window.google.accounts.oauth2.initTokenClient({
+        client_id: window.GOOGLE_CLIENT_ID,
+        scope: 'openid email profile',
+        callback: async function (tokenResponse) {
+            if (tokenResponse.error) {
+                setGoogleLoading(false);
+                showGoogleError('Google sign-up was cancelled. Please try again.');
+                return;
+            }
+            try {
+                const data = await API.Auth.googleAuth(tokenResponse.access_token);
+                const user = data.user || API.getUser();
+                if (user && (user.role === 'admin' || user.role === 'Admin')) {
+                    window.location.href = 'admin-dashboard.html';
+                } else if (user && (user.role === 'lawyer' || user.role === 'Lawyer')) {
+                    window.location.href = 'lawyer.html';
+                } else {
+                    window.location.href = '../index.html';
+                }
+            } catch (err) {
+                setGoogleLoading(false);
+                const msg = err.message || '';
+                if (msg.toLowerCase().includes('local') || msg.toLowerCase().includes('password')) {
+                    showGoogleError('This email is already registered. Please log in with your password instead.');
+                } else {
+                    showGoogleError(msg || 'Google sign-up failed. Please try again.');
+                }
+            }
+        }
+    });
+
+    const btn = document.getElementById('googleBtn');
+    if (btn) {
+        btn.addEventListener('click', function () {
+            clearGoogleError();
+            clearError();
+            setGoogleLoading(true);
+            tokenClient.requestAccessToken({ prompt: 'select_account' });
+        });
+        btn.disabled = false;
+    }
+};
+
+// Fallback: if GSI already loaded before this script ran
+if (window.google && window.google.accounts) {
+    window.onGoogleLibraryLoad();
+}

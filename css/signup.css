@@ -1,6 +1,25 @@
 @import url("./home.css");
 
-/* Signup page specific styles */
+/* ══════════════════════════════════════════════════════
+   BASE RESET
+══════════════════════════════════════════════════════ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at top, #1f2c45 0%, #0d1524 40%);
+    min-height: 100vh;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════
+   PAGE SHELL
+══════════════════════════════════════════════════════ */
 .auth-section {
     padding: 120px 0 80px;
     position: relative;
@@ -21,37 +40,45 @@
 }
 
 .auth-container {
-    max-width: 550px;
+    max-width: 540px;
     width: 100%;
     margin: 0 auto;
-    padding: 0 40px;
+    padding: 0 20px;
     position: relative;
     z-index: 1;
 }
 
+/* ══════════════════════════════════════════════════════
+   CARD
+══════════════════════════════════════════════════════ */
 .auth-form-wrapper {
-    background: radial-gradient(circle at top, rgba(31, 44, 69, 0.85), rgba(13, 21, 36, 0.98));
-    backdrop-filter: blur(12px);
-    border-radius: 20px;
-    padding: 50px 40px;
-    border: 1px solid rgba(197, 149, 74, 0.25);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    background: radial-gradient(circle at top, rgba(31, 44, 69, 0.88), rgba(13, 21, 36, 0.98));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 24px;
+    padding: 48px 44px;
+    border: 1px solid rgba(197, 149, 74, 0.28);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .form-container {
     width: 100%;
 }
 
+/* ══════════════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════════════ */
 .form-header {
-    margin-bottom: 40px;
+    margin-bottom: 32px;
     text-align: center;
 }
 
 .form-header h2 {
-    font-size: 36px;
-    color: #ffffff;
-    margin-bottom: 12px;
-    font-weight: 600;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 8px;
     background: linear-gradient(135deg, #ffffff 0%, #c5954a 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -59,86 +86,98 @@
 }
 
 .form-header p {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 15px;
 }
 
-.form-header p a {
-    color: #c5954a;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.form-header p a:hover {
-    color: #d4a55a;
-    text-decoration: underline;
-}
-
+/* ══════════════════════════════════════════════════════
+   INPUTS
+══════════════════════════════════════════════════════ */
 .input-group {
-    margin-bottom: 24px;
+    margin-bottom: 18px;
 }
 
+.input-group label,
 label {
     display: block;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 8px;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 7px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
 }
 
-input {
+.input-group input,
+input[type="email"],
+input[type="password"],
+input[type="text"] {
     width: 100%;
-    padding: 14px 18px;
-    background: rgba(13, 21, 36, 0.6);
-    border: 1px solid rgba(197, 149, 74, 0.3);
+    padding: 13px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(197, 149, 74, 0.25);
     border-radius: 12px;
     font-size: 15px;
-    color: #ffffff;
-    transition: all 0.3s ease;
+    color: #fff;
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
     font-family: inherit;
+    box-sizing: border-box;
 }
 
+.input-group input::placeholder,
 input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.3);
 }
 
+.input-group input:focus,
 input:focus {
     outline: none;
-    border-color: rgba(197, 149, 74, 0.6);
-    box-shadow: 0 0 0 3px rgba(197, 149, 74, 0.1);
-    background: rgba(13, 21, 36, 0.8);
+    border-color: rgba(197, 149, 74, 0.7);
+    box-shadow: 0 0 0 3px rgba(197, 149, 74, 0.12);
+    background: rgba(255, 255, 255, 0.08);
 }
 
+/* ══════════════════════════════════════════════════════
+   SUBMIT BUTTON
+══════════════════════════════════════════════════════ */
 .submit-btn {
     width: 100%;
-    padding: 16px;
+    padding: 15px;
     background: linear-gradient(135deg, #c5954a 0%, #b8863a 100%);
-    color: white;
+    color: #fff;
     border: none;
     border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 8px;
-    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
-.submit-btn:hover {
-    background: linear-gradient(135deg, #b8863a 0%, #a6752a 100%);
+.submit-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #d4a55a 0%, #c5954a 100%);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(197, 149, 74, 0.4);
+    box-shadow: 0 8px 24px rgba(197, 149, 74, 0.45);
 }
 
 .submit-btn:active {
     transform: translateY(0);
 }
 
+.submit-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* ══════════════════════════════════════════════════════
+   TERMS
+══════════════════════════════════════════════════════ */
 .terms {
-    margin-top: 24px;
+    margin-top: 18px;
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.45);
     text-align: center;
     line-height: 1.6;
 }
@@ -146,7 +185,7 @@ input:focus {
 .terms a {
     color: #c5954a;
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: color 0.25s;
 }
 
 .terms a:hover {
@@ -154,27 +193,30 @@ input:focus {
     text-decoration: underline;
 }
 
+/* ══════════════════════════════════════════════════════
+   LOGIN LINK SECTION
+══════════════════════════════════════════════════════ */
 .login-link-section {
-    margin-top: 30px;
+    margin-top: 24px;
     text-align: center;
-    padding-top: 30px;
-    border-top: 1px solid rgba(197, 149, 74, 0.2);
+    padding-top: 24px;
+    border-top: 1px solid rgba(197, 149, 74, 0.18);
 }
 
 .login-link-section p {
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.55);
     font-size: 14px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .login-btn {
     display: inline-block;
-    padding: 14px 32px;
+    padding: 12px 32px;
     background: transparent;
     color: #c5954a;
-    border: 2px solid rgba(197, 149, 74, 0.5);
+    border: 1.5px solid rgba(197, 149, 74, 0.5);
     border-radius: 12px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -186,52 +228,224 @@ input:focus {
     border-color: rgba(197, 149, 74, 0.8);
     color: #d4a55a;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(197, 149, 74, 0.2);
+    box-shadow: 0 4px 16px rgba(197, 149, 74, 0.2);
 }
 
 .login-btn:active {
     transform: translateY(0);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .auth-section {
-        padding: 100px 0 60px;
-    }
+/* ══════════════════════════════════════════════════════
+   OR DIVIDER
+══════════════════════════════════════════════════════ */
+.or-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 24px 0 18px;
+}
 
-    .auth-container {
-        padding: 0 25px;
-    }
+.or-divider::before,
+.or-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(197, 149, 74, 0.3), transparent);
+}
 
-    .auth-form-wrapper {
-        padding: 40px 30px;
-    }
+.or-divider span {
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
 
-    .form-header h2 {
-        font-size: 28px;
+/* ══════════════════════════════════════════════════════
+   GOOGLE BUTTON
+══════════════════════════════════════════════════════ */
+.google-btn {
+    width: 100%;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.google-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: inherit;
+}
+
+.google-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.google-btn:hover::before {
+    opacity: 1;
+}
+
+.google-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.google-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.google-btn-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.google-btn-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.2px;
+}
+
+.google-btn-spinner {
+    display: flex;
+    align-items: center;
+}
+
+.google-btn-spinner svg {
+    width: 18px;
+    height: 18px;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 
-@media (max-width: 480px) {
+/* ══════════════════════════════════════════════════════
+   ERROR BANNER (Google)
+══════════════════════════════════════════════════════ */
+.google-error-banner {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: rgba(192, 57, 43, 0.15);
+    border: 1px solid rgba(192, 57, 43, 0.4);
+    border-radius: 10px;
+    color: #ff6b6b;
+    font-size: 13px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .auth-section {
+        padding: 90px 0 60px;
+        align-items: flex-start;
+    }
+
+    .auth-container {
+        padding: 0 16px;
+        max-width: 100%;
+    }
+
     .auth-form-wrapper {
-        padding: 35px 25px;
+        padding: 36px 28px;
+        border-radius: 20px;
     }
 
     .form-header h2 {
         font-size: 24px;
     }
 
-    .input-group {
-        margin-bottom: 20px;
+    .form-header {
+        margin-bottom: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-section {
+        padding: 80px 0 40px;
     }
 
-    input {
-        padding: 12px 16px;
+    .auth-form-wrapper {
+        padding: 28px 20px;
+        border-radius: 16px;
+    }
+
+    .form-header h2 {
+        font-size: 22px;
+    }
+
+    .input-group {
+        margin-bottom: 14px;
+    }
+
+    .input-group input,
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+        padding: 12px 14px;
         font-size: 14px;
     }
 
     .submit-btn {
-        padding: 14px;
-        font-size: 15px;
+        padding: 13px;
+        font-size: 14px;
+    }
+
+    .google-btn-inner {
+        padding: 12px 16px;
+    }
+
+    .google-btn-text {
+        font-size: 14px;
+    }
+
+    .or-divider {
+        margin: 20px 0 14px;
+    }
+
+    .login-btn {
+        padding: 11px 24px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 360px) {
+    .auth-form-wrapper {
+        padding: 22px 14px;
+    }
+
+    .form-header h2 {
+        font-size: 19px;
     }
 }
