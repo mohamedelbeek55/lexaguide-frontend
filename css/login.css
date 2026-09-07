@@ -170,11 +170,10 @@ input:focus {
     border-radius: 12px;
     font-size: 15px;
     font-weight: 700;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.5px;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 4px;
-    text-transform: uppercase;
 }
 
 .submit-btn:hover:not(:disabled) {
@@ -215,6 +214,17 @@ input:focus {
 .signup-link a:hover {
     color: #d4a55a;
     text-decoration: underline;
+}
+
+/* ── Active-page state for navbar Login button ─────────────────────────── */
+/* Applied only on login.html via class btn-login--active */
+.btn-login--active {
+    border-color: #c5954a !important;
+    color: #c5954a !important;
+    background: rgba(197, 149, 74, 0.08) !important;
+    pointer-events: none;
+    /* already on this page */
+    cursor: default;
 }
 
 /* ══════════════════════════════════════════════════════
