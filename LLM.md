@@ -280,8 +280,20 @@ All pages follow a unified **Glassmorphism** design language:
 6. **Arabic RTL**: Ensure all new layouts work correctly in RTL mode (test with language=ar)
 7. **No Frameworks**: This is a Zero-dependency vanilla JS project — do not introduce npm modules or bundlers
 8. **Google Sign-In**: Uses GSI `window.onGoogleLibraryLoad` callback pattern — `GOOGLE_CLIENT_ID` is defined at the top of `shared/api.js`. The GSI `<script>` tag is loaded async/defer AFTER `api.js` in the HTML. Add any new origin to Authorized JavaScript origins in Google Cloud Console.
+9. **Password Strength**: Any page with a "new password" field MUST include the strength bar UI (`strength-bar-wrap`, `strength-bar`, `strength-label`) and the `pw-rules` checklist. Reuse the CSS from `css/forgot-password.css` and the JS logic from `js/reset-password.js`. The 5 rules are: min 8 chars, uppercase, lowercase, digit, special character — identical to the backend.
+10. **Mobile Navbar**: The hamburger menu slides in from the right as a 300 px panel. All items inside `.navbar-right` and `.navbar-cta` must have `align-items: stretch` on mobile so login/signup buttons and the language selector are full-width and consistent between logged-in and logged-out states.
 
 ---
 
-**Last Updated**: 2026-09-06
+## 🔧 Recent Changes & Fixes
+
+| Date | What Changed | File(s) |
+|---|---|---|
+| 2026-09-07 | Mobile navbar: merged duplicate `@media (max-width: 768px)` blocks — fixed layout break (misaligned language selector + buttons) before login | `shared/home.css` |
+| 2026-09-07 | Password strength indicator added to Sign Up page (progress bar + 5-rule checklist, EN/AR) | `html/signup.html`, `js/signup.js`, `css/signup.css` |
+| 2026-09-07 | Signup form now blocks submission if password doesn't pass all 5 strength rules | `js/signup.js` |
+
+---
+
+**Last Updated**: 2026-09-07
 **Scope**: Frontend repo only (`lexaguide-frontend`)
