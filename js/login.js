@@ -150,7 +150,7 @@ const translations = {
         emailLabel: 'E-mail Address',
         passwordLabel: 'Password',
         forgotPassword: 'Forgot password?',
-        loginButton: 'Sign In',
+        loginButton: 'Login',
         noAccount: "Don't have an account?",
         createAccount: 'Sign Up',
         orContinueWith: 'or continue with',
