@@ -150,9 +150,9 @@ const translations = {
         emailLabel: 'E-mail Address',
         passwordLabel: 'Password',
         forgotPassword: 'Forgot password?',
-        loginButton: 'LOGIN',
+        loginButton: 'Sign In',
         noAccount: "Don't have an account?",
-        createAccount: 'Create account',
+        createAccount: 'Sign Up',
         orContinueWith: 'or continue with',
         signInWithGoogle: 'Sign in with Google'
     },
