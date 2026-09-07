@@ -72,6 +72,59 @@ function clearError() {
     if (banner) banner.style.display = 'none';
 }
 
+// ─── Password strength rules ──────────────────────────────────────────────────
+// Must stay in sync with the backend Zod schema in auth.controller.js
+const PW_RULES = [
+    { id: 'rule-length', test: pw => pw.length >= 8, msgEn: 'At least 8 characters', msgAr: '8 أحرف على الأقل' },
+    { id: 'rule-upper', test: pw => /[A-Z]/.test(pw), msgEn: 'At least one uppercase letter', msgAr: 'حرف كبير واحد على الأقل' },
+    { id: 'rule-lower', test: pw => /[a-z]/.test(pw), msgEn: 'At least one lowercase letter', msgAr: 'حرف صغير واحد على الأقل' },
+    { id: 'rule-number', test: pw => /[0-9]/.test(pw), msgEn: 'At least one number', msgAr: 'رقم واحد على الأقل' },
+    { id: 'rule-special', test: pw => /[^A-Za-z0-9]/.test(pw), msgEn: 'At least one special character', msgAr: 'رمز خاص واحد على الأقل (!@#$…)' },
+];
+
+const STRENGTH_LEVELS = [
+    { pct: '0%', bg: 'transparent', label: '', labelAr: '' },
+    { pct: '20%', bg: '#e74c3c', label: 'Weak', labelAr: 'ضعيفة' },
+    { pct: '40%', bg: '#e67e22', label: 'Fair', labelAr: 'مقبولة' },
+    { pct: '60%', bg: '#f1c40f', label: 'Good', labelAr: 'جيدة' },
+    { pct: '80%', bg: '#2ecc71', label: 'Strong', labelAr: 'قوية' },
+    { pct: '100%', bg: '#27ae60', label: 'Very Strong', labelAr: 'قوية جداً' },
+];
+
+function getPasswordScore(pw) {
+    if (!pw) return 0;
+    return PW_RULES.filter(r => r.test(pw)).length;
+}
+
+function isPasswordValid(pw) {
+    return getPasswordScore(pw) === PW_RULES.length;
+}
+
+function updateStrengthUI(pw) {
+    const bar = document.getElementById('strengthBar');
+    const lbl = document.getElementById('strengthLabel');
+    const lang = localStorage.getItem('language') || 'en';
+    if (!bar || !lbl) return;
+
+    const score = getPasswordScore(pw);
+    const level = pw.length === 0 ? STRENGTH_LEVELS[0] : STRENGTH_LEVELS[score];
+
+    bar.style.width = level.pct;
+    bar.style.background = level.bg;
+    lbl.textContent = lang === 'ar' ? level.labelAr : level.label;
+    lbl.style.color = level.bg === 'transparent' ? 'rgba(255,255,255,0.5)' : level.bg;
+}
+
+// Wire up real-time strength feedback
+document.addEventListener('DOMContentLoaded', function () {
+    const pwInput = document.getElementById('password');
+    if (pwInput) {
+        pwInput.addEventListener('input', function () {
+            updateStrengthUI(this.value);
+        });
+    }
+});
+
 // ─── Signup Form Submission ───────────────────────────────────────────────────
 document.getElementById('signupForm').addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -85,13 +138,26 @@ document.getElementById('signupForm').addEventListener('submit', async function 
     const phone = (document.getElementById('phone') || {}).value || '';
     const national_id = (document.getElementById('nationalId') || {}).value || '';
 
+    const lang = localStorage.getItem('language') || 'en';
+
     // Client-side validation
-    if (!full_name) { showError('Full name is required.'); return; }
-    if (!email) { showError('Email address is required.'); return; }
-    if (!password) { showError('Password is required.'); return; }
-    if (password.length < 6) { showError('Password must be at least 6 characters.'); return; }
+    if (!full_name) { showError(lang === 'ar' ? 'الاسم الكامل مطلوب.' : 'Full name is required.'); return; }
+    if (!email) { showError(lang === 'ar' ? 'البريد الإلكتروني مطلوب.' : 'Email address is required.'); return; }
+    if (!password) { showError(lang === 'ar' ? 'كلمة المرور مطلوبة.' : 'Password is required.'); return; }
+
+    // Strong password check — must pass ALL 5 rules
+    if (!isPasswordValid(password)) {
+        showError(
+            lang === 'ar'
+                ? 'كلمة المرور ضعيفة. يجب أن تحتوي على 8 أحرف على الأقل، حرف كبير، حرف صغير، رقم، ورمز خاص.'
+                : 'Password is too weak. It must have at least 8 characters, one uppercase, one lowercase, one number, and one special character.'
+        );
+        updateStrengthUI(password); // ensure rules list is visible
+        return;
+    }
+
     if (confirmPw && confirmPw !== password) {
-        showError('Passwords do not match.');
+        showError(lang === 'ar' ? 'كلمتا المرور غير متطابقتين.' : 'Passwords do not match.');
         return;
     }
 
@@ -142,7 +208,13 @@ const translations = {
         alreadyHaveAccount: 'Already have an account?',
         goToLogin: 'Go to Login',
         orContinueWith: 'or continue with',
-        signUpWithGoogle: 'Sign up with Google'
+        signUpWithGoogle: 'Sign up with Google',
+        // password rule labels
+        'rule-length': 'At least 8 characters',
+        'rule-upper': 'At least one uppercase letter',
+        'rule-lower': 'At least one lowercase letter',
+        'rule-number': 'At least one number',
+        'rule-special': 'At least one special character'
     },
     ar: {
         home: 'الرئيسية',
@@ -167,7 +239,13 @@ const translations = {
         signupButton: 'إنشاء حساب',
         termsText: 'بإنشاء حساب، أنت توافق على <a href="#" data-i18n="termsLink">شروط الخدمة</a> و <a href="#" data-i18n="privacyLink">سياسة الخصوصية</a>',
         termsLink: 'شروط الخدمة',
-        privacyLink: 'سياسة الخصوصية'
+        privacyLink: 'سياسة الخصوصية',
+        // password rule labels
+        'rule-length': '8 أحرف على الأقل',
+        'rule-upper': 'حرف كبير واحد على الأقل',
+        'rule-lower': 'حرف صغير واحد على الأقل',
+        'rule-number': 'رقم واحد على الأقل',
+        'rule-special': 'رمز خاص واحد على الأقل (!@#$…)'
     }
 };
 
@@ -195,6 +273,17 @@ function changeLanguage(lang) {
     const langText = document.getElementById('langText');
     langText.textContent = lang === 'ar' ? 'العربية' : 'English';
     document.getElementById('langDropdown').classList.remove('active');
+
+    // Translate password rule labels
+    PW_RULES.forEach(rule => {
+        const el = document.getElementById(rule.id);
+        if (!el) return;
+        el.textContent = lang === 'ar' ? rule.msgAr : rule.msgEn;
+    });
+
+    // Re-render strength label in new language
+    const pwInput = document.getElementById('password');
+    if (pwInput && pwInput.value) updateStrengthUI(pwInput.value);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
