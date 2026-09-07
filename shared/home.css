@@ -892,6 +892,38 @@ body {
     border-radius: 3px;
 }
 
+/* Hamburger → X animation when menu is open */
+.navbar-toggle.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.navbar-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.navbar-toggle.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Dark overlay behind the slide-in panel — injected by navbar.js */
+.navbar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1001;
+    /* below panel (1002) but above page content */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.navbar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
 /* Responsive Styles */
 @media (max-width: 1024px) {
     .navbar-container {

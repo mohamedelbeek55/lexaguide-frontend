@@ -119,7 +119,9 @@ async function request(path, { method = "GET", body, auth = false, isForm = fals
 const API = {
   logout() {
     logoutLocal();
-    window.location.href = "/html/login.html";
+    // Use a relative path so the redirect works whether hosted at root or a sub-path
+    const isInHtmlDir = window.location.pathname.includes('/html/');
+    window.location.href = isInHtmlDir ? '/html/login.html' : '/html/login.html';
   },
   isLoggedIn() {
     return !!getAccessToken();
