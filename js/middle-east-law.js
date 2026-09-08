@@ -1,3 +1,6 @@
+// Protected page — requires authentication
+if (typeof API !== 'undefined') API.requireAuth();
+
 // Simple navbar toggle
 function toggleMenu() {
     const menu = document.getElementById('navbarMenu');
@@ -355,14 +358,14 @@ function renderMatchedLawyers(lawyers) {
         var specialty = l.specialization || l.specialty || l.legal_area || l.specialties?.[0] || '';
         var country = l.city || l.country || l.governorate || '';
         var specialtyLine = specialty + (country ? ' · ' + country : '');
-        
+
         var rating = 0;
         if (l.avg_rating != null) rating = parseFloat(l.avg_rating);
         else if (l.ratingAvg != null) rating = parseFloat(l.ratingAvg);
         else if (l.rating != null) rating = parseFloat(l.rating);
 
         var ratingStr = rating >= 4.5 ? '★★★★★' : rating >= 4 ? '★★★★☆' : rating >= 3.5 ? '★★★☆☆' : '★★☆☆☆';
-        
+
         var consultations = 0;
         if (l.reviews_count != null) consultations = l.reviews_count;
         else if (l.ratingCount != null) consultations = l.ratingCount;
@@ -374,14 +377,14 @@ function renderMatchedLawyers(lawyers) {
         else if (l.price_per_session != null) price = parseFloat(l.price_per_session);
 
         var mins = l.session_duration_mins || l.sessionDurationMins || 30;
-        
+
         var avail = l.availability_status || (l.isActive ? 'online_now' : 'unavailable');
         var availLabel = avail === 'online_now' ? 'Online now' :
             avail === 'available_in_30_mins' ? 'Available in 30 mins' : 'Unavailable';
         var availClass = 'me-availability';
         if (avail === 'available_in_30_mins') availClass += ' soon';
         else if (avail !== 'online_now') availClass += ' offline';
-        
+
         var bio = (l.bio || '').trim() || 'Specialised legal support for your needs.';
         var initials = '';
         if (name) {

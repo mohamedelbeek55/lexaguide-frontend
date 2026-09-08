@@ -106,9 +106,13 @@
                             <label for="password" data-i18n="passwordLabel">Password</label>
                             <input type="password" id="password" name="password" placeholder="************"
                                 autocomplete="new-password" required>
-                            <!-- Password strength bar — same structure as reset-password.html -->
-                            <div class="strength-bar-wrap">
-                                <div class="strength-bar" id="strengthBar"></div>
+                            <!-- Password strength bar — 5-segment design -->
+                            <div class="strength-bar-wrap" id="strengthBarWrap">
+                                <span class="strength-seg"></span>
+                                <span class="strength-seg"></span>
+                                <span class="strength-seg"></span>
+                                <span class="strength-seg"></span>
+                                <span class="strength-seg"></span>
                             </div>
                             <p class="strength-label" id="strengthLabel"></p>
                         </div>

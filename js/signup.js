@@ -101,18 +101,23 @@ function isPasswordValid(pw) {
 }
 
 function updateStrengthUI(pw) {
-    const bar = document.getElementById('strengthBar');
+    const wrap = document.getElementById('strengthBarWrap');
     const lbl = document.getElementById('strengthLabel');
     const lang = localStorage.getItem('language') || 'en';
-    if (!bar || !lbl) return;
+    if (!wrap || !lbl) return;
 
     const score = getPasswordScore(pw);
-    const level = pw.length === 0 ? STRENGTH_LEVELS[0] : STRENGTH_LEVELS[score];
 
-    bar.style.width = level.pct;
-    bar.style.background = level.bg;
-    lbl.textContent = lang === 'ar' ? level.labelAr : level.label;
-    lbl.style.color = level.bg === 'transparent' ? 'rgba(255,255,255,0.5)' : level.bg;
+    if (pw.length === 0) {
+        wrap.removeAttribute('data-score');
+        lbl.textContent = '';
+        lbl.style.color = '';
+    } else {
+        wrap.setAttribute('data-score', score);
+        const level = STRENGTH_LEVELS[score];
+        lbl.textContent = lang === 'ar' ? level.labelAr : level.label;
+        lbl.style.color = level.bg;
+    }
 }
 
 // Wire up real-time strength feedback

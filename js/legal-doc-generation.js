@@ -1,3 +1,6 @@
+// Protected page — requires authentication
+if (typeof API !== 'undefined') API.requireAuth();
+
 // Navbar menu toggle
 function toggleMenu() {
     const menu = document.getElementById('navbarMenu');
@@ -164,7 +167,7 @@ function updateNavbarAuth() {
         const user = API.getUser();
         const isAdmin = user && (user.role === 'admin' || user.role === 'Admin');
         const isLawyer = user && (user.role === 'lawyer' || user.role === 'Lawyer');
-        
+
         let dashboardUrl = '../index.html';
         if (isAdmin) dashboardUrl = './admin-dashboard.html';
         else if (isLawyer) dashboardUrl = './lawyer.html';
@@ -192,7 +195,7 @@ async function onCategoryChange() {
     try {
         // ✅ Switch to use the dynamic CSV-based Documents API
         const data = await API.Documents.listTemplates();
-        
+
         // Filter by category
         currentTemplates = data.filter(t => {
             if (category === 'complaint') {
@@ -231,7 +234,7 @@ async function onTemplateChange() {
     const templateId = document.getElementById('templateSelect').value;
     const dynamicFields = document.getElementById('dynamicFields');
     const generateBtn = document.getElementById('generateBtn');
-    
+
     // Determine category
     const categoryVal = document.querySelector('input[name="docCategory"]:checked').value;
     let fetchType = 'contracts';
@@ -248,10 +251,10 @@ async function onTemplateChange() {
         // Find the template in currentTemplates to get correct category if needed
         const templateInfo = currentTemplates.find(t => t.id === templateId);
         const effectiveType = templateInfo ? templateInfo.category : fetchType;
-        
+
         const res = await API.Documents.getTemplate(effectiveType, templateId);
         currentTemplateData = res;
-        
+
         // Extract unique inputs from all clauses
         const allInputs = [];
         if (res.clauses) {
