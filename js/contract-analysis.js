@@ -1,3 +1,6 @@
+// Protected page — requires authentication
+if (typeof API !== 'undefined') API.requireAuth();
+
 function toggleMenu() {
     const menu = document.getElementById('navbarMenu');
     const toggle = document.getElementById('navbarToggle');
@@ -240,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Step 2: Display result (AI placeholder - wire real AI service when available)
             var fileName = docData.originalFilename || docData.original_name || selectedFile.name;
-            var fileUrl  = docData.fileUrl || docData.url || '';
+            var fileUrl = docData.fileUrl || docData.url || '';
             var mockAnalysis = currentLang === 'ar'
                 ? '\u2705 \u062a\u0645 \u0631\u0641\u0639 \u0627\u0644\u0645\u0644\u0641 \u0628\u0646\u062c\u0627\u062d!\n\n\ud83d\udcc4 \u0627\u0644\u0645\u0644\u0641: ' + fileName + '\n\n\ud83d\udccb \u0627\u0644\u062a\u062d\u0644\u064a\u0644:\n\u062a\u0645 \u0627\u0633\u062a\u0644\u0627\u0645 \u0627\u0644\u0648\u062b\u064a\u0642\u0629. \u062a\u0648\u0627\u0635\u0644 \u0645\u0639 \u0645\u062d\u0627\u0645\u064d \u0644\u0645\u0631\u0627\u062c\u0639\u062a\u0647\u0627.\n\n\u26a0\ufe0f \u062e\u062f\u0645\u0629 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0642\u064a\u062f \u0627\u0644\u062a\u0637\u0648\u064a\u0631.'
                 : '\u2705 File uploaded successfully!\n\n\ud83d\udcc4 File: ' + fileName + '\n\n\ud83d\udccb Analysis:\nYour document was received. Consult one of our lawyers to review it.\n\n\u26a0\ufe0f AI analysis is under development.';

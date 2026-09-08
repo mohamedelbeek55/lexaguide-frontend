@@ -106,7 +106,8 @@ async function request(path, { method = "GET", body, auth = false, isForm = fals
     }
     logoutLocal();
     if (!window.location.pathname.includes("login.html")) {
-      window.location.href = "/html/login.html";
+      const intended = window.location.pathname + window.location.search;
+      window.location.href = '/html/login.html?redirect=' + encodeURIComponent(intended);
     }
     throw new Error("Session expired. Please login again.");
   }
@@ -119,9 +120,14 @@ async function request(path, { method = "GET", body, auth = false, isForm = fals
 const API = {
   logout() {
     logoutLocal();
-    // Use a relative path so the redirect works whether hosted at root or a sub-path
-    const isInHtmlDir = window.location.pathname.includes('/html/');
-    window.location.href = isInHtmlDir ? '/html/login.html' : '/html/login.html';
+    // Redirect to login, preserving current page as the post-login destination
+    const current = window.location.pathname + window.location.search;
+    const isLoginPage = current.includes('login.html');
+    if (isLoginPage) {
+      window.location.href = '/html/login.html';
+    } else {
+      window.location.href = '/html/login.html?redirect=' + encodeURIComponent(current);
+    }
   },
   isLoggedIn() {
     return !!getAccessToken();
@@ -144,10 +150,34 @@ const API = {
       throw new Error("Unauthorized");
     }
   },
+  /**
+   * Hard guard — call at the top of protected pages.
+   * Stores the intended URL and redirects to login if not authenticated.
+   * On login success, login.js reads ?redirect= and sends the user back.
+   */
   requireAuth() {
     if (!this.isLoggedIn()) {
-      window.location.href = "/html/login.html";
+      const intended = window.location.pathname + window.location.search;
+      window.location.href = '/html/login.html?redirect=' + encodeURIComponent(intended);
       throw new Error("Login required");
+    }
+  },
+  /**
+   * Soft gate — use on CTA buttons that need auth but are on a public page.
+   * If logged in, runs callback(). If not, stores intended URL and goes to login.
+   *
+   * @param {string}   redirectUrl  - The protected page to go to after login
+   * @param {Function} [callback]   - Optional: run this instead of redirecting when logged in
+   */
+  authGate(redirectUrl, callback) {
+    if (this.isLoggedIn()) {
+      if (typeof callback === 'function') {
+        callback();
+      } else {
+        window.location.href = redirectUrl;
+      }
+    } else {
+      window.location.href = '/html/login.html?redirect=' + encodeURIComponent(redirectUrl);
     }
   },
   Auth: {

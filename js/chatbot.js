@@ -1,3 +1,6 @@
+// Protected page — requires authentication
+if (typeof API !== 'undefined') API.requireAuth();
+
 // Navbar menu reuse
 function toggleMenu() {
     const menu = document.getElementById('navbarMenu');
@@ -110,7 +113,7 @@ function updateNavbarAuth() {
         const user = API.getUser();
         const isAdmin = user && (user.role === 'admin' || user.role === 'Admin');
         const isLawyer = user && (user.role === 'lawyer' || user.role === 'Lawyer');
-        
+
         let dashboardUrl = '../index.html';
         if (isAdmin) dashboardUrl = './admin-dashboard.html';
         else if (isLawyer) dashboardUrl = './lawyer.html';
@@ -187,8 +190,8 @@ async function realBotReply(userText) {
         const resp = await API.Chatbot.sendMessage(sessionId, userText);
 
         // Extract the answer from the backend response
-        const answer = (resp && resp.assistantMessage && resp.assistantMessage.content) || 
-                       'I received a response but could not extract the text.';
+        const answer = (resp && resp.assistantMessage && resp.assistantMessage.content) ||
+            'I received a response but could not extract the text.';
 
         // Replace the thinking bubble with the real answer
         thinkingMsg.classList.remove('thinking-bubble');

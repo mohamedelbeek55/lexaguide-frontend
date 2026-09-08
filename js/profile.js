@@ -1,9 +1,9 @@
 (function () {
     'use strict';
 
-    // Auth Guard
+    // Auth Guard — redirects to login with ?redirect= for post-login return
     if (!API.isLoggedIn()) {
-        window.location.href = 'login.html';
+        API.requireAuth();
         return;
     }
 
@@ -16,7 +16,7 @@
             const user = API.getUser();
             const isAdmin = user && (user.role === 'admin' || user.role === 'Admin');
             const isLawyer = user && (user.role === 'lawyer' || user.role === 'Lawyer');
-            
+
             let dashboardUrl = '../index.html';
             if (isAdmin) dashboardUrl = './admin-dashboard.html';
             else if (isLawyer) dashboardUrl = './lawyer.html';
@@ -36,7 +36,7 @@
 
         const { user, stats, consultations, documents } = data;
         const role = user.role.toLowerCase();
-        
+
         // 1. Render Stats
         let statsHTML = '';
         if (role === 'lawyer') {
@@ -82,10 +82,10 @@
                     </div>
                     <div class="data-list">
                         ${consultations.map(c => {
-                            const partnerName = role === 'lawyer' ? (c.userId?.fullName || 'Client') : (c.lawyerId?.fullName || 'Lawyer');
-                            const date = c.scheduledAt ? new Date(c.scheduledAt).toLocaleDateString() : new Date(c.createdAt).toLocaleDateString();
-                            const dashboardUrl = role === 'lawyer' ? 'lawyer.html' : 'user-consultations.html';
-                            return `
+                const partnerName = role === 'lawyer' ? (c.userId?.fullName || 'Client') : (c.lawyerId?.fullName || 'Lawyer');
+                const date = c.scheduledAt ? new Date(c.scheduledAt).toLocaleDateString() : new Date(c.createdAt).toLocaleDateString();
+                const dashboardUrl = role === 'lawyer' ? 'lawyer.html' : 'user-consultations.html';
+                return `
                                 <div class="data-item" onclick="window.location.href='${dashboardUrl}'" style="cursor: pointer;">
                                     <div class="data-main">
                                         <span class="data-title">${partnerName}</span>
@@ -94,7 +94,7 @@
                                     <span class="data-status status-${c.status.toLowerCase()}">${c.status}</span>
                                 </div>
                             `;
-                        }).join('')}
+            }).join('')}
                     </div>
                 </div>
             `;
@@ -132,13 +132,13 @@
             const resp = await API.Profile.get();
             const user = resp.user;
             const lang = localStorage.getItem('language') || 'en';
-            
+
             // Display Info
             document.getElementById('displayFullName').textContent = user.fullName;
             document.getElementById('displayEmail').textContent = user.email;
             document.getElementById('displayRole').textContent = user.role;
             document.getElementById('displayDate').textContent = new Date(user.createdAt).toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-US', { year: 'numeric', month: 'long' });
-            
+
             // Initials or Avatar
             const initialsEl = document.getElementById('initials');
             const avatarContainer = document.getElementById('profileAvatarLg');
@@ -146,7 +146,7 @@
                 avatarContainer.innerHTML = `<img src="${user.avatarUrl}" alt="Avatar">`;
             } else {
                 const names = user.fullName.split(' ');
-                const initials = names.length >= 2 ? (names[0][0] + names[names.length-1][0]) : user.fullName.slice(0,2);
+                const initials = names.length >= 2 ? (names[0][0] + names[names.length - 1][0]) : user.fullName.slice(0, 2);
                 initialsEl.textContent = initials.toUpperCase();
             }
 
@@ -226,7 +226,7 @@
         }
     }
 
-    window.markAllRead = async function() {
+    window.markAllRead = async function () {
         try {
             await API.Profile.markNotificationsRead();
             loadNotifications();
@@ -240,7 +240,7 @@
         updateNavbarAuth();
         loadProfile();
         loadNotifications();
-        
+
         // Listen for language changes
         window.addEventListener('languageChanged', () => {
             updateNavbarAuth();
@@ -250,7 +250,7 @@
 
         const form = document.getElementById('editProfileForm');
         if (form) form.addEventListener('submit', handleUpdateProfile);
-        
+
         const avatarInput = document.getElementById('avatarInput');
         if (avatarInput) avatarInput.addEventListener('change', handleAvatarUpload);
     });
