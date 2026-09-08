@@ -46,6 +46,49 @@ body {
     flex-direction: row-reverse;
 }
 
+/* ── RTL mobile overrides — keep column layout in the slide-in panel ── */
+@media (max-width: 768px) {
+
+    /* nav links stay in a column (not row-reverse) inside the panel */
+    [dir="rtl"] .navbar-links {
+        flex-direction: column;
+        text-align: right;
+    }
+
+    /* right section stays column and stretches full width */
+    [dir="rtl"] .navbar-right {
+        flex-direction: column;
+        align-items: stretch;
+        margin: 0;
+        width: 100%;
+    }
+
+    /* lang button text aligns right in RTL */
+    [dir="rtl"] .lang-btn {
+        flex-direction: row-reverse;
+        justify-content: center;
+    }
+
+    /* lang dropdown fills width from both sides */
+    [dir="rtl"] .lang-dropdown {
+        right: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    /* CTA buttons full-width column */
+    [dir="rtl"] .navbar-cta {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    /* nav link text right-aligned in RTL */
+    [dir="rtl"] .navbar-links a {
+        text-align: right;
+    }
+}
+
 [dir="rtl"] .hero-content {
     text-align: right;
 }
