@@ -1,4 +1,6 @@
-@import url("./home.css");
+/* Navbar and base styles come from ../shared/home.css loaded in the HTML <head>.
+   The @import below is intentionally removed to avoid loading an outdated
+   css/home.css that would override the shared mobile navbar fixes. */
 
 /* Chatbot page specific styles - matching Middle East Law page style */
 .chatbot-section {
